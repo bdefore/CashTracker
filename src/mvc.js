@@ -136,7 +136,7 @@ function controllerAction(name, plural, action, fn) {
       // Render template
       res.render = render;
       options = options || {};
-      // Expose obj as the "users" or "user" local
+      // Expose obj as the "bills" or "bill" local
       if (action == 'index') {
         options[plural] = obj;
       } else {

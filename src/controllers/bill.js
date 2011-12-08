@@ -1,54 +1,54 @@
 
-// Fake user database for example
+// Fake bill database for example
 
-var users = [
+var bills = [
     { id: 0, name: 'TJ', email: 'tj@vision-media.ca' }
   , { id: 1, name: 'Simon', email: 'simon@vision-media.ca' }
 ];
 
 function get(id, fn) {
-  if (users[id]) {
-    fn(null, users[id]);
+  if (bills[id]) {
+    fn(null, bills[id]);
   } else {
-    fn(new Error('User ' + id + ' does not exist'));
+    fn(new Error('Bill ' + id + ' does not exist'));
   }
 }
 
 module.exports = {
   
-  // /users
+  // /bills
   
   index: function(req, res){
-    res.render(users);
+    res.render(bills);
   },
 
-  // /users/:id
+  // /bills/:id
 
   show: function(req, res, next){
-    get(req.params.id, function(err, user){
+    get(req.params.id, function(err, bill){
       if (err) return next(err);
-      res.render(user);
+      res.render(bill);
     });
   },
   
-  // /users/:id/edit
+  // /bills/:id/edit
   
   edit: function(req, res, next){
-    get(req.params.id, function(err, user){
+    get(req.params.id, function(err, bill){
       if (err) return next(err);
-      res.render(user);
+      res.render(bill);
     });
   },
   
-  // PUT /users/:id
+  // PUT /bills/:id
   
   update: function(req, res, next){
     var id = req.params.id;
     get(id, function(err){
       if (err) return next(err);
-      var user = users[id] = req.body.user;
-      user.id = id;
-      req.flash('info', 'Successfully updated _' + user.name + '_.');
+      var bill = bills[id] = req.body.bill;
+      bill.id = id;
+      req.flash('info', 'Successfully updated _' + bill.name + '_.');
       res.redirect('back');
     });
   }

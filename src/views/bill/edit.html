@@ -1,8 +1,9 @@
-<h1>Editing bill <%= bill.name %></h1>
+<h1>Editing bill <%= bill.serial %></h1>
 <%- partial('../messages') %>
 <form method="post" action="/bills/<%= bill.id %>">
   <input type="hidden" name="_method" value="put" />
-  <p>Name: <input type="text" name="bill[name]", value="<%= bill.name %>" /></p>
-  <p>Email: <input type="text" name="bill[email]", value="<%= bill.email %>" /></p>
+  <p>Serial: <input type="text" name="bill[serial]", value="<%= bill.serial %>" /></p>
+  <p>Currency: <input type="text" name="bill[currency]", value="<%= bill.currency %>" /></p>
+  <p>Denomination: <input type="text" name="bill[denomination]", value="<%= bill.denomination %>" /></p>
   <p><input type="submit" value="Update" /></p>
 </form>

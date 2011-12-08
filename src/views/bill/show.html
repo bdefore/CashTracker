@@ -1,7 +1,8 @@
 <h1>Viewing bill #<%= bill.id %></h1>
 <%- partial('../messages') %>
 <ul>
-  <li><%- bill.name %></li>
-  <li><%- bill.email %></li>
+  <li>Serial: <%- bill.serial %></li>
+  <li>Currency: <%- bill.currency %></li>
+  <li>Denomination: <%- bill.denomination %></li>
   <li><a href="<%= bill.id %>/edit">Edit</a> this bill</li>
 </ul>

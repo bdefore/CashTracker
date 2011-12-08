@@ -2,6 +2,6 @@
 <%- partial('../messages') %>
 <ul>
   <% bills.forEach(function(bill){ %>
-    <li><a href="/bills/<%= bill.id %>"><%= bill.name %></a></li>
+    <li><a href="/bills/<%= bill.id %>"><%= bill.serial %></a></li>
   <% }) %>
 </ul>

@@ -2,8 +2,9 @@
 // Fake bill database for example
 
 var bills = [
-    { id: 0, name: 'TJ', email: 'tj@vision-media.ca' }
-  , { id: 1, name: 'Simon', email: 'simon@vision-media.ca' }
+    { id: 0, serial: 'X18084287225', denomination: 20, currency: 'euro' }
+  , { id: 1, serial: 'M81450250492', denomination: 10, currency: 'euro' }
+  , { id: 2, serial: 'V20393535199', denomination: 5, currency: 'euro' }
 ];
 
 function get(id, fn) {
@@ -48,7 +49,7 @@ module.exports = {
       if (err) return next(err);
       var bill = bills[id] = req.body.bill;
       bill.id = id;
-      req.flash('info', 'Successfully updated _' + bill.name + '_.');
+      req.flash('info', 'Successfully updated _' + bill.serial + '_.');
       res.redirect('back');
     });
   }

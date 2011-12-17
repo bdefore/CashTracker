@@ -1,0 +1,7 @@
+<h1>Sightings</h1>
+<%- partial('../messages') %>
+<ul>
+  <% sightings.forEach(function(sighting){ %>
+    <li><a href="/sightings/<%= sighting.id %>"><%= sighting.latitude %> <%= sighting.longitude %></a></li>
+  <% }) %>
+</ul>

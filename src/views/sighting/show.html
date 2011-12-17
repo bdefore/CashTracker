@@ -1,0 +1,10 @@
+<h1>Sightings for Bill</h1>
+<%- partial('../messages') %>
+<ul>
+	<!-- There is a problem here with pluralization, where mvc.js assigns sighting/sightings based on if it's index.html or not. Since this is inherently a list of sightings, this nomenclature is inaccurate, probably because it's contrary to
+	the spirit of the framework. Needs a refactor -->
+  <% sighting.forEach(function(sighting_fo_realz){ %>
+ <!--    <li><a href="/sightings/HOW_TO_DISAMBIGUATE_BILL_ID_FROM_SIGHTING_ID/<%= sighting.id %>"><%= sighting_fo_realz.latitude %> <%= sighting_fo_realz.longitude %></a></li>
+  -->   <li><%= sighting_fo_realz.latitude %> <%= sighting_fo_realz.longitude %> - <%= sighting_fo_realz.comment %></li>
+  <% }) %>
+</ul>

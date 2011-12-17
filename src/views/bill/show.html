@@ -4,5 +4,7 @@
   <li>Serial: <%- bill.serial %></li>
   <li>Currency: <%- bill.currency %></li>
   <li>Denomination: <%- bill.denomination %></li>
-  <li><a href="<%= bill.id %>/edit">Edit</a> this bill</li>
+  <!-- Disabled until MondoDB integration is complete -->
+  <!-- <li><a href="<%= bill.id %>/edit">Edit</a> this bill</li> -->
+  <li><a href="/sightings/<%= bill.id %>">View sightings of this bill</a></li>
 </ul>

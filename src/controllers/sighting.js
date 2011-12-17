@@ -51,8 +51,10 @@ module.exports = {
   // /sightings/:id
 
   show: function(req, res, next){
-    getSightings(req.params.id, function(result){
-      res.render(result[0]);
+   	getSightings(req.params.id, function(result){
+	    getBillBySerial(result[0].serial, function(error, bill){
+	   		res.render(result[0], { bill: bill });
+	  	});
     });
   },
 

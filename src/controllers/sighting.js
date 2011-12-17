@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/cashtracker');
+// TO FIX: This is also referenced in app.js. Keep in one place
+mongoose.connect('mongodb://nodejitsu:ad8ba547acf567721d7c6fa8f27de705@staff.mongohq.com:10041/nodejitsudb708672827726');
 
 console.log("MongoDB connection success...")
 

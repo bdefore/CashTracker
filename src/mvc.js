@@ -4,7 +4,8 @@
  */
 
 var fs = require('fs')
-  , express = require('../lib/express');
+  , connect = require('connect')
+  , express = require('express');
 
 exports.boot = function(app){
   bootApplication(app);
@@ -18,7 +19,7 @@ function bootApplication(app) {
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(express.session({ secret: 'bunniesonfire' }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 
@@ -32,11 +33,6 @@ function bootApplication(app) {
   app.use(function(req, res){
     res.render('404');
   });
-
-  // Setup ejs views as default, with .html as the extension
-  app.set('views', __dirname + '/views');
-  app.register('.html', require('ejs'));
-  app.set('view engine', 'html');
 
   // Some dynamic view helpers
   app.dynamicHelpers({

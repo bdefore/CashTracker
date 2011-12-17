@@ -34,7 +34,7 @@ var Sighting = mongoose.model('Sighting');
 
 console.log("Checking for existing data...")
 
-var sightingTest = Sighting.findOne( { id: 0 }, function(error, result) {
+var sightingTest = Sighting.findOne( null, function(error, result) {
 	if(!result)
 	{
 		console.log("No sightings found, filling with dummy data...");

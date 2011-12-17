@@ -23,6 +23,11 @@ function bootApplication(app) {
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 
+  // Setup ejs views as default, with .html as the extension
+  app.set('views', __dirname + '/views');
+  app.register('.html', require('ejs'));
+  app.set('view engine', 'html');
+
   // Example 500 page
   app.error(function(err, req, res){
     console.dir(err)

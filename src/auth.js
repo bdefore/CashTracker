@@ -2,8 +2,8 @@ var fs = require('fs')
   , express = require('express');
 
 exports.boot = function(app){
-  bootPassport(app);
-  //bootEveryAuth(app);
+  //bootPassport(app);
+  bootEveryAuth(app);
 };
 
 function bootPassport(app) {
@@ -39,12 +39,6 @@ function bootPassport(app) {
       // Successful authentication, redirect home.
       res.redirect('/');
     });
-
-    // Setup ejs views as default, with .html as the extension
-    app.set('views', __dirname + '/views');
-    app.register('.html', require('ejs'));
-    app.set('view engine', 'html');
-
 }
 
 function bootEveryAuth(app) {

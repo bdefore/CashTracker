@@ -21,7 +21,7 @@ var Sighting = mongoose.model('Sighting');
 function getSightings(filterById, callback) {
   console.log("getting sighting of id: " + filterById + " (or all if id is null)")
   filter = {};
-  if(filterById) filter = { id: filterById };
+  if(filterById) filter = { _id: filterById };
   Sighting.find( filter, function(error, result) {
     if(error) console.log("Error getting sightings: " + error);
     console.log("results: " + result)
@@ -42,8 +42,6 @@ module.exports = {
   // /sightings/add
 
   add: function(req, res, next){
-    console.log('in add')
-
     // TO FIX: Blank object construction shouldn't be necessary. Validate forms instead.
     var bill = new Bill( { serial: "", currency: "", denomination: 10 } );
     var sighting = new Sighting( { serial: bill.serial, latitude: "", longitude: "", comment: "" });
@@ -53,7 +51,6 @@ module.exports = {
   // /sightings/:id
 
   show: function(req, res, next){
-    console.log('in show')
     getSightings(req.params.id, function(result){
       res.render(result[0]);
     });
@@ -62,7 +59,6 @@ module.exports = {
   // /sightings/:id/edit
   
   edit: function(req, res, next){
-  	console.log('in edit')
   	if(req.params.id)
   	{
 	   	getSightings(req.params.id, function(result){

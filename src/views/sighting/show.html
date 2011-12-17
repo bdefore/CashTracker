@@ -1,4 +1,47 @@
-<h1>Viewing sighting #<%= sighting.id %></h1>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <article>
+      <p>Location of sighting</p>
+    </article>
+
+<script>
+  
+function success(position) {
+  var mapcanvas = document.createElement('div');
+  mapcanvas.id = 'mapcanvas';
+  mapcanvas.style.height = '400px';
+  mapcanvas.style.width = '560px';
+  
+  document.querySelector('article').appendChild(mapcanvas);
+
+  var latlng = new google.maps.LatLng(<%- sighting.latitude %>, <%- sighting.longitude %>);
+  var myOptions = {
+    zoom: 15,
+    center: latlng,
+    mapTypeControl: false,
+    navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
+  
+  var marker = new google.maps.Marker({
+      position: latlng, 
+      map: map, 
+      title:"Location of sighting"
+  });
+}
+
+function error(msg) {
+}
+
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(success, error);
+} else {
+  error('not supported');
+}
+
+</script>
+
+<h1>Viewing sighting #<%= sighting._id %></h1>
 <%- partial('../messages') %>
 <ul>
   <li>Serial: <%- sighting.serial %></li>
@@ -7,5 +50,5 @@
   <li>Latitude: <%- sighting.latitude %></li>
   <li>Longitude: <%- sighting.longitude %></li>
   <li>Comment: <%- sighting.comment %></li>
-  <li><a href="<%= sighting.id %>/edit">Edit</a> this sighting</li>
+  <li><a href="<%= sighting._id %>/edit">Edit</a> this sighting</li>
 </ul>

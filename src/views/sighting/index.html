@@ -3,6 +3,6 @@
 <%- partial('../messages') %>
 <ul>
   <% sightings.forEach(function(sighting){ %>
-    <li><a href="/sightings/<%= sighting.id %>"><%= sighting.latitude %> <%= sighting.longitude %> - <%= sighting.comment %></a></li>
+    <li><a href="/sightings/<%= sighting._id %>"><%= sighting.latitude %> <%= sighting.longitude %> - <%= sighting.comment %></a></li>
   <% }) %>
 </ul>

@@ -16,7 +16,6 @@ console.log("MongoDB connection success...")
 var Schema = mongoose.Schema;
   
 var BillSchema = new Schema({
-  id            : Number,
   serial        : String,
   denomination  : Number,
   currency      : String
@@ -25,10 +24,9 @@ mongoose.model('Bill', BillSchema);
 var Bill = mongoose.model('Bill');
 
 var SightingSchema = new Schema({
-  id            : Number,
   serial        : String,
-  latitude	    : String,
-  longitude     : String,
+  latitude	    : Number,
+  longitude     : Number,
   comment	    : String
 });
 mongoose.model('Sighting', SightingSchema);
@@ -41,13 +39,13 @@ var sightingTest = Sighting.findOne( { id: 0 }, function(error, result) {
 	{
 		console.log("No sightings found, filling with dummy data...");
 
-		new Bill( { id: 0, serial: 'X18084287225', denomination: 20, currency: 'euro' } ).save();
-		new Bill( { id: 1, serial: 'Y81450250492', denomination: 10, currency: 'euro' } ).save();
-
-		new Sighting( { id: 0, serial: 'X18084287225', latitude: "43°20'N", longitude: "8°25'W", comment: 'I got this from my mother' } ).save();
-		new Sighting( { id: 1, serial: 'Y81450250492', latitude: "37°27'N", longitude: "03°57'W", comment: 'I got this from a restaurant' } ).save();
-		new Sighting( { id: 2, serial: 'Y81450250492', latitude: "34°27'N", longitude: "05°57'W", comment: 'I got this from a bar' } ).save();
-		new Sighting( { id: 3, serial: 'Y81450250492', latitude: "35°27'N", longitude: "01°57'W", comment: 'I got this from somewhere' } ).save();
+		new Bill( { serial: 'X18084287225', denomination: 20, currency: 'euro' } ).save();
+		new Bill( { serial: 'Y81450250492', denomination: 10, currency: 'euro' } ).save();
+ 
+		new Sighting( { serial: 'X18084287225', latitude: "41.377301033335414", longitude: "2.189307280815329", comment: 'I got this from my mother' } ).save();
+		new Sighting( { serial: 'Y81450250492', latitude: "31.377301033335414", longitude: "-32.189307280815329", comment: 'I got this from a restaurant' } ).save();
+		new Sighting( { serial: 'Y81450250492', latitude: "-41.377301033335414", longitude: "9.189307280815329", comment: 'I got this from a bar' } ).save();
+		new Sighting( { serial: 'Y81450250492', latitude: "11.377301033335414", longitude: "12.189307280815329", comment: 'I got this from somewhere' } ).save();
 
 		console.log("Dummy data created...")
 	}	

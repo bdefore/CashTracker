@@ -2,8 +2,8 @@ var fs = require('fs')
   , express = require('express');
 
 exports.boot = function(app){
-  //bootPassport(app);
-  bootEveryAuth(app);
+  bootPassport(app);
+  //bootEveryAuth(app);
 };
 
 function bootPassport(app) {

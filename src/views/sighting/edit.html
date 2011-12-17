@@ -1,0 +1,12 @@
+<h1>New Sighting!</h1>
+<%- partial('../messages') %>
+<form method="post" action="/sightings/<%= sighting.id %>">
+  <input type="hidden" name="_method" value="put" />
+  <p>Serial: <input type="text" name="sighting[serial]", value="<%= sighting.serial %>" /></p>
+  <p>Currency: <input type="text" name="sighting[currency]", value="<%= bill.currency %>" /></p>
+  <p>Denomination: <input type="text" name="sighting[denomination]", value="<%= bill.denomination %>" /></p>
+  <p>Latitude: <input type="text" name="sighting[latitude]", value="<%= sighting.latitude %>" /></p>
+  <p>Longitude: <input type="text" name="sighting[longitude]", value="<%= sighting.longitude %>" /></p>
+  <p>Comment: <input type="text" name="sighting[comment]", value="<%= sighting.comment %>" /></p>
+  <p><input type="submit" value="Update" /></p>
+</form>

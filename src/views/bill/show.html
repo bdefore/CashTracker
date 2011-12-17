@@ -1,10 +1,7 @@
-<h1>Viewing bill #<%= bill.id %></h1>
+<h1>Bills</h1>
 <%- partial('../messages') %>
 <ul>
-  <li>Serial: <%- bill.serial %></li>
-  <li>Currency: <%- bill.currency %></li>
-  <li>Denomination: <%- bill.denomination %></li>
-  <!-- Disabled until MondoDB integration is complete -->
-  <!-- <li><a href="<%= bill.id %>/edit">Edit</a> this bill</li> -->
-  <li><a href="/sightings/<%= bill.id %>">View sightings of this bill</a></li>
+  <% bills.forEach(function(bill){ %>
+    <li><a href="/bills/<%= bill.id %>"><%= bill.serial %></a></li>
+  <% }) %>
 </ul>

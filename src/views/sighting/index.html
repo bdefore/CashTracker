@@ -1,7 +1,8 @@
 <h1>Sightings</h1>
+<a href="/sightings/add" />Add New Sighting</a>
 <%- partial('../messages') %>
 <ul>
   <% sightings.forEach(function(sighting){ %>
-    <li><a href="/sightings/<%= sighting.id %>"><%= sighting.latitude %> <%= sighting.longitude %></a></li>
+    <li><a href="/sightings/<%= sighting.id %>"><%= sighting.latitude %> <%= sighting.longitude %> - <%= sighting.comment %></a></li>
   <% }) %>
 </ul>

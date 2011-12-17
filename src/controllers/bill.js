@@ -4,16 +4,16 @@ mongoose.connect('mongodb://localhost/cashtracker');
 
 console.log("MongoDB connection success...")
 
-var Bill = mongoose.model('Bill');
+var Sighting = mongoose.model('Sighting');
 
-function getBills(filterById, callback) {
-  console.log("getting bill of id: " + filterById + " (or all if id is null)")
+function getBills(filterBySerial, callback) {
+  console.log("getting sighting of sighting id: " + filterBySerial + " (or all if id is null)")
   filter = {};
-  if(filterById) filter = { id: filterById };
-  Bill.find( filter, function(error, result) {
-    if(error) console.log("Error getting bills: " + error);
+  if(filterBySerial) filter = { serial: filterBySerial };
+  Sighting.find( filter, function(error, result) {
+    if(error) console.log("Error getting sightings: " + error);
     console.log("results: " + result)
-    if(!callback) console.log("Warning: bills requested without callback")
+    if(!callback) console.log("Warning: sightings requested without callback")
     else callback(result);
   });
 }
@@ -22,25 +22,25 @@ module.exports = {
   
   // /bills
   
-  index: function(req, res){
-    getBills(null, res.render);
-  },
+  // index: function(req, res){
+  //   getBills(null, res.render);
+  // },
 
   // /bills/:id
 
   show: function(req, res, next){
     getBills(req.params.id, function(result){
-      res.render(result[0]);
+      res.render(result);
     });
   },
   
   // /bills/:id/edit
   
-  edit: function(req, res, next){
-    getBills(req.params.id, function(result){
-      res.render(result[0]);
-    });
-  }
+  // edit: function(req, res, next){
+  //   getBills(req.params.id, function(result){
+  //     res.render(result[0]);
+  //   });
+  // }
 
   // PUT /bills/:id
   

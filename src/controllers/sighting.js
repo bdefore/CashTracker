@@ -66,9 +66,12 @@ module.exports = {
 
   show: function(req, res, next){
    	getSightings(req.params.id, function(result){
-	    getBillBySerial(result[0].serial, function(error, bill){
-	   		res.render(result[0], { bill: bill });
-	  	});
+      // TO FIX: Periodic server crashes when result appears to be null
+      if(result || result[0]) {
+        getBillBySerial(result[0].serial, function(error, bill){
+          res.render(result[0], { bill: bill });
+        });
+      }
     });
   },
 

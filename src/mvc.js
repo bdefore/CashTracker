@@ -4,6 +4,7 @@
  */
 
 var fs = require('fs')
+  , conf = require('./conf')
   , connect = require('connect')
   , express = require('express');
 
@@ -26,7 +27,7 @@ function bootApplication(app) {
   app.use(express.static(__dirname + '/public'));
 
   // Setup ejs views as default, with .html as the extension
-  app.set('views', __dirname + '/views/ejs');
+  app.set('views', __dirname + '/views/' + conf.template_engine);
   app.register('.html', require('ejs'));
   app.set('view engine', 'html');
 
@@ -124,7 +125,7 @@ function controllerAction(name, plural, action, fn) {
   return function(req, res, next){
     var render = res.render
       , format = req.params.format
-      , path = __dirname + '/views/ejs/' + name + '/' + action + '.html';
+      , path = __dirname + '/views/' + conf.template_engine + '/' + name + '/' + action + '.html';
     res.render = function(obj, options, fn){
       res.render = render;
       // Template path

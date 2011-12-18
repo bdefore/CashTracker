@@ -1,8 +1,0 @@
-<h1>Editing sighting <%= sighting.name %></h1>
-<%- partial('../messages') %>
-<form method="post" action="/sightings/<%= sighting.id %>">
-  <input type="hidden" name="_method" value="put" />
-  <p>Name: <input type="text" name="sighting[name]", value="<%= sighting.name %>" /></p>
-  <p>Email: <input type="text" name="sighting[email]", value="<%= sighting.email %>" /></p>
-  <p><input type="submit" value="Update" /></p>
-</form>

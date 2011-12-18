@@ -101,14 +101,14 @@ module.exports = {
   		if(!result)
   		{
 	  		new Bill( { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency } ).save();
-	  		console.log("saved new sighting to new bill");
-	  		req.flash('info', 'Successfully saved to new bill');
+	  		console.log("saved new sighting to new record");
+	  		req.flash('info', 'Successfully saved to new record');
 	  		res.redirect('/sightings');
   		}
   		else
   		{
-  			console.log("saved new sighting to preexisting bill: " + result);
-	  		req.flash('info', 'Successfully saved to preexisting bill');
+  			console.log("saved new sighting to preexisting record: " + result);
+	  		req.flash('info', 'Successfully saved to preexisting record');
   			res.redirect('/sightings');
   		}
   	});  	

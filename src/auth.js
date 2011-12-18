@@ -86,7 +86,7 @@ function getUser(id, callback) {
   User.findOne( { id: id }, function(error, result) {
     if(error) console.log("Error getting user: " + error);
     console.log("results: " + result)
-    if(!callback) console.log("Warning: sightings requested without callback")
+    if(!callback) console.log("Warning: user requested without callback")
     else callback(result);
   });
 }
@@ -125,11 +125,12 @@ function bootEveryAuth(app) {
       .appId(conf.fb.appId)
       .appSecret(conf.fb.appSecret)
       .findOrCreateUser( function (session, accessToken, accessTokenExtra, fbUserMetadata) {
-        var existingUser = getUser(fbUserMetadata.id);
-        if(!existingUser)
-        {
-          new User( { name: fbUserMetadata.name }).save();
-        }
+        getUser(fbUserMetadata.id, function(result) {
+          if(!result)
+          {
+            new User( { name: fbUserMetadata.name }).save();
+          }
+        });
 
         return usersByFbId[fbUserMetadata.id] ||
           (usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata));

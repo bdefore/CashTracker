@@ -1,7 +1,8 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
+,	conf = require('../conf')
+,	everyauth = require('everyauth');
 
-// TO FIX: This is also referenced in app.js. Keep in one place
-mongoose.connect('mongodb://nodejitsu:ad8ba547acf567721d7c6fa8f27de705@staff.mongohq.com:10041/nodejitsudb708672827726');
+mongoose.connect(conf.database);
 
 console.log("MongoDB connection success...")
 
@@ -31,6 +32,16 @@ function getSightings(filterById, callback) {
   });
 }
 
+function getUser(id, callback) {
+  console.log("getting user of id: " + id)
+  User.findOne( { id: id }, function(error, result) {
+    if(error) console.log("Error getting user: " + error);
+    console.log("results: " + result)
+    if(!callback) console.log("Warning: sightings requested without callback")
+    else callback(result);
+  });
+}
+
 module.exports = {
   
   // /sightings
@@ -46,7 +57,9 @@ module.exports = {
     // TO FIX: Blank object construction shouldn't be necessary. Validate forms instead.
     var bill = new Bill( { serial: "", currency: "", denomination: 10 } );
     var sighting = new Sighting( { serial: bill.serial, latitude: "", longitude: "", comment: "" });
-  	res.render( sighting, { bill: bill} );
+    var facebook = {};
+    if(everyauth.user) facebook = everyauth.user.facebook;
+  	res.render( sighting, { bill: bill, facebook: facebook } );
   },
 
   // /sightings/:id

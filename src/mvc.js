@@ -15,7 +15,9 @@ exports.boot = function(app){
 // App settings and middleware
 
 function bootApplication(app) {
+
   app.use(express.logger(':method :url :status'));
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
@@ -28,7 +30,9 @@ function bootApplication(app) {
   app.register('.html', require('ejs'));
   app.set('view engine', 'html');
 
-  // Example 500 page
+  require('./auth').boot(app);
+
+  //  Example 500 page
   app.error(function(err, req, res){
     console.dir(err)
     res.render('500');
@@ -59,6 +63,8 @@ function bootApplication(app) {
       }
     }
   });
+
+    // app.use(everyauth.middleware());
 }
 
 // Bootstrap controllers
@@ -111,6 +117,7 @@ function bootController(app, file) {
   });
 }
 
+
 // Proxy res.render() to add some magic
 
 function controllerAction(name, plural, action, fn) {
@@ -143,6 +150,19 @@ function controllerAction(name, plural, action, fn) {
       } else {
         options[name] = obj;
       }
+
+      var user = {};
+      
+      // if( req.isAuthenticated() ) {
+      //   user.username = JSON.stringify( req.getAuthDetails().user );
+      // }
+      // else user.username = "Not logged in"; 
+
+      // if(req.user) user.username = req.user;
+      // else user.username = "fweoeooeoe";
+
+      // options.user = user;
+
       return res.render(path, options, fn);
     };
     fn.apply(this, arguments);

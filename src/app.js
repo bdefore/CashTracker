@@ -5,13 +5,11 @@
 
 var express = require('express')
     , mongoose = require('mongoose')
-	, jade = require('jade');
+	, conf = require('./conf');
 
 // Mongodb schema
 
-// TO FIX: This is also referenced in controllers/sighting.js. Keep in one place
-mongoose.connect('mongodb://nodejitsu:ad8ba547acf567721d7c6fa8f27de705@staff.mongohq.com:10041/nodejitsudb708672827726');
-// mongoose.connect('mongodb://localhost/cashtracker');
+mongoose.connect(conf.database);
 
 console.log("MongoDB connection success...")
 
@@ -60,8 +58,9 @@ var sightingTest = Sighting.findOne( null, function(error, result) {
 var app = express.createServer();
 
 require('./mvc').boot(app);
-require('./auth').boot(app);
 
 app.listen(3000);
 
+// var growl = require("growl");
+// growl("Express app started on port 3000");
 console.log('Express app started on port 3000');

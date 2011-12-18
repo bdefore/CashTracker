@@ -6,5 +6,5 @@ module.exports = {
 	domain: "http://local.host:3000",
 	// database: "mongodb://nodejitsu:ad8ba547acf567721d7c6fa8f27de705@staff.mongohq.com:10041/nodejitsudb708672827726"
 	database: "mongodb://localhost/cashtracker",
-	template_engine: "ejs"
+	template_engine: "jade"
 };

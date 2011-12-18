@@ -1,0 +1,8 @@
+h1 Sightings
+a(href="/sightings/add") Add New Sighting
+!=partial('../messages')
+ul
+  - sightings.forEach(function(sighting){
+    li
+        a(href="/sightings/#{sighting._id}") #{sighting.latitude} #{sighting.longitude} - #{sighting.comment}
+  - })

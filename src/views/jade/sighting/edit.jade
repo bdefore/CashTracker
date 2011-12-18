@@ -1,0 +1,18 @@
+h1 Edit Sighting
+!=partial('../messages')
+form(method="post", action="/sightings/!=sighting.id")
+  input(type="hidden", name="_method", value="put")
+  p Serial:
+    input(type="text", name="sighting[serial]", value="#{sighting.serial}")
+  p Currency:
+    input(type="text", name="sighting[currency]", value="#{bill.currency}")
+  p Denomination:
+    input(type="text", name="sighting[denomination]", value="#{bill.denomination}")
+  p Latitude: 
+    input(type="text", id="latitudeInput", name="sighting[latitude]", value="#{sighting.latitude}")
+  p Longitude:
+    input(type="text", id="longitudeInput", name="sighting[longitude]", value="#{sighting.longitude}")
+  p Comment:
+    input(type="text", name="sighting[comment]", value="#{sighting.comment}")
+  p
+    input(type="submit", value="Update")  

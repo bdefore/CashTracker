@@ -1,0 +1,8 @@
+h1 Bills
+!=partial('../messages')
+ul
+    - bills.forEach(function(bill){
+        li
+            a(href="/bills/#{bill.serial}")
+                = bill.serial
+    - })

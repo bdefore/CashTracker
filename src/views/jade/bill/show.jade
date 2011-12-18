@@ -1,0 +1,10 @@
+h1 History of Bill: 
+    = sightings[0].serial
+!=partial('../messages')
+ul
+  - sightings.forEach(function(sighting){
+    li
+        a(href="/sightings/#{sighting._id}") 
+            = sighting.latitude + " "
+            = sighting.longitude
+  - })

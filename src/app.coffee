@@ -43,7 +43,9 @@ class MVC
     return (req, res, next) ->
       render = res.render
       format = req.params.format
-      path = __dirname + '/views/' + conf.template_engine + '/' + name + '/' + action + '.' + conf.template_engine
+      path = __dirname + '/views/' + conf.template_engine + '/' + name + '/' +
+        action + '.' + conf.template_engine
+
       res.render = (obj, options, fn) ->
         res.render = render
 
@@ -78,63 +80,6 @@ class Auth
   conf = require('./conf')
   express = require('express')
   mongoose = require('mongoose')
-
-  # TO FIX: Abandoned in favor of everyauth
-  # function bootPassport(app) {
-
-  #   var passport = require('passport')
-  #     , facebook_strategy = require('passport-facebook').Strategy
-
-  #   app.use(passport.initialize())
-  #   app.use(passport.session())
-
-  #   passport.use(new facebook_strategy({
-  #       clientID: conf.fb.appId,
-  #       clientSecret: conf.fb.appSecret,
-  #       # callbackURL: "http:#cashtracker.nodejitsu.com/auth/facebook/callback"
-  #       callbackURL: conf.domain + "/auth/facebook/callback"
-  #     },
-  #     function(accessToken, refreshToken, profile, done) {
-  #       User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-  #         return done(err, user)
-  #       })
-  #     }
-  #   ))
-
-  #   app.get('/auth/facebook',
-  #     passport.authenticate('facebook'),
-  #     function(req, res){
-  #       # The request will be redirected to Facebook for authentication, so
-  #       # this function will not be called.
-  #     })
-
-  #   app.get('/auth/facebook/callback',
-  #     passport.authenticate('facebook', { failureRedirect: conf.domain + '/login' }),
-  #     function(req, res) {
-  #       # Successful authentication, redirect home.
-  #       res.redirect(conf.domain)
-  #     })
-
-  #   app.get('/login', function(req, res){
-  #     res.render('login', { user: req.user })
-  #   })
-
-  #   # Passport session setup.
-  #   #   To support persistent login sessions, Passport needs to be able to
-  #   #   serialize users into and deserialize users out of the session.  Typically,
-  #   #   this will be as simple as storing the user ID when serializing, and finding
-  #   #   the user by ID when deserializing.  However, since this example does not
-  #   #   have a database of user records, the complete Facebook profile is serialized
-  #   #   and deserialized.
-  #   passport.serializeUser(function(user, done) {
-  #     done(null, user)
-  #   })
-
-  #   passport.deserializeUser(function(obj, done) {
-  #     done(null, obj)
-  #   })
-
-  # }
 
   mongoose.connect(conf.database)
 

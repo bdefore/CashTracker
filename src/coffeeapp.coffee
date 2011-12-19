@@ -103,60 +103,61 @@ class Auth
       user = usersById[++nextUserId] = { id: nextUserId }
       user[source] = sourceUser
 
+    console.log '-> addUser: adding user of id: ' + user.id
     return user
 
-  getUser = (id, callback) ->
-    console.log "getting user of id: " + id
+  getStoredUser = (id, callback) ->
     User.findOne { id: id }, (error, result) ->
       if error
         console.log "Error getting user: " + error
 
-      console.log "results: " + result
+      if !callback
+        console.log "Warning: user requested without callback"
 
-      if !callback console.log "Warning: user requested without callback"
       else callback result
 
   @bootEveryAuth: (app) ->
 
     everyauth = require('everyauth')
 
+    # everyauth requires this override in order to store
+    # local version of facebook user data
     everyauth.everymodule.findUserById (userId, callback) ->
-      console.log('Z Z Z')
-      console.log('findUserById - userId: ' + userId)
-      console.log('Z Z Z')
-
-      user = usersById[userId]
-      for name in user.facebook
-        console.log(name + " : " + user.facebook[name])
-
-      console.log('user: ' + user.facebook.name)
-      everyauth.user = user
-
       callback null, { userId: userId }
+
+    # Create callback that will store user to db
+    facebookResponseCallback = (session, token, extra, fbUserMetadata) ->
+
+      getStoredUser fbUserMetadata.id, (result) ->
+        if !result
+          u = new User
+            name: fbUserMetadata.name
+          u.save()
+
+      # Check if this user has already been added to our list of users
+      # If not, add. Then return this user
+      userByFbId = usersByFbId[fbUserMetadata.id]
+      if(!userByFbId)
+        userByFbId = usersByFbId[fbUserMetadata.id] = \
+          addUser('facebook', fbUserMetadata)
+
+      return userByFbId
 
     # TO FIX: Find more elegant way of complying with line length
     # than making daisychain variables and \ char. #toolazytoreaddocs
-    daisyChain1 = everyauth.facebook.appId(conf.fb.appId)
-    daisyChain2 = daisyChain1.appSecret(conf.fb.appSecret)
-    daisyChain3 = daisyChain2.findOrCreateUser \
-      (session, accessToken, accessTokenExtra, fbUserMetadata) ->
-        getUser fbUserMetadata.id, (result) ->
-          if !result
-            new User( { name: fbUserMetadata.name }).save()
+    daisyChain = everyauth \
+      .facebook \
+      .appId(conf.fb.appId) \
+      .appSecret(conf.fb.appSecret) \
+      .findOrCreateUser facebookResponseCallback
 
-        return usersByFbId[fbUserMetadata.id] ||
-          (usersByFbId[fbUserMetadata.id] = \
-            addUser('facebook', fbUserMetadata))
+    # TO FIX: If this could be appeneded to previous call, daisyChain
+    # variable is unnecessary
+    daisyChain.redirectPath conf.domain
 
-    daisyChain3.redirectPath conf.domain
-
-    # # everyauth.everymodule.findUserById( function (userId, callback) {
-    # #   User.findById(userId, callback)
-    # #   # callback has the signature, function (err, user) {...}
-    # # })
-
+    # Link everyauth to express, in order to access user object in view
+    # templates
     app.use everyauth.middleware()
-
     everyauth.helpExpress app
 
 class DB
@@ -206,7 +207,7 @@ class DB
           denomination: 20
           currency: 'euro'
         b.save()
-        
+
         b = new Bill
           serial: 'Y81450250492'
           denomination: 10

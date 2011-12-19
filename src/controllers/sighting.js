@@ -57,9 +57,7 @@ module.exports = {
     // TO FIX: Blank object construction shouldn't be necessary. Validate forms instead.
     var bill = new Bill( { serial: "", currency: "", denomination: 10 } );
     var sighting = new Sighting( { serial: bill.serial, latitude: "", longitude: "", comment: "" });
-    var facebook = {};
-    if(everyauth.user) facebook = everyauth.user.facebook;
-  	res.render( sighting, { bill: bill, facebook: facebook } );
+  	res.render( sighting, { bill: bill } );
   },
 
   // /sightings/:id

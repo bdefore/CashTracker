@@ -1,5 +1,5 @@
 - if (everyauth.loggedIn)
-	p You are linked with your Facebook account
+    p You are logged in with Facebook user: #{everyauth.facebook.user.name}
 - else
-	p You are not linked with your Facebook account yet. 
-		a(href="/auth/facebook") Log in via Facebook
+    p You are not linked with your Facebook account yet. 
+        a(href="/auth/facebook") Log in via Facebook

@@ -3,7 +3,9 @@ script(src="/user_on_map.js")
 
 h1 Add New Sighting!
 !=partial('../messages')
+
 div#mapContainer
+
 form(method="post", action="/sightings/!=sighting.id")
   input(type="hidden", name="_method", value="put")
   p Serial: 

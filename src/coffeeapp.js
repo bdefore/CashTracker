@@ -86,7 +86,7 @@
   })();
 
   Auth = (function() {
-    var User, UserSchema, addUser, conf, express, fs, getUser, mongoose, nextUserId, usersByFbId, usersById;
+    var User, UserSchema, addUser, conf, express, fs, getStoredUser, mongoose, nextUserId, usersByFbId, usersById;
 
     function Auth() {}
 
@@ -126,55 +126,50 @@
         };
         user[source] = sourceUser;
       }
+      console.log('-> addUser: adding user of id: ' + user.id);
       return user;
     };
 
-    getUser = function(id, callback) {
-      console.log("getting user of id: " + id);
+    getStoredUser = function(id, callback) {
       return User.findOne({
         id: id
       }, function(error, result) {
         if (error) console.log("Error getting user: " + error);
-        console.log("results: " + result);
-        if (!callback(console.log("Warning: user requested without callback"))) {} else {
+        if (!callback) {
+          return console.log("Warning: user requested without callback");
+        } else {
           return callback(result);
         }
       });
     };
 
     Auth.bootEveryAuth = function(app) {
-      var daisyChain1, daisyChain2, daisyChain3, everyauth;
+      var daisyChain, everyauth, facebookResponseCallback;
       everyauth = require('everyauth');
       everyauth.everymodule.findUserById(function(userId, callback) {
-        var name, user, _i, _len, _ref;
-        console.log('Z Z Z');
-        console.log('findUserById - userId: ' + userId);
-        console.log('Z Z Z');
-        user = usersById[userId];
-        _ref = user.facebook;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          name = _ref[_i];
-          console.log(name + " : " + user.facebook[name]);
-        }
-        console.log('user: ' + user.facebook.name);
-        everyauth.user = user;
         return callback(null, {
           userId: userId
         });
       });
-      daisyChain1 = everyauth.facebook.appId(conf.fb.appId);
-      daisyChain2 = daisyChain1.appSecret(conf.fb.appSecret);
-      daisyChain3 = daisyChain2.findOrCreateUser(function(session, accessToken, accessTokenExtra, fbUserMetadata) {
-        getUser(fbUserMetadata.id, function(result) {
+      facebookResponseCallback = function(session, token, extra, fbUserMetadata) {
+        var userByFbId;
+        getStoredUser(fbUserMetadata.id, function(result) {
+          var u;
           if (!result) {
-            return new User({
+            u = new User({
               name: fbUserMetadata.name
-            }).save();
+            });
+            return u.save();
           }
         });
-        return usersByFbId[fbUserMetadata.id] || (usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata));
-      });
-      daisyChain3.redirectPath(conf.domain);
+        userByFbId = usersByFbId[fbUserMetadata.id];
+        if (!userByFbId) {
+          userByFbId = usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata);
+        }
+        return userByFbId;
+      };
+      daisyChain = everyauth.facebook.appId(conf.fb.appId).appSecret(conf.fb.appSecret).findOrCreateUser(facebookResponseCallback);
+      daisyChain.redirectPath(conf.domain);
       app.use(everyauth.middleware());
       return everyauth.helpExpress(app);
     };

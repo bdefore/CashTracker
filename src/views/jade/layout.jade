@@ -2,9 +2,17 @@ html
   head
     title
       CashTracker
-    link(rel="stylesheet", href="/style.css")
-  !=partial('header')
-  !=partial('messages')
+    //- link(rel="stylesheet", href="/style.css")
+    //- link(rel="stylesheet/less", type="text/css", href="/bootstrap/bootstrap.less")
+    link(href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.css", rel="stylesheet")
+    // script(src="less-1.1.6.js", type="text/javascript")
+    link(type="text/css", rel="stylesheet", href="/bootstrap_styles.css")
   body
-    !=body
-  !=partial('footer')
+    !=partial('header')
+    .container
+        .content
+            !=body
+            !=partial('messages')
+
+        .footer                    
+          !=partial('footer')

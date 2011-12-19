@@ -1,29 +1,34 @@
-script(src="http://maps.google.com/maps/api/js?sensor=false")
-script(src="/sighting_on_map.js")
-script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
+.page-header
+  h1 Sighting Details 
+    small #{sighting._id}
+.row
+  .span10
+    script(src="http://maps.google.com/maps/api/js?sensor=false")
+    script(src="/sighting_on_map.js")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
 
-!= "<script type='text/javascript'>"
-!= '$(document).ready( function() { showOnMap( $("#latitude").val(), $("#longitude").val() ) } )'
-!= "</script>"
+    != "<script type='text/javascript'>"
+    != '$(document).ready( function() { showOnMap( $("#latitude").val(), $("#longitude").val() ) } )'
+    != "</script>"
 
-input(type='hidden', id='latitude', value='#{sighting.latitude}')
-input(type='hidden', id='longitude', value='#{sighting.longitude}')
+    input(type='hidden', id='latitude', value='#{sighting.latitude}')
+    input(type='hidden', id='longitude', value='#{sighting.longitude}')
 
-h1 Viewing sighting ##{sighting._id}
-
-div#mapContainer
-ul
-  li Serial: 
-    = sighting.serial
-  li Currency: 
-    = bill.currency
-  li Denomination: 
-    = bill.denomination
-  li Latitude: 
-    = sighting.latitude
-  li Longitude: 
-    = sighting.longitude
-  li Comment: 
-    = sighting.comment
-  li
-    a(href="#{sighting._id}/edit") Edit this sighting
+    div#mapContainer
+    ul
+      li Serial: 
+        = sighting.serial
+      li Currency: 
+        = bill.currency
+      li Denomination: 
+        = bill.denomination
+      li Latitude: 
+        = sighting.latitude
+      li Longitude: 
+        = sighting.longitude
+      li Comment: 
+        = sighting.comment
+      li
+        a(href="#{sighting._id}/edit") Edit this sighting
+  .span4
+      h3 Secondary content

@@ -1,8 +1,9 @@
-- if (everyauth.loggedIn)
-    p You are logged in with Facebook user: #{everyauth.facebook.user.name}. 
-        a(href="/account") View your account
-        .
-- else
-    p You are not linked with your Facebook account yet. If you'd like to save a record of your sightings, please 
-        a(href="/auth/facebook") log in
-        .
+footer
+    - if (everyauth.loggedIn)
+        p You are logged in with Facebook user: #{everyauth.facebook.user.name}. 
+            a(href="/account") View your account
+            .
+    - else
+        p If you'd like to save a record of your sightings, please 
+            !=partial('fb')
+            // !=partial('fb_login')

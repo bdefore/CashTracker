@@ -85,6 +85,7 @@ class Auth
 
   UserSchema = new mongoose.Schema({
     name        : String
+    fbId        : Number
   })
   mongoose.model 'User', UserSchema
   User = mongoose.model 'User'
@@ -107,7 +108,7 @@ class Auth
     return user
 
   getStoredUser = (id, callback) ->
-    User.findOne { id: id }, (error, result) ->
+    User.findOne { fbId: id }, (error, result) ->
       if error
         console.log "Error getting user: " + error
 
@@ -128,11 +129,18 @@ class Auth
     # Create callback that will store user to db
     facebookResponseCallback = (session, token, extra, fbUserMetadata) ->
 
+      console.log "Checking to see if we have FB user: " + fbUserMetadata.id
+      console.log fbUserMetadata
+
       getStoredUser fbUserMetadata.id, (result) ->
         if !result
+          console.log "Is new user record"
           u = new User
-            name: fbUserMetadata.name
+            name:   fbUserMetadata.name
+            fbId:   fbUserMetadata.id
           u.save()
+        else
+          console.log "Stored user record found"
 
       # Check if this user has already been added to our list of users
       # If not, add. Then return this user

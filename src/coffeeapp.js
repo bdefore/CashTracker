@@ -101,7 +101,8 @@
     mongoose.connect(conf.database);
 
     UserSchema = new mongoose.Schema({
-      name: String
+      name: String,
+      fbId: Number
     });
 
     mongoose.model('User', UserSchema);
@@ -132,7 +133,7 @@
 
     getStoredUser = function(id, callback) {
       return User.findOne({
-        id: id
+        fbId: id
       }, function(error, result) {
         if (error) console.log("Error getting user: " + error);
         if (!callback) {
@@ -153,13 +154,19 @@
       });
       facebookResponseCallback = function(session, token, extra, fbUserMetadata) {
         var userByFbId;
+        console.log("Checking to see if we have FB user: " + fbUserMetadata.id);
+        console.log(fbUserMetadata);
         getStoredUser(fbUserMetadata.id, function(result) {
           var u;
           if (!result) {
+            console.log("Is new user record");
             u = new User({
-              name: fbUserMetadata.name
+              name: fbUserMetadata.name,
+              fbId: fbUserMetadata.id
             });
             return u.save();
+          } else {
+            return console.log("Stored user record found");
           }
         });
         userByFbId = usersByFbId[fbUserMetadata.id];

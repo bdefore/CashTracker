@@ -30,6 +30,10 @@
       plural = name + 's';
       prefix = '/' + plural;
       if (name === 'app') prefix = '/';
+      if (name === 'account') {
+        plural = name;
+        prefix = "/account";
+      }
       return Object.keys(actions).map(function(action) {
         var fn;
         fn = controllerAction(name, plural, action, actions[action]);
@@ -148,9 +152,7 @@
       var daisyChain, everyauth, facebookResponseCallback;
       everyauth = require('everyauth');
       everyauth.everymodule.findUserById(function(userId, callback) {
-        return callback(null, {
-          userId: userId
-        });
+        return User.findOne(userId, callback);
       });
       facebookResponseCallback = function(session, token, extra, fbUserMetadata) {
         var userByFbId;
@@ -176,7 +178,7 @@
         return userByFbId;
       };
       daisyChain = everyauth.facebook.appId(conf.fb.appId).appSecret(conf.fb.appSecret).findOrCreateUser(facebookResponseCallback);
-      daisyChain.redirectPath(conf.domain);
+      daisyChain.redirectPath(conf.domain + "/account");
       app.use(everyauth.middleware());
       return everyauth.helpExpress(app);
     };
@@ -206,7 +208,8 @@
       serial: String,
       latitude: Number,
       longitude: Number,
-      comment: String
+      comment: String,
+      submitterId: String
     });
 
     mongoose.model('Bill', BillSchema);
@@ -233,13 +236,13 @@
           b = new Bill({
             serial: 'X18084287225',
             denomination: 20,
-            currency: 'euro'
+            currency: 'Euro'
           });
           b.save();
           b = new Bill({
             serial: 'Y81450250492',
             denomination: 10,
-            currency: 'euro'
+            currency: 'Euro'
           });
           b.save();
           s = new Sighting({
@@ -306,6 +309,8 @@
     secret: 'bunniesonfire'
   }));
 
+  Auth.bootEveryAuth(app);
+
   app.use(app.router);
 
   app.use(express.static(__dirname + '/public'));
@@ -315,8 +320,6 @@
   app.set('views', __dirname + '/views/' + conf.template_engine);
 
   app.set('view engine', conf.template_engine);
-
-  Auth.bootEveryAuth(app);
 
   app.error = function(err, req, res) {
     return render('500');

@@ -1,5 +1,8 @@
 - if (everyauth.loggedIn)
-    p You are logged in with Facebook user: #{everyauth.facebook.user.name}
+    p You are logged in with Facebook user: #{everyauth.facebook.user.name}. 
+        a(href="/account") View your account
+        .
 - else
-    p You are not linked with your Facebook account yet. 
-        a(href="/auth/facebook") Log in via Facebook
+    p You are not linked with your Facebook account yet. If you'd like to save a record of your sightings, please 
+        a(href="/auth/facebook") log in
+        .

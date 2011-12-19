@@ -25,6 +25,13 @@ class MVC
     # Special when for "app"
     if name == 'app'
       prefix = '/'
+    
+    # TO FIX: Shouldn't need to hijack the nature of objects here
+    # just to redirect user to their own account (there will never
+    # be access to more than one at a time.
+    if name == 'account'
+      plural = name
+      prefix = "/account"
 
     Object.keys(actions).map (action) ->
       fn = controllerAction(name, plural, action, actions[action])
@@ -124,7 +131,8 @@ class Auth
     # everyauth requires this override in order to store
     # local version of facebook user data
     everyauth.everymodule.findUserById (userId, callback) ->
-      callback null, { userId: userId }
+      User.findOne userId, callback
+      # callback null, { userId: userId }
 
     # Create callback that will store user to db
     facebookResponseCallback = (session, token, extra, fbUserMetadata) ->
@@ -161,7 +169,7 @@ class Auth
 
     # TO FIX: If this could be appeneded to previous call, daisyChain
     # variable is unnecessary
-    daisyChain.redirectPath conf.domain
+    daisyChain.redirectPath conf.domain + "/account"
 
     # Link everyauth to express, in order to access user object in view
     # templates
@@ -187,7 +195,8 @@ class DB
     serial        : String,
     latitude      : Number,
     longitude     : Number,
-    comment     : String
+    comment       : String,
+    submitterId   : String
   })
 
   mongoose.model 'Bill', BillSchema
@@ -213,13 +222,13 @@ class DB
         b = new Bill
           serial: 'X18084287225'
           denomination: 20
-          currency: 'euro'
+          currency: 'Euro'
         b.save()
 
         b = new Bill
           serial: 'Y81450250492'
           denomination: 10
-          currency: 'euro'
+          currency: 'Euro'
         b.save()
 
         s = new Sighting
@@ -269,6 +278,8 @@ DB.prepopulate()
 
 # BEWARE: Sequence matters.
 # Note: express.session call MUST precede auth init
+# Note: Auth.bootEveryAuth MUST precede app.router call, or else 
+# req.user is not assigned
 express = require('express')
 app = express.createServer()
 app.use(express.logger(':method :url :status'))
@@ -278,6 +289,7 @@ app.use(express.methodOverride())
 app.use(express.cookieParser())
 app.use(express.favicon())
 app.use(express.session({ secret: 'bunniesonfire' }))
+Auth.bootEveryAuth app
 app.use(app.router)
 app.use(express.static(__dirname + '/public'))
 
@@ -296,8 +308,6 @@ app.set('views', __dirname + '/views/' + conf.template_engine)
 app.set('view engine', conf.template_engine)
 
 # @register coffee: require('coffeekup').adapters.express
-
-Auth.bootEveryAuth app
 
 # Example 500 page
 app.error = (err, req, res) -> render '500'

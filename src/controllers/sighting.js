@@ -55,7 +55,8 @@ module.exports = {
 
   add: function(req, res, next){
     // TO FIX: Blank object construction shouldn't be necessary. Validate forms instead.
-    var bill = new Bill( { serial: "", currency: "", denomination: 10 } );
+    // TO FIX: Default to 10?
+    var bill = new Bill( { serial: "", currency: "Euro", denomination: 10 } );
     var sighting = new Sighting( { serial: bill.serial, latitude: "", longitude: "", comment: "" });
   	res.render( sighting, { bill: bill } );
   },
@@ -94,21 +95,44 @@ module.exports = {
   
   update: function(req, res, next){
   	var sighting = req.body.sighting;
-	new Sighting( { serial: sighting.serial, latitude: sighting.latitude, longitude: sighting.longitude, comment: sighting.comment } ).save();
-  	getBillBySerial(sighting.serial, function(error, result){
-  		if(!result)
-  		{
-	  		new Bill( { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency } ).save();
-	  		console.log("saved new sighting to new record");
-	  		req.flash('info', 'Successfully saved to new record');
-	  		res.redirect('/sightings');
-  		}
-  		else
-  		{
-  			console.log("saved new sighting to preexisting record: " + result);
-	  		req.flash('info', 'Successfully saved to preexisting record');
-  			res.redirect('/sightings');
-  		}
-  	});  	
+
+    // TO FIX: Move to utils class
+    
+    // Validate
+    // Euro example: X18084287225
+    if(sighting.serial.length != 12)
+    {
+
+      req.flash('info', 'Serial must contain 12 characters, the first beginning with a letter');
+      res.redirect('/sightings/add');
+    }
+    else
+    {
+      var s = new Sighting( { serial: sighting.serial, latitude: sighting.latitude, longitude: sighting.longitude, comment: sighting.comment } )
+      
+      // If user is logged in, tag their id to this submission
+      if(req.user)
+      {
+        s.submitterId = req.user.id;
+      }
+      s.save();
+
+      // If there's no existing bill of this sighting, create an entry for it
+      getBillBySerial(sighting.serial, function(error, result){
+        if(!result)
+        {
+          new Bill( { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency } ).save();
+          console.log("saved new sighting to new record");
+          req.flash('info', 'Successfully saved to new record');
+          res.redirect('/sightings');
+        }
+        else
+        {
+          console.log("saved new sighting to preexisting record: " + result);
+          req.flash('info', 'Successfully saved to preexisting record');
+          res.redirect('/sightings');
+        }
+      });   
+    }
   }
 };

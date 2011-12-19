@@ -1,0 +1,27 @@
+h1 User Account
+- if (everyauth.loggedIn)
+    p Name: #{everyauth.facebook.user.name}
+    p FB ID: #{everyauth.facebook.user.id}
+    p CashTracker ID: #{everyauth.user.id}
+
+    h1 Your sightings
+    a(href="/sightings/add") Add New Sighting
+
+    ul
+      - sightings.forEach(function(sighting){
+        li
+            a(href="/sightings/#{sighting._id}") #{sighting.latitude} #{sighting.longitude} - #{sighting.comment}
+      - })
+
+    h1 Your related bills
+
+    ul
+        - bills.forEach(function(bill){
+            li
+                a(href="/bills/#{bill.serial}")
+                    = bill.serial
+        - })
+
+- else
+    p You are not linked with your Facebook account yet. 
+        a(href="/auth/facebook") Log in via Facebook

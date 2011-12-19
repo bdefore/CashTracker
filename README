@@ -1,0 +1,16 @@
+Dev workflow tips:
+
+== Facebook integration
+
+Note the local.host:3000 nonsense, due to FB security localhost:3000 is not allowed
+
+== CoffeeScript, watching and redeploying per change
+
+At the moment, there's a two terminal solution:
+
+Terminal 1:
+	From main dir, run: jitter src src
+Terminal 2:
+	From main dir, run: nodemon src/coffeeapp.js local.host:3000
+
+This will then compile CS down to JS per change and then nodemon will restart node.js

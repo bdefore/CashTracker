@@ -134,15 +134,21 @@ class Auth
 
       callback null, { userId: userId }
 
-    daisyChain = everyauth.facebook.appId(conf.fb.appId).appSecret(conf.fb.appSecret).findOrCreateUser (session, accessToken, accessTokenExtra, fbUserMetadata) ->
-      getUser fbUserMetadata.id, (result) ->
-        if !result
-          new User( { name: fbUserMetadata.name }).save()
+    # TO FIX: Find more elegant way of complying with line length
+    # than making daisychain variables and \ char. #toolazytoreaddocs
+    daisyChain1 = everyauth.facebook.appId(conf.fb.appId)
+    daisyChain2 = daisyChain1.appSecret(conf.fb.appSecret)
+    daisyChain3 = daisyChain2.findOrCreateUser \
+      (session, accessToken, accessTokenExtra, fbUserMetadata) ->
+        getUser fbUserMetadata.id, (result) ->
+          if !result
+            new User( { name: fbUserMetadata.name }).save()
 
-      return usersByFbId[fbUserMetadata.id] ||
-        (usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata))
+        return usersByFbId[fbUserMetadata.id] ||
+          (usersByFbId[fbUserMetadata.id] = \
+            addUser('facebook', fbUserMetadata))
 
-    daisyChain.redirectPath conf.domain
+    daisyChain3.redirectPath conf.domain
 
     # # everyauth.everymodule.findUserById( function (userId, callback) {
     # #   User.findById(userId, callback)
@@ -181,43 +187,79 @@ class DB
   mongoose.model 'Sighting', SightingSchema
   Sighting = mongoose.model 'Sighting'
 
-  @connect: ->
+  @connect: () ->
     mongoose.connect conf.database
     console.log "MongoDB connection success..."
 
-  @prepopulate: ->
+  @prepopulate: () ->
 
     console.log "Checking for existing data..."
 
     Sighting.findOne null, (error, result) ->
-      if result console.log "Found a sighting... skipping dummy data creation..."
+      if result
+        console.log "Found a sighting... skipping dummy data creation..."
       else
         console.log "No sightings found, filling with dummy data..."
 
-        new Bill( { serial: 'X18084287225', denomination: 20, currency: 'euro' } ).save()
-        new Bill( { serial: 'Y81450250492', denomination: 10, currency: 'euro' } ).save()
+        b = new Bill
+          serial: 'X18084287225'
+          denomination: 20
+          currency: 'euro'
+        b.save()
+        
+        b = new Bill
+          serial: 'Y81450250492'
+          denomination: 10
+          currency: 'euro'
+        b.save()
 
-        new Sighting( { serial: 'X18084287225', latitude: "41.377301033335414", longitude: "2.189307280815329", comment: 'I got this from my mother' } ).save()
-        new Sighting( { serial: 'Y81450250492', latitude: "31.377301033335414", longitude: "-32.189307280815329", comment: 'I got this from a restaurant' } ).save()
-        new Sighting( { serial: 'Y81450250492', latitude: "-41.377301033335414", longitude: "9.189307280815329", comment: 'I got this from a bar' } ).save()
-        new Sighting( { serial: 'Y81450250492', latitude: "11.377301033335414", longitude: "12.189307280815329", comment: 'I got this from somewhere' } ).save()
+        s = new Sighting
+          serial: 'X18084287225'
+          latitude: "41.377301033335414"
+          longitude: "2.189307280815329"
+          comment: 'I got this from my mother'
+        s.save()
+
+        s = new Sighting
+          serial: 'Y81450250492'
+          latitude: "31.377301033335414"
+          longitude: "-32.189307280815329"
+          comment: 'I got this from a restaurant'
+        s.save()
+
+        s = new Sighting
+          serial: 'Y81450250492'
+          latitude: "61.377301033335414"
+          longitude: "-12.189307280815329"
+          comment: 'I got this from my sister'
+        s.save()
+
+        s = new Sighting
+          serial: 'Y81450250492'
+          latitude: "11.377301033335414"
+          longitude: "-22.189307280815329"
+          comment: 'I got this from Bob'
+        s.save()
 
         console.log "Dummy data created..."
 
-
 # require('zappa') ->
 
-DB.connect
-DB.prepopulate
+DB.connect()
+DB.prepopulate()
 
-# @use 'bodyParser', 'cookieParser', 'methodOverride', app.router, static: __dirname + '/public'
+# @use 'bodyParser', 'cookieParser', 'methodOverride', app.router, \
+  # static: __dirname + '/public'
 
-# @use 'bodyParser', 'cookieParser', 'methodOverride', session: { secret: 'bunniesonfire' }, app router, static: __dirname + '/public'
+# @use 'bodyParser', 'cookieParser', 'methodOverride', session: \
+  # { secret: 'bunniesonfire' }, app router, static: __dirname + '/public'
 
 # @configure
 #   development: => @use errorHandler: {dumpExceptions: on}
 #   production: => @use 'errorHandler'
 
+# BEWARE: Sequence matters.
+# Note: express.session call MUST precede auth init
 express = require('express')
 app = express.createServer()
 app.use(express.logger(':method :url :status'))
@@ -226,7 +268,7 @@ app.use(express.bodyParser())
 app.use(express.methodOverride())
 app.use(express.cookieParser())
 app.use(express.favicon())
-app.use(express.session({ secret: 'bunniesonfire' })) # must precede auth init
+app.use(express.session({ secret: 'bunniesonfire' }))
 app.use(app.router)
 app.use(express.static(__dirname + '/public'))
 
@@ -237,7 +279,8 @@ conf = require './conf'
 # # get '/': -> render 'index.jade'
 # @get '/': "hi!"
 
-# blacklist = 'scope self locals filename debug compiler compileDebug inline'.split ' '
+# blacklist = 'scope self locals filename debug compiler compileDebug \
+  # inline'.split ' '
 # @register jade: @zappa.adapter 'jade', blacklist
 
 app.set('views', __dirname + '/views/' + conf.template_engine)
@@ -250,7 +293,9 @@ Auth.bootEveryAuth app
 # Example 500 page
 app.error = (err, req, res) -> render '500'
 
-# TO FIX: 404 not hooked up right since coffeescript migration. Confusion between use and app.use
+# TO FIX: 404 not hooked up right since coffeescript migration. Confusion
+# between use and app.use
+
 # Example 404 page via simple Connect middleware
 # use(function(req, res){
 #   res.render('404')

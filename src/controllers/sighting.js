@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
 
 mongoose.connect(conf.database);
 
-console.log("MongoDB connection success...")
+console.log("sighting.js: MongoDB connection success...")
 
 var Bill = mongoose.model('Bill');
 

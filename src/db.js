@@ -36,7 +36,7 @@ function connect() {
 
 	mongoose.connect(conf.database);
 
-	console.log("MongoDB connection success...")
+	console.log("db.js: MongoDB connection success...")
 }
 
 function prepopulate() {

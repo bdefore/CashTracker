@@ -41,7 +41,7 @@
   },
   "name": "cashtracker",
   "subdomain": "cashtracker",
-  "version": "0.0.0-19",
+  "version": "0.0.0-21",
   "repository": {},
   "env": {
     "SUBDOMAIN": "cashtracker",

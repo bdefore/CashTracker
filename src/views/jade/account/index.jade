@@ -1,5 +1,5 @@
 .page-header
-    h1 User Account
+    h1 User Account 
         small yon vittles be waiting
 .row
     .span10
@@ -9,13 +9,14 @@
             p CashTracker ID: #{everyauth.user.id}
 
             h1 Your sightings
-            a(href="/sightings/add") Add New Sighting
 
             ul
               - sightings.forEach(function(sighting){
                 li
                     a(href="/sightings/#{sighting._id}") #{sighting.latitude} #{sighting.longitude} - #{sighting.comment}
               - })
+
+            a(href="/sightings/add") Add New Sighting
 
             h1 Your related bills
 
@@ -29,5 +30,5 @@
         - else
             p You are not linked with your Facebook account yet. 
                 a(href="/auth/facebook") Log in via Facebook
-    .spain4
+    .span4
         h3 Secondary content

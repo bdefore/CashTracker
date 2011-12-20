@@ -42,7 +42,7 @@
     DB.prepopulate = function() {
       console.log("Checking for existing data...");
       return Sighting.findOne(null, function(error, result) {
-        var Bil, b, s;
+        var b, s;
         if (result) {
           return console.log("Found a sighting... skipping dummy data creation...");
         } else {
@@ -53,7 +53,7 @@
             currency: 'Euro'
           });
           b.save();
-          Bil = l({
+          b = new Bill({
             serial: 'Y81450250492',
             denomination: 10,
             currency: 'Euro'
@@ -94,6 +94,6 @@
 
     return DB;
 
-  }).call(this);
+  })();
 
 }).call(this);

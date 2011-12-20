@@ -6,13 +6,15 @@ module.exports = class DB
   # Mongodb schema
 
   @Bill = mongoose.model 'Bill' , new mongoose.Schema {
+    # _id           : String, # assigned by mongodb
     serial        : String,
     denomination  : Number,
-    currency      : String
+    currency      : { type: String, default: "Euro" }
   }
 
   @Sighting = mongoose.model 'Sighting', new mongoose.Schema {
-    date          : Date,
+    # _id           : String, # assigned by mongodb
+    date          : { type: Date, default: Date.now }
     serial        : String,
     latitude      : Number,
     longitude     : Number,
@@ -24,70 +26,72 @@ module.exports = class DB
   # Begin service logic
   # ===================
 
+  @debug = true;
+
   @getBills: (filterBySerial, callback) =>
-    console.log "getting bill by serial: " + filterBySerial + " (or all if serial is null)"
+    console.log "getBills serial: " + filterBySerial + " (or all if serial is null)"
     filter = {}
     if filterBySerial
       filter = { serial: filterBySerial }
     @Bill.find filter, (error, result) =>
       if error
-        console.log "Error getting bills: " + error
-      console.log "results: " + result
+        console.log "getBills error: " + error
+      console.log "getBills results: " + result
       if !callback
-        console.log "Warning: bills requested without callback"
+        console.log "Warning: getBills requested without callback"
       else
         callback result
 
   @getBillBySerial: (filterBySerial, callback) =>
-    console.log "getting bill of serial: " + filterBySerial
+    console.log "getBillBySerial serial: " + filterBySerial
     @Bill.findOne { serial: filterBySerial }, (error, result) =>
       if error
-        console.log "Error getting bills: " + error
-      console.log "bill results: " + result
+        console.log "getBillBySerial error: " + error
+      console.log "getBillBySerial results: " + result
       if !callback
-        console.log "Warning: bills requested without callback"
+        console.log "Warning: getBillBySerial requested without callback"
       else
         callback error, result
 
   @getSightings: (filterById, callback) =>
-    console.log "getting sighting of id: " + filterById + " (or all if id is null)"
+    console.log "getSightings id: " + filterById + " (or all if id is null)"
     filter = {}
     if filterById
       filter = { _id: filterById }
     @Sighting.find filter, (error, result) =>
       if error
-        console.log "Error getting sightings: " + error
-      console.log "results: " + result
+        console.log "getSightings error: " + error
+      console.log "getSightings results: " + result
       if !callback
-        console.log "Warning: sightings requested without callback"
+        console.log "Warning: getSightings requested without callback"
       else
         callback result
 
   @getSightingsBySerial: (filterBySerial, callback) =>
-    console.log "getting sighting of serial: " + filterBySerial + " (or all if serial is null)"
+    console.log "getSightingsBySerial serial: " + filterBySerial + " (or all if serial is null)"
     filter = {}
     if filterBySerial
       filter = { serial: filterBySerial }
     @Sighting.find filter, (error, result) =>
       if error
-        console.log "Error getting sightings: " + error
-      console.log "results: " + result
+        console.log "getSightingsBySerial error: " + error
+      console.log "getSightingsBySerial results: " + result
       if !callback
-        console.log "Warning: sightings requested without callback"
+        console.log "Warning: getSightingsBySerial requested without callback"
       else
         callback result
 
   @getSightingsBySubmitter: (filterBySubmitterId, callback) =>
-    console.log "getting sighting of id: " + filterBySubmitterId + " (or all if id is null)"
+    console.log "getSightingsBySubmitter id: " + filterBySubmitterId + " (or all if id is null)"
     filter = {}
     if filterBySubmitterId
       filter = { submitterId: filterBySubmitterId }
     @Sighting.find filter, (error, result) =>
       if error
-        console.log "Error getting sightings: " + error
-      console.log "results: " + result
+        console.log "getSightingsBySubmitter error: " + error
+      console.log "getSightingsBySubmitter results: " + result
       if !callback
-        console.log "Warning: sightings requested without callback"
+        console.log "Warning: getSightingsBySubmitter requested without callback"
       else
         callback result
 
@@ -135,7 +139,6 @@ module.exports = class DB
     fakeComment += @getRandomLetter() for n in [0..20]
 
     sighting = new @Sighting
-      date: new Date()
       serial: fakeSerial
       latitude: @getRandomCoordinate()
       longitude: @getRandomCoordinate()
@@ -151,7 +154,7 @@ module.exports = class DB
       else
         console.log "No sightings found, filling with dummy data..."
 
-        for n in [0..20]
+        for n in [0..10]
           s = @getRandomSighting()
           b = new @Bill       
             serial: s.serial

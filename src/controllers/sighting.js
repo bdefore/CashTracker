@@ -1,5 +1,6 @@
 var conf = require('../conf')
 ,	everyauth = require('everyauth')
+, sha1 = require('sha1')
 , DB = require('../db.js');
 
 var Bill = DB.Bill;
@@ -19,7 +20,8 @@ module.exports = {
     // TO FIX: Blank object construction shouldn't be necessary. Validate forms instead.
     // TO FIX: Default to 10?
     var bill = new Bill( { serial: "", currency: "Euro", denomination: 10 } );
-    var sighting = new Sighting( { date: new Date(), serial: bill.serial, latitude: "", longitude: "", comment: "" });
+    var sighting = new Sighting( { serial: bill.serial, latitude: "", longitude: "", comment: "" });
+
   	res.render( sighting, { bill: bill } );
   },
 
@@ -28,10 +30,15 @@ module.exports = {
   show: function(req, res, next){
    	DB.getSightings(req.params.id, function(result){
       // TO FIX: Periodic server crashes when result appears to be null
-      if(result || result[0]) {
+      if(result && result[0]) {
         DB.getBillBySerial(result[0].serial, function(error, bill){
           res.render(result[0], { bill: bill });
         });
+      }
+      else
+      {
+        // TO FIX: Better than pass empty object? Inform user of error?
+        res.render([], { bill: {} } );
       }
     });
   },
@@ -41,44 +48,77 @@ module.exports = {
   edit: function(req, res, next){
   	if(req.params.id)
   	{
-	   	DB.getSightings(req.params.id, function(result){
-		    DB.getBillBySerial(result[0].serial, function(error, bill){
-		   		res.render(result[0], { bill: bill });
-		  	});
+	   	DB.getSightings(req.params.id, function(result)
+      {
+        if(result && result[0])
+        {
+  		    DB.getBillBySerial(result[0].serial, function(error, bill)
+          {
+            res.render(result[0], { bill: bill });
+  		  	});
+        }
+        else
+        {
+          res.redirect('/sightings/add');
+        }
 	    });
   	}
   	else
   	{
-	   	res.render( new Sighting(), { bill: new Bill() } );
+	   	res.redirect('/sightings/add');
   	}
   },
 
   // PUT /sightings/:id
   
   update: function(req, res, next){
-  	var sighting = req.body.sighting;
+    var sighting = new Sighting( req.body.sighting )
 
-    // TO FIX: Move to utils class
-    
     // Validate
     // Euro example: X18084287225
     // USD example: CE24659434D (E5 underneath that) on a 20
     if(sighting.serial.length != 12)
     {
-
       req.flash('info', 'Serial must contain 12 characters, the first beginning with a letter');
       res.redirect('/sightings/add');
     }
     else
     {
-      var s = new Sighting( { date: new Date(), serial: sighting.serial, latitude: sighting.latitude, longitude: sighting.longitude, comment: sighting.comment } )
-      
       // If user is logged in, tag their id to this submission
       if(req.user)
       {
-        s.submitterId = req.user.id;
+        sighting.submitterId = req.user.id;
       }
-      s.save();
+
+      Sighting.findById(sighting.id, function(error, result){
+
+        if(result)
+        {
+          console.log("Updating existing entry")
+
+          Sighting.update(
+              { _id: sighting._id },
+              { serial: sighting.serial, latitude: sighting.latitude, longitude: sighting.longitude, comment: sighting.comment },
+              null,
+              function(error) {
+                if(error)
+                {
+                  console.log ("Error updating entry: " + error)
+                }
+                else
+                {
+                  console.log ("=== Successful update === ")
+                }
+                  
+              });
+        }
+        else
+        {
+          // New sighting, save new entry
+          console.log("Saving new entry: '" + result + "'")
+          sighting.save();
+        }
+      });     
 
       // If there's no existing bill of this sighting, create an entry for it
       DB.getBillBySerial(sighting.serial, function(error, result){
@@ -86,13 +126,13 @@ module.exports = {
         {
           new Bill( { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency } ).save();
           console.log("saved new sighting to new record");
-          req.flash('info', 'Successfully saved to new record');
+          req.flash('info', 'Successfully saved to new bill record');
           res.redirect('/sightings');
         }
         else
         {
           console.log("saved new sighting to preexisting record: " + result);
-          req.flash('info', 'Successfully saved to preexisting record');
+          req.flash('info', 'Successfully saved to a bill that already had records');
           res.redirect('/sightings');
         }
       });   

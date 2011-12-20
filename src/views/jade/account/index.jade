@@ -3,6 +3,8 @@
         small yon vittles be waiting
 .row
     .span10
+        !=partial('messages')
+    
         - if (everyauth.loggedIn)
             p Name: #{everyauth.facebook.user.name}
             p FB ID: #{everyauth.facebook.user.id}

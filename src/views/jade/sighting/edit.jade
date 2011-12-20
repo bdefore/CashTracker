@@ -3,8 +3,14 @@
     small oh noes, uncle joe never lies!
 .row
   .span10
+    !=partial('messages')
+    
     form(method="post", action="/sightings/!=sighting.id")
       input(type="hidden", name="_method", value="put")
+
+      //- To preserve existing id (know when to update or when to add)
+      input(type="hidden", name="sighting[_id]", value="#{sighting._id}")
+
       p Serial:
         input(type="text", name="sighting[serial]", value="#{sighting.serial}")
       p Currency:

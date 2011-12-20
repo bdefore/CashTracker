@@ -13,11 +13,17 @@
     DB.Bill = mongoose.model('Bill', new mongoose.Schema({
       serial: String,
       denomination: Number,
-      currency: String
+      currency: {
+        type: String,
+        "default": "Euro"
+      }
     }));
 
     DB.Sighting = mongoose.model('Sighting', new mongoose.Schema({
-      date: Date,
+      date: {
+        type: Date,
+        "default": Date.now
+      },
       serial: String,
       latitude: Number,
       longitude: Number,
@@ -25,9 +31,11 @@
       submitterId: String
     }));
 
+    DB.debug = true;
+
     DB.getBills = function(filterBySerial, callback) {
       var filter;
-      console.log("getting bill by serial: " + filterBySerial + " (or all if serial is null)");
+      console.log("getBills serial: " + filterBySerial + " (or all if serial is null)");
       filter = {};
       if (filterBySerial) {
         filter = {
@@ -35,10 +43,10 @@
         };
       }
       return DB.Bill.find(filter, function(error, result) {
-        if (error) console.log("Error getting bills: " + error);
-        console.log("results: " + result);
+        if (error) console.log("getBills error: " + error);
+        console.log("getBills results: " + result);
         if (!callback) {
-          return console.log("Warning: bills requested without callback");
+          return console.log("Warning: getBills requested without callback");
         } else {
           return callback(result);
         }
@@ -46,14 +54,14 @@
     };
 
     DB.getBillBySerial = function(filterBySerial, callback) {
-      console.log("getting bill of serial: " + filterBySerial);
+      console.log("getBillBySerial serial: " + filterBySerial);
       return DB.Bill.findOne({
         serial: filterBySerial
       }, function(error, result) {
-        if (error) console.log("Error getting bills: " + error);
-        console.log("bill results: " + result);
+        if (error) console.log("getBillBySerial error: " + error);
+        console.log("getBillBySerial results: " + result);
         if (!callback) {
-          return console.log("Warning: bills requested without callback");
+          return console.log("Warning: getBillBySerial requested without callback");
         } else {
           return callback(error, result);
         }
@@ -62,7 +70,7 @@
 
     DB.getSightings = function(filterById, callback) {
       var filter;
-      console.log("getting sighting of id: " + filterById + " (or all if id is null)");
+      console.log("getSightings id: " + filterById + " (or all if id is null)");
       filter = {};
       if (filterById) {
         filter = {
@@ -70,10 +78,10 @@
         };
       }
       return DB.Sighting.find(filter, function(error, result) {
-        if (error) console.log("Error getting sightings: " + error);
-        console.log("results: " + result);
+        if (error) console.log("getSightings error: " + error);
+        console.log("getSightings results: " + result);
         if (!callback) {
-          return console.log("Warning: sightings requested without callback");
+          return console.log("Warning: getSightings requested without callback");
         } else {
           return callback(result);
         }
@@ -82,7 +90,7 @@
 
     DB.getSightingsBySerial = function(filterBySerial, callback) {
       var filter;
-      console.log("getting sighting of serial: " + filterBySerial + " (or all if serial is null)");
+      console.log("getSightingsBySerial serial: " + filterBySerial + " (or all if serial is null)");
       filter = {};
       if (filterBySerial) {
         filter = {
@@ -90,10 +98,10 @@
         };
       }
       return DB.Sighting.find(filter, function(error, result) {
-        if (error) console.log("Error getting sightings: " + error);
-        console.log("results: " + result);
+        if (error) console.log("getSightingsBySerial error: " + error);
+        console.log("getSightingsBySerial results: " + result);
         if (!callback) {
-          return console.log("Warning: sightings requested without callback");
+          return console.log("Warning: getSightingsBySerial requested without callback");
         } else {
           return callback(result);
         }
@@ -102,7 +110,7 @@
 
     DB.getSightingsBySubmitter = function(filterBySubmitterId, callback) {
       var filter;
-      console.log("getting sighting of id: " + filterBySubmitterId + " (or all if id is null)");
+      console.log("getSightingsBySubmitter id: " + filterBySubmitterId + " (or all if id is null)");
       filter = {};
       if (filterBySubmitterId) {
         filter = {
@@ -110,10 +118,10 @@
         };
       }
       return DB.Sighting.find(filter, function(error, result) {
-        if (error) console.log("Error getting sightings: " + error);
-        console.log("results: " + result);
+        if (error) console.log("getSightingsBySubmitter error: " + error);
+        console.log("getSightingsBySubmitter results: " + result);
         if (!callback) {
-          return console.log("Warning: sightings requested without callback");
+          return console.log("Warning: getSightingsBySubmitter requested without callback");
         } else {
           return callback(result);
         }
@@ -150,7 +158,6 @@
         fakeComment += DB.getRandomLetter();
       }
       return sighting = new DB.Sighting({
-        date: new Date(),
         serial: fakeSerial,
         latitude: DB.getRandomCoordinate(),
         longitude: DB.getRandomCoordinate(),
@@ -166,7 +173,7 @@
           return console.log("Found a sighting... skipping dummy data creation...");
         } else {
           console.log("No sightings found, filling with dummy data...");
-          for (n = 0; n <= 20; n++) {
+          for (n = 0; n <= 10; n++) {
             s = DB.getRandomSighting();
             b = new DB.Bill({
               serial: s.serial,

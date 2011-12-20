@@ -4,6 +4,8 @@
             = sightings[0].serial
 .row
     .span10
+        !=partial('messages')
+
         ul
           - sightings.forEach(function(sighting){
             li

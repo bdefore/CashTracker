@@ -6,7 +6,7 @@
     function Home() {}
 
     Home.index = function(req, res) {
-      return res.render;
+      return res.render();
     };
 
     return Home;

@@ -5,7 +5,7 @@
 
   MVC = require('./mvc');
 
-  Auth = require('.auth');
+  Auth = require('./auth');
 
   DB.connect();
 

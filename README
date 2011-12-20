@@ -9,8 +9,14 @@ Note the local.host:3000 nonsense, due to FB security localhost:3000 is not allo
 At the moment, there's a two terminal solution:
 
 Terminal 1:
-	From main dir, run: jitter src src
+	From main dir, run: jitter src/coffee src
 Terminal 2:
-	From main dir, run: nodemon src/coffeeapp.js local.host:3000
+	From main dir, run: nodemon src/app.js local.host:3000
+	Add the --debug switch to get node-monitor debugging
 
 This will then compile CS down to JS per change and then nodemon will restart node.js
+
+== Lint
+
+coffeelint 
+http://www.coffeelint.org/

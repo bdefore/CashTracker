@@ -22,10 +22,10 @@ module.exports = class MVC
     plural = name + 's' # realistically we would use an inflection lib
     prefix = '/' + plural
 
-    # Special when for "home"
+    # Special for loading home page
     if name == 'home'
       prefix = '/'
-    
+
     # TO FIX: Shouldn't need to hijack the nature of objects here
     # just to redirect user to their own account (there will never
     # be access to more than one at a time.

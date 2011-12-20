@@ -2,7 +2,7 @@
 
 DB = require './db'
 MVC = require './mvc'
-Auth = require '.auth'
+Auth = require './auth'
 
 DB.connect()
 DB.prepopulate()
@@ -19,7 +19,7 @@ DB.prepopulate()
 
 # BEWARE: Sequence matters.
 # Note: express.session call MUST precede auth init
-# Note: Auth.bootEveryAuth MUST precede app.router call, or else 
+# Note: Auth.bootEveryAuth MUST precede app.router call, or else
 # req.user is not assigned
 express = require 'express'
 app = express.createServer()

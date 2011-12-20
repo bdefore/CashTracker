@@ -4,11 +4,8 @@
 .row
     .span10
         !=partial('messages')
-    
+
         - if (everyauth.loggedIn)
-            p Name: #{everyauth.facebook.user.name}
-            p FB ID: #{everyauth.facebook.user.id}
-            p CashTracker ID: #{everyauth.user.id}
 
             h1 Your sightings
 
@@ -18,19 +15,25 @@
                     a(href="/sightings/#{sighting._id}") #{sighting.latitude} #{sighting.longitude} - #{sighting.comment}
               - })
 
-            a(href="/sightings/add") Add New Sighting
+            a(href="/sightings/add")
+                button(class="btn primary", type="submit", value="Update") Add New Sighting
 
-            h1 Your related bills
+            //- 
+            //- Bills section disabled. Not very useful, sightings is all user cares about
+            //- 
+            //- h1 Your related bills
 
-            ul
-                - bills.forEach(function(bill){
-                    li
-                        a(href="/bills/#{bill.serial}")
-                            = bill.serial
-                - })
+            //- ul
+            //-     - bills.forEach(function(bill){
+            //-         li
+            //-             a(href="/bills/#{bill.serial}")
+            //-                 = bill.serial
+            //-     - })
 
         - else
             p You are not linked with your Facebook account yet. 
                 a(href="/auth/facebook") Log in via Facebook
     .span4
-        h3 Secondary content
+        p Name: #{everyauth.facebook.user.name}
+        p FB ID: #{everyauth.facebook.user.id}
+        p CashTracker ID: #{everyauth.user.id}

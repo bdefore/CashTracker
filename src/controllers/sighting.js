@@ -104,10 +104,14 @@ module.exports = {
                 if(error)
                 {
                   console.log ("Error updating entry: " + error)
+                  req.flash('error', 'Failed to update entry.');
+                  res.redirect('/sightings');
                 }
                 else
                 {
                   console.log ("=== Successful update === ")
+                  req.flash('success', 'Successfully updated entry.');
+                  res.redirect('/sightings');
                 }
                   
               });
@@ -117,25 +121,25 @@ module.exports = {
           // New sighting, save new entry
           console.log("Saving new entry: '" + result + "'")
           sighting.save();
+
+          // If there's no existing bill of this sighting, create an entry for it
+          DB.getBillBySerial(sighting.serial, function(error, result){
+            if(!result)
+            {
+              new Bill( { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency } ).save();
+              console.log("saved new sighting to new record");
+              req.flash('success', 'Successfully saved sighting. First record of this bill!');
+              res.redirect('/sightings');
+            }
+            else
+            {
+              console.log("saved new sighting to preexisting record: " + result);
+              req.flash('success', 'Successfully saved sighting. Bill has been seen before!');
+              res.redirect('/sightings');
+            }
+          });          
         }
       });     
-
-      // If there's no existing bill of this sighting, create an entry for it
-      DB.getBillBySerial(sighting.serial, function(error, result){
-        if(!result)
-        {
-          new Bill( { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency } ).save();
-          console.log("saved new sighting to new record");
-          req.flash('info', 'Successfully saved to new bill record');
-          res.redirect('/sightings');
-        }
-        else
-        {
-          console.log("saved new sighting to preexisting record: " + result);
-          req.flash('info', 'Successfully saved to a bill that already had records');
-          res.redirect('/sightings');
-        }
-      });   
     }
   }
 };

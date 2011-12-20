@@ -36,8 +36,9 @@
         p
 
     .span4
-        h3 Secondary Content
-        a(href="/sightings/add") Add New Sighting
+        a(href="/sightings/add")
+            button(class="btn primary", type="submit", value="Update") Add New Sighting          
+        p
         ul
           - sightings.forEach(function(sighting){
             li

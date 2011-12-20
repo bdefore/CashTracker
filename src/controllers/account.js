@@ -7,11 +7,9 @@ module.exports = {
 
   index: function(req, res){
 	
-	everyauth = require('everyauth')
-
 	if(!req.user)
 	{
-		req.flash('info', "Oi! You're not logged in.");
+		req.flash('error', "Oi! You're not logged in.");
 	  	res.redirect('/');
 	}
 	else

@@ -5,15 +5,8 @@
     .span10
         !=partial('messages')
 
-        p Begin with the following:
-        ul
-            li
-                a(href="/sightings/add") Make a new sighting
-            li
-                a(href="/sightings") List all sightings
-            li
-                a(href="/bills") List all bills
         h2 why!?
         img(src="/images/ridiculous.jpg", alt="i don't know!")
     .span4
-        h3  Secondary Content
+        a(href="/sightings/add")
+            button(class="btn primary", type="submit", value="Update") Add New Sighting

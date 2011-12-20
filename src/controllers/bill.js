@@ -1,6 +1,7 @@
-var mongoose = require('mongoose');
+var DB = require('../db.js');
 
-var Bill = mongoose.model('Bill');
+var Bill = DB.Bill;
+var Sighting = DB.Sighting;
 
 function getBills(filterBySerial, callback) {
   console.log("getting bill by serial: " + filterBySerial + " (or all if serial is null)")
@@ -13,8 +14,6 @@ function getBills(filterBySerial, callback) {
     else callback(result);
   });
 }
-
-var Sighting = mongoose.model('Sighting');
 
 function getSightingsBySerial(filterBySerial, callback) {
   console.log("getting sighting of serial: " + filterBySerial + " (or all if serial is null)")

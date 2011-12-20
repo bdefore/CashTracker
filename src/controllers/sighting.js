@@ -1,8 +1,9 @@
-var mongoose = require('mongoose')
-,	conf = require('../conf')
-,	everyauth = require('everyauth');
+var conf = require('../conf')
+,	everyauth = require('everyauth')
+, DB = require('../db.js');
 
-var Bill = mongoose.model('Bill');
+var Bill = DB.Bill;
+var Sighting = DB.Sighting;
 
 function getBillBySerial(filterBySerial, callback) {
   console.log("getting bill of serial: " + filterBySerial)
@@ -13,8 +14,6 @@ function getBillBySerial(filterBySerial, callback) {
     else callback(error, result);
   });
 }
-
-var Sighting = mongoose.model('Sighting');
 
 function getSightings(filterById, callback) {
   console.log("getting sighting of id: " + filterById + " (or all if id is null)")

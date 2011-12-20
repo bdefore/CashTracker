@@ -1,170 +1,92 @@
+(function() {
+  var MVC;
 
-/**
- * Module dependencies.
- */
+  module.exports = MVC = (function() {
+    var bootController, conf, connect, controllerAction, express;
 
-var fs = require('fs')
-  , conf = require('./conf')
-  , connect = require('connect')
-  , express = require('express');
+    function MVC() {}
 
-exports.boot = function(app){
-  bootApplication(app);
-  bootControllers(app);
-};
+    conf = require('./conf');
 
-// App settings and middleware
+    connect = require('connect');
 
-function bootApplication(app) {
+    express = require('express');
 
-  app.use(express.logger(':method :url :status'));
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser());
-  app.use(express.session({ secret: 'bunniesonfire' }));
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-
-  // Setup ejs views as default, with .html as the extension
-  app.set('views', __dirname + '/views/' + conf.template_engine);
-  app.set('view engine', conf.template_engine);
-
-  require('./auth').boot(app);
-
-  //  Example 500 page
-  app.error(function(err, req, res){
-    console.dir(err)
-    res.render('500');
-  });
-
-  // Example 404 page via simple Connect middleware
-  app.use(function(req, res){
-    res.render('404');
-  });
-
-  // Some dynamic view helpers
-  app.dynamicHelpers({
-    request: function(req){
-      return req;
-    },
-
-    hasMessages: function(req){
-      if (!req.session) return false;
-      return Object.keys(req.session.flash || {}).length;
-    },
-
-    messages: function(req){
-      return function(){
-        var msgs = req.flash();
-        return Object.keys(msgs).reduce(function(arr, type){
-          return arr.concat(msgs[type]);
-        }, []);
-      }
-    }
-  });
-
-    // app.use(everyauth.middleware());
-}
-
-// Bootstrap controllers
-
-function bootControllers(app) {
-  fs.readdir(__dirname + '/controllers', function(err, files){
-    if (err) throw err;
-    files.forEach(function(file){
-      bootController(app, file);
-    });
-  });
-}
-
-// Example (simplistic) controller support
-
-function bootController(app, file) {
-  var name = file.replace('.js', '')
-    , actions = require('./controllers/' + name)
-    , plural = name + 's' // realistically we would use an inflection lib
-    , prefix = '/' + plural; 
-
-  // Special case for "app"
-  if (name == 'app') prefix = '/';
-
-  Object.keys(actions).map(function(action){
-    var fn = controllerAction(name, plural, action, actions[action]);
-    switch(action) {
-      case 'index':
-        app.get(prefix, fn);
-        break;
-      case 'add':
-        app.get(prefix + '/add', fn);
-        break;
-      case 'show':
-        app.get(prefix + '/:id.:format?', fn);
-        break;
-      case 'create':
-        app.post(prefix + '/:id', fn);
-        break;
-      case 'edit':
-        app.get(prefix + '/:id/edit', fn);
-        break;
-      case 'update':
-        app.put(prefix + '/:id', fn);
-        break;
-      case 'destroy':
-        app.del(prefix + '/:id', fn);
-        break;
-    }
-  });
-}
-
-
-// Proxy res.render() to add some magic
-
-function controllerAction(name, plural, action, fn) {
-  return function(req, res, next){
-    var render = res.render
-      , format = req.params.format
-      , path = __dirname + '/views/' + conf.template_engine + '/' + name + '/' + action + '.' + conf.template_engine;
-    res.render = function(obj, options, fn){
-      res.render = render;
-      // Template path
-      if (typeof obj === 'string') {
-        return res.render(obj, options, fn);
-      }
-
-      // Format support
-      if (action == 'show' && format) {
-        if (format === 'json') {
-          return res.send(obj);
-        } else {
-          throw new Error('unsupported format "' + format + '"');
-        }
-      }
-
-      // Render template
-      res.render = render;
-      options = options || {};
-      // Expose obj as the "bills" or "bill" local
-      if (action == 'index') {
-        options[plural] = obj;
-      } else {
-        options[name] = obj;
-      }
-
-      var user = {};
-      
-      // if( req.isAuthenticated() ) {
-      //   user.username = JSON.stringify( req.getAuthDetails().user );
-      // }
-      // else user.username = "Not logged in"; 
-
-      // if(req.user) user.username = req.user;
-      // else user.username = "fweoeooeoe";
-
-      // options.user = user;
-
-      return res.render(path, options, fn);
+    MVC.bootControllers = function(app) {
+      var fs;
+      fs = require('fs');
+      return fs.readdir(__dirname + '/controllers', function(err, files) {
+        if (err) throw err;
+        return files.forEach(function(file) {
+          return bootController(app, file);
+        });
+      });
     };
-    fn.apply(this, arguments);
-  };
-}
+
+    bootController = function(app, file) {
+      var actions, name, plural, prefix;
+      name = file.replace('.js', '');
+      actions = require('./controllers/' + name);
+      plural = name + 's';
+      prefix = '/' + plural;
+      if (name === 'app') prefix = '/';
+      if (name === 'account') {
+        plural = name;
+        prefix = "/account";
+      }
+      return Object.keys(actions).map(function(action) {
+        var fn;
+        fn = controllerAction(name, plural, action, actions[action]);
+        switch (action) {
+          case 'index':
+            return app.get(prefix, fn);
+          case 'add':
+            return app.get(prefix + '/add', fn);
+          case 'show':
+            return app.get(prefix + '/:id.:format?', fn);
+          case 'create':
+            return app.post(prefix + '/:id', fn);
+          case 'edit':
+            return app.get(prefix + '/:id/edit', fn);
+          case 'update':
+            return app.put(prefix + '/:id', fn);
+          case 'destroy':
+            return app.del(prefix + '/:id', fn);
+        }
+      });
+    };
+
+    controllerAction = function(name, plural, action, fn) {
+      return function(req, res, next) {
+        var format, path, render;
+        render = res.render;
+        format = req.params.format;
+        path = __dirname + '/views/' + conf.template_engine + '/' + name + '/' + action + '.' + conf.template_engine;
+        res.render = function(obj, options, fn) {
+          res.render = render;
+          if (typeof obj === 'string') return res.render(obj, options, fn);
+          if (action === 'show' && format) {
+            if (format === 'json') {
+              return res.send(obj);
+            } else {
+              throw new Error('unsupported format "' + format + '"');
+            }
+          }
+          res.render = render;
+          options = options || {};
+          if (action === 'index') {
+            options[plural] = obj;
+          } else {
+            options[name] = obj;
+          }
+          return res.render(path, options, fn);
+        };
+        return fn.apply(this, arguments);
+      };
+    };
+
+    return MVC;
+
+  })();
+
+}).call(this);

@@ -22,8 +22,8 @@ module.exports = class MVC
     plural = name + 's' # realistically we would use an inflection lib
     prefix = '/' + plural
 
-    # Special when for "app"
-    if name == 'app'
+    # Special when for "home"
+    if name == 'home'
       prefix = '/'
     
     # TO FIX: Shouldn't need to hijack the nature of objects here

@@ -29,7 +29,7 @@
       actions = require('./controllers/' + name);
       plural = name + 's';
       prefix = '/' + plural;
-      if (name === 'app') prefix = '/';
+      if (name === 'home') prefix = '/';
       if (name === 'account') {
         plural = name;
         prefix = "/account";

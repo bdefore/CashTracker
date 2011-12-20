@@ -1,24 +1,33 @@
-var DB = require('../db.js');
+(function() {
+  var Bill;
 
-var Bill = DB.Bill;
-var Sighting = DB.Sighting;
+  module.exports = Bill = (function() {
+    var DB, Sighting;
 
-module.exports = {
-  
-  // /bills
-  
-  index: function(req, res){
-    DB.getBills(null, res.render);
-  },
+    function Bill() {}
 
-  // /bills/:id
+    DB = require('../db.js');
 
-  show: function(req, res, next){
-    console.log("id: " + req.params.id)
-    DB.getSightingsBySerial(req.params.id, function(result){
-      // TO FIX: Poor form. Hijacking the framework here.
-      res.render(null, { sightings: result });
-    });
-  }
+    Bill = DB.Bill;
 
-};
+    Sighting = DB.Sighting;
+
+    Bill.index = function(req, res) {
+      return DB.getBills(null, res.render);
+    };
+
+    Bill.show = function(req, res, next) {
+      var _this = this;
+      console.log("id: " + req.params.id);
+      return DB.getSightingsBySerial(req.params.id, function(result) {
+        return res.render(null, {
+          sightings: result
+        });
+      });
+    };
+
+    return Bill;
+
+  })();
+
+}).call(this);

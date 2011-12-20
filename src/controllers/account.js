@@ -1,59 +1,54 @@
-var DB = require('../db.js');
+(function() {
+  var Account;
 
-var Bill = DB.Bill;
-var Sighting = DB.Sighting;
+  module.exports = Account = (function() {
+    var Bill, DB, Sighting;
 
-module.exports = {
+    function Account() {}
 
-  index: function(req, res){
-	
-	if(!req.user)
-	{
-		req.flash('error', "Oi! You're not logged in.");
-	  	res.redirect('/');
-	}
-	else
-	{
-	   	DB.getSightingsBySubmitter(req.user.id, function(result){
+    DB = require('../db.js');
 
-	   		var relatedBills = [];
-			var sightings = result;
+    Bill = DB.Bill;
 
-	   		// TO FIX: We keep track of how many sightings have been matched
-	   		// to bills this way, and don't render the page until n DB requests
-	   		// have been made for each of them. Feels very caveman and needs to
-	   		// have a better solution to scale. Perhaps storing this information
-	   		// to a table specific to user is better.
-			var totalToCheck = result.length;
-			var currentCheck = 0;
+    Sighting = DB.Sighting;
 
-			if(sightings.length > 0)
-			{
-				for(var index in sightings)
-				{
-					var sighting = sightings[index];
-					console.log("sighting: " + sighting)
+    Account.index = function(req, res) {
+      var _this = this;
+      return DB.getSightingsBySubmitter(req.user.id, function(result) {
+        var currentCheck, relatedBills, sighting, sightings, totalToCheck, _i, _len, _results;
+        relatedBills = [];
+        sightings = result;
+        totalToCheck = result.length;
+        currentCheck = 0;
+        if (sightings.length > 0) {
+          _results = [];
+          for (_i = 0, _len = sightings.length; _i < _len; _i++) {
+            sighting = sightings[_i];
+            console.log("sighting: " + sighting);
+            _results.push(DB.getBillBySerial(sighting.serial, function(error, bill) {
+              relatedBills.push(bill);
+              currentCheck++;
+              console.log('Related bill received: ' + bill.serial + " lookup: " + currentCheck + " of " + totalToCheck);
+              if (currentCheck === totalToCheck) {
+                return res.render(null, {
+                  sightings: sightings,
+                  bills: relatedBills
+                });
+              }
+            }));
+          }
+          return _results;
+        } else {
+          return res.render(null, {
+            sightings: sightings,
+            bills: relatedBills
+          });
+        }
+      });
+    };
 
-					DB.getBillBySerial(sighting.serial, function(error, bill) {
-						relatedBills.push(bill);
-						currentCheck++;
+    return Account;
 
-						console.log('Related bill received: ' + bill.serial + " lookup: " + currentCheck + " of " + totalToCheck)
+  })();
 
-						if(currentCheck == totalToCheck)
-						{
-					  		res.render(null, { sightings: sightings, bills: relatedBills });
-						}
-					});
-				};
-			}
-			else
-			{
-				// User has not entered any sightings, would not otherwise get to 
-				// render step
-				res.render(null, { sightings: sightings, bills: relatedBills });
-			}
-	    });
-	}
-  }
-};
+}).call(this);

@@ -2,7 +2,9 @@ footer
     - if (everyauth.loggedIn)
         p You are logged in with Facebook user: #{everyauth.facebook.user.name}. 
             a(href="/account") View your account
-            .
+            &nbsp;
+            a(href="/logout") Log out
+
     - else
         p If you'd like to save a record of your sightings, please 
             !=partial('fb')

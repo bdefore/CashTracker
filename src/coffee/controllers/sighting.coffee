@@ -3,8 +3,6 @@ module.exports = class Account
   DB = require '../db.js'
   Bill = DB.Bill
   Sighting = DB.Sighting
-  conf = require '../conf'
-  everyauth = require 'everyauth'
 
   # /sightings
 

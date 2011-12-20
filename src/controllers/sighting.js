@@ -2,7 +2,7 @@
   var Account;
 
   module.exports = Account = (function() {
-    var Bill, DB, Sighting, conf, everyauth;
+    var Bill, DB, Sighting;
 
     function Account() {}
 
@@ -11,10 +11,6 @@
     Bill = DB.Bill;
 
     Sighting = DB.Sighting;
-
-    conf = require('../conf');
-
-    everyauth = require('everyauth');
 
     Account.index = function(req, res) {
       return DB.getSightings(null, res.render);

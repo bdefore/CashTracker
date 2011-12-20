@@ -2,18 +2,17 @@
   var MVC;
 
   module.exports = MVC = (function() {
-    var bootController, conf, connect, controllerAction, express;
+    var bootController, connect, controllerAction, express;
 
     function MVC() {}
-
-    conf = require('./conf');
 
     connect = require('connect');
 
     express = require('express');
 
-    MVC.bootControllers = function(app) {
+    MVC.bootControllers = function(app, template_engine) {
       var fs;
+      this.template_engine = template_engine;
       fs = require('fs');
       return fs.readdir(__dirname + '/controllers', function(err, files) {
         if (err) throw err;
@@ -61,7 +60,7 @@
         var format, path, render;
         render = res.render;
         format = req.params.format;
-        path = __dirname + '/views/' + conf.template_engine + '/' + name + '/' + action + '.' + conf.template_engine;
+        path = __dirname + '/views/' + MVC.template_engine + '/' + name + '/' + action + '.' + MVC.template_engine;
         res.render = function(obj, options, fn) {
           res.render = render;
           if (typeof obj === 'string') return res.render(obj, options, fn);

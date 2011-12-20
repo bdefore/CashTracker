@@ -1,8 +1,7 @@
 module.exports = class DB
 
   mongoose = require 'mongoose'
-  conf = require './conf'
-
+  
   # Mongodb schema
 
   @Bill = mongoose.model 'Bill' , new mongoose.Schema {
@@ -20,6 +19,11 @@ module.exports = class DB
     longitude     : Number,
     comment       : String,
     submitterId   : String
+  }
+
+  @User = mongoose.model 'User', new mongoose.Schema {
+    name        : String,
+    fbId        : Number
   }
 
   # ===================
@@ -114,8 +118,8 @@ module.exports = class DB
   # End service logic
   # ===================
 
-  @connect: () =>
-    mongoose.connect conf.database
+  @connect: (path) =>
+    mongoose.connect path
     console.log "MongoDB connection success..."
 
   # TO FIX: These shouldn't be publicly exposed (@ prefix) but the scope

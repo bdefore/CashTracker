@@ -1,10 +1,13 @@
 # require('zappa') ->
 
+console.log "Starting in NODE_ENV: " + process.env['NODE_ENV']
+
 DB = require './db'
 MVC = require './mvc'
 Auth = require './auth'
+config = require './config_' + process.env['NODE_ENV']
 
-DB.connect()
+DB.connect(config.database)
 DB.prepopulate()
 
 # @use 'bodyParser', 'cookieParser', 'methodOverride', app.router, \
@@ -30,11 +33,9 @@ app.use express.methodOverride()
 app.use express.cookieParser()
 app.use express.favicon()
 app.use express.session { secret: 'bunniesonfire' }
-Auth.bootEveryAuth app
+Auth.bootEveryAuth app, config.creds
 app.use app.router
 app.use express.static __dirname + '/public'
-
-conf = require './conf'
 
 # @set 'views': __dirname + '/views/' + conf.template_engine
 # @set 'view engine': conf.template_engine
@@ -45,8 +46,8 @@ conf = require './conf'
   # inline'.split ' '
 # @register jade: @zappa.adapter 'jade', blacklist
 
-app.set 'views', __dirname + '/views/' + conf.template_engine
-app.set 'view engine', conf.template_engine
+app.set 'views', __dirname + '/views/' + config.template_engine
+app.set 'view engine', config.template_engine
 
 # @register coffee: require('coffeekup').adapters.express
 
@@ -80,6 +81,6 @@ messages = (req) ->
 
 app.dynamicHelpers { hasMessages, request, messages }
 
-MVC.bootControllers app
+MVC.bootControllers app, config.template_engine
 
 app.listen 3000

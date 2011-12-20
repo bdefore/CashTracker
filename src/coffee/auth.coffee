@@ -1,18 +1,9 @@
 module.exports = class Auth
 
   fs = require 'fs'
-  conf = require './conf'
   express = require 'express'
-  mongoose = require 'mongoose'
-
-  mongoose.connect conf.database
-
-  UserSchema = new mongoose.Schema {
-    name        : String
-    fbId        : Number
-  }
-  mongoose.model 'User', UserSchema
-  User = mongoose.model 'User'
+  DB = require './db'
+  User = DB.User
 
   usersByFbId = {}
   usersById = {}
@@ -41,7 +32,7 @@ module.exports = class Auth
 
       else callback result
 
-  @bootEveryAuth: (app) ->
+  @bootEveryAuth: (app, creds) ->
 
     everyauth = require 'everyauth'
 
@@ -80,13 +71,13 @@ module.exports = class Auth
     # than making daisychain variables and \ char. #toolazytoreaddocs
     daisyChain = everyauth \
       .facebook \
-      .appId(conf.fb.appId) \
-      .appSecret(conf.fb.appSecret) \
+      .appId(creds.fb.appId) \
+      .appSecret(creds.fb.appSecret) \
       .findOrCreateUser facebookResponseCallback
 
     # TO FIX: If this could be appeneded to previous call, daisyChain
     # variable is unnecessary
-    daisyChain.redirectPath conf.domain + "/account"
+    daisyChain.redirectPath creds.domain + "/account"
 
     # Link everyauth to express, in order to access user object in view
     # templates

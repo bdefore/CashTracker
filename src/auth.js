@@ -2,28 +2,17 @@
   var Auth;
 
   module.exports = Auth = (function() {
-    var User, UserSchema, addUser, conf, express, fs, getStoredUser, mongoose, nextUserId, usersByFbId, usersById;
+    var DB, User, addUser, express, fs, getStoredUser, nextUserId, usersByFbId, usersById;
 
     function Auth() {}
 
     fs = require('fs');
 
-    conf = require('./conf');
-
     express = require('express');
 
-    mongoose = require('mongoose');
+    DB = require('./db');
 
-    mongoose.connect(conf.database);
-
-    UserSchema = new mongoose.Schema({
-      name: String,
-      fbId: Number
-    });
-
-    mongoose.model('User', UserSchema);
-
-    User = mongoose.model('User');
+    User = DB.User;
 
     usersByFbId = {};
 
@@ -60,7 +49,7 @@
       });
     };
 
-    Auth.bootEveryAuth = function(app) {
+    Auth.bootEveryAuth = function(app, creds) {
       var daisyChain, everyauth, facebookResponseCallback;
       everyauth = require('everyauth');
       everyauth.everymodule.findUserById(function(userId, callback) {
@@ -89,8 +78,8 @@
         }
         return userByFbId;
       };
-      daisyChain = everyauth.facebook.appId(conf.fb.appId).appSecret(conf.fb.appSecret).findOrCreateUser(facebookResponseCallback);
-      daisyChain.redirectPath(conf.domain + "/account");
+      daisyChain = everyauth.facebook.appId(creds.fb.appId).appSecret(creds.fb.appSecret).findOrCreateUser(facebookResponseCallback);
+      daisyChain.redirectPath(creds.domain + "/account");
       app.use(everyauth.middleware());
       return everyauth.helpExpress(app);
     };

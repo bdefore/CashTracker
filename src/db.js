@@ -2,13 +2,11 @@
   var DB;
 
   module.exports = DB = (function() {
-    var conf, mongoose;
+    var mongoose;
 
     function DB() {}
 
     mongoose = require('mongoose');
-
-    conf = require('./conf');
 
     DB.Bill = mongoose.model('Bill', new mongoose.Schema({
       serial: String,
@@ -29,6 +27,11 @@
       longitude: Number,
       comment: String,
       submitterId: String
+    }));
+
+    DB.User = mongoose.model('User', new mongoose.Schema({
+      name: String,
+      fbId: Number
     }));
 
     DB.debug = true;
@@ -128,8 +131,8 @@
       });
     };
 
-    DB.connect = function() {
-      mongoose.connect(conf.database);
+    DB.connect = function(path) {
+      mongoose.connect(path);
       return console.log("MongoDB connection success...");
     };
 

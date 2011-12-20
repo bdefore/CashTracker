@@ -1,12 +1,12 @@
 module.exports = class MVC
 
-  conf = require './conf'
   connect = require 'connect'
   express = require 'express'
 
   # Bootstrap controllers
 
-  @bootControllers: (app) ->
+  @bootControllers: (app, template_engine) ->
+    @template_engine = template_engine
     fs = require 'fs'
     fs.readdir __dirname + '/controllers', (err, files) ->
       if err
@@ -50,8 +50,8 @@ module.exports = class MVC
     return (req, res, next) ->
       render = res.render
       format = req.params.format
-      path = __dirname + '/views/' + conf.template_engine + '/' + name + '/' +
-        action + '.' + conf.template_engine
+      path = __dirname + '/views/' + MVC.template_engine + '/' + name + '/' +
+        action + '.' + MVC.template_engine
 
       res.render = (obj, options, fn) ->
         res.render = render

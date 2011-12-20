@@ -1,5 +1,7 @@
 (function() {
-  var Auth, DB, MVC, app, conf, express, hasMessages, messages, request;
+  var Auth, DB, MVC, app, config, express, hasMessages, messages, request;
+
+  console.log("Starting in NODE_ENV: " + process.env['NODE_ENV']);
 
   DB = require('./db');
 
@@ -7,7 +9,9 @@
 
   Auth = require('./auth');
 
-  DB.connect();
+  config = require('./config_' + process.env['NODE_ENV']);
+
+  DB.connect(config.database);
 
   DB.prepopulate();
 
@@ -34,17 +38,15 @@
     secret: 'bunniesonfire'
   }));
 
-  Auth.bootEveryAuth(app);
+  Auth.bootEveryAuth(app, config.creds);
 
   app.use(app.router);
 
   app.use(express.static(__dirname + '/public'));
 
-  conf = require('./conf');
+  app.set('views', __dirname + '/views/' + config.template_engine);
 
-  app.set('views', __dirname + '/views/' + conf.template_engine);
-
-  app.set('view engine', conf.template_engine);
+  app.set('view engine', config.template_engine);
 
   app.error = function(err, req, res) {
     return render('500');
@@ -78,7 +80,7 @@
     messages: messages
   });
 
-  MVC.bootControllers(app);
+  MVC.bootControllers(app, config.template_engine);
 
   app.listen(3000);
 

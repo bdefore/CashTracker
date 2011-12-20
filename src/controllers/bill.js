@@ -1,9 +1,5 @@
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/cashtracker');
-
-console.log("bill.js: MongoDB connection success...")
-
 var Bill = mongoose.model('Bill');
 
 function getBills(filterBySerial, callback) {

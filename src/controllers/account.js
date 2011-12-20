@@ -1,9 +1,5 @@
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/cashtracker');
-
-console.log("account.js: MongoDB connection success...")
-
 var Sighting = mongoose.model('Sighting');
 
 function getSightingsBySubmitter(filterBySubmitterId, callback) {

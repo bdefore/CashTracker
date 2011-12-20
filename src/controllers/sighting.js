@@ -2,10 +2,6 @@ var mongoose = require('mongoose')
 ,	conf = require('../conf')
 ,	everyauth = require('everyauth');
 
-mongoose.connect(conf.database);
-
-console.log("sighting.js: MongoDB connection success...")
-
 var Bill = mongoose.model('Bill');
 
 function getBillBySerial(filterBySerial, callback) {
@@ -100,6 +96,7 @@ module.exports = {
     
     // Validate
     // Euro example: X18084287225
+    // USD example: CE24659434D (E5 underneath that) on a 20
     if(sighting.serial.length != 12)
     {
 

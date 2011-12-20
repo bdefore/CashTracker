@@ -35,8 +35,10 @@
         = sighting.longitude
       li Comment: 
         = sighting.comment
+      p
       - if (everyauth.loggedIn)
         - if (sighting.submitterId == everyauth.user.id)
-          a(href="#{sighting._id}/edit") Edit your sighting
+          a(href="#{sighting._id}/edit")
+            button(class="btn primary", type="submit", value="Update") Edit
   .span4
       h3 Secondary content

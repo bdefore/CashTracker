@@ -121,7 +121,7 @@
         if (error) console.log("getSightingsBySubmitter error: " + error);
         console.log("getSightingsBySubmitter results: " + result);
         if (!callback) {
-          return console.log("Warning: getSightingsBySubmitter requested without callback");
+          return console.log("Warning: getSightingsBySubmitter requested sin callback");
         } else {
           return callback(result);
         }

@@ -5,18 +5,22 @@ module.exports = class Account
   Sighting = DB.Sighting
   conf = require '../conf'
   everyauth = require 'everyauth'
+
   # /sightings
-  
+
   @index: (req, res) ->
     DB.getSightings null, res.render
 
   # /sightings/add
 
   @add: (req, res, next) ->
-    # TO FIX: Blank object construction shouldn't be necessary. Validate forms instead.
+    # TO FIX: Blank object construction shouldn't be necessary.
+    # Validate forms instead.
+
     # TO FIX: Default to 10?
     bill = new Bill { serial: "", currency: "Euro", denomination: 10 }
-    sighting = new Sighting { serial: bill.serial, latitude: "", longitude: "", comment: "" }
+    sighting = new Sighting \
+      { serial: bill.serial, latitude: "", longitude: "", comment: "" }
 
     res.render sighting, { bill: bill }
 
@@ -33,7 +37,7 @@ module.exports = class Account
         res.render [], { bill: {} }
 
   # /sightings/:id/edit
-  
+
   @edit: (req, res, next) ->
     if req.params.id
       DB.getSightings req.params.id, (result) =>
@@ -46,7 +50,7 @@ module.exports = class Account
       res.redirect '/sightings/add'
 
   # PUT /sightings/:id
-  
+
   @update: (req, res, next) ->
     sighting = new Sighting req.body.sighting
 
@@ -54,30 +58,34 @@ module.exports = class Account
     # Euro example: X18084287225
     # USD example: CE24659434D (E5 underneath that) on a 20
     if sighting.serial.length != 12
-      req.flash 'info', 'Serial must contain 12 characters, the first beginning with a letter'
+      req.flash 'info', \
+        'Serial must contain 12 characters, the first beginning with a letter'
       res.redirect '/sightings/add'
     else
       # If user is logged in, tag their id to this submission
       if req.user
-        sighting.submitterId = req.user.id;
+        sighting.submitterId = req.user.id
 
       Sighting.findById sighting.id, (error, result) =>
         if result
           console.log "Updating existing entry"
 
+          updateCallback = (error) =>
+            if error
+              console.log "Error updating entry: " + error
+              req.flash 'error', 'Failed to update entry.'
+              res.redirect '/sightings'
+            else
+              console.log "=== Successful update === "
+              req.flash 'success', 'Successfully updated entry.'
+              res.redirect '/sightings'
+
           Sighting.update \
             { _id: sighting._id }, \
-            { serial: sighting.serial, latitude: sighting.latitude, longitude: sighting.longitude, comment: sighting.comment }, \
+            { serial: sighting.serial, latitude: sighting.latitude, longitude: \
+              sighting.longitude, comment: sighting.comment }, \
             null, \
-            (error) =>
-              if error
-                console.log "Error updating entry: " + error
-                req.flash 'error', 'Failed to update entry.'
-                res.redirect '/sightings'
-              else
-                console.log "=== Successful update === "
-                req.flash 'success', 'Successfully updated entry.'
-                res.redirect '/sightings'
+            updateCallback
         else
           # New sighting, save new entry
           console.log "Saving new entry: '" + result + "'"
@@ -86,12 +94,16 @@ module.exports = class Account
           # If there's no existing bill of this sighting, create an entry for it
           DB.getBillBySerial sighting.serial, (error, result) =>
             if !result
-              b = new Bill { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency }
+              b = new Bill { serial: sighting.serial, \
+                denomination: sighting.denomination, \
+                currency: sighting.currency }
               b.save()
               console.log "saved new sighting to new record"
-              req.flash 'success', 'Successfully saved sighting. First record of this bill!'
+              req.flash 'success', \
+                'Successfully saved sighting. First record of this bill!'
               res.redirect '/sightings'
             else
               console.log "saved new sighting to preexisting record: " + result
-              req.flash 'success', 'Successfully saved sighting. Bill has been seen before!'
+              req.flash 'success', \
+                'Successfully saved sighting. Bill has been seen before!'
               res.redirect '/sightings'

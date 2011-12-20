@@ -84,16 +84,10 @@
       } else {
         if (req.user) sighting.submitterId = req.user.id;
         return Sighting.findById(sighting.id, function(error, result) {
+          var updateCallback;
           if (result) {
             console.log("Updating existing entry");
-            return Sighting.update({
-              _id: sighting._id
-            }, {
-              serial: sighting.serial,
-              latitude: sighting.latitude,
-              longitude: sighting.longitude,
-              comment: sighting.comment
-            }, null, function(error) {
+            updateCallback = function(error) {
               if (error) {
                 console.log("Error updating entry: " + error);
                 req.flash('error', 'Failed to update entry.');
@@ -103,7 +97,15 @@
                 req.flash('success', 'Successfully updated entry.');
                 return res.redirect('/sightings');
               }
-            });
+            };
+            return Sighting.update({
+              _id: sighting._id
+            }, {
+              serial: sighting.serial,
+              latitude: sighting.latitude,
+              longitude: sighting.longitude,
+              comment: sighting.comment
+            }, null, updateCallback);
           } else {
             console.log("Saving new entry: '" + result + "'");
             sighting.save();

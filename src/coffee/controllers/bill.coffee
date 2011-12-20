@@ -5,7 +5,7 @@ module.exports = class Bill
   Sighting = DB.Sighting
 
   # /bills
-  
+
   @index: (req, res) ->
     DB.getBills null, res.render
 

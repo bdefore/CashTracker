@@ -26,10 +26,11 @@ module.exports = class DB
   # Begin service logic
   # ===================
 
-  @debug = true;
+  @debug = true
 
   @getBills: (filterBySerial, callback) =>
-    console.log "getBills serial: " + filterBySerial + " (or all if serial is null)"
+    console.log "getBills serial: " + filterBySerial \
+      + " (or all if serial is null)"
     filter = {}
     if filterBySerial
       filter = { serial: filterBySerial }
@@ -68,7 +69,8 @@ module.exports = class DB
         callback result
 
   @getSightingsBySerial: (filterBySerial, callback) =>
-    console.log "getSightingsBySerial serial: " + filterBySerial + " (or all if serial is null)"
+    console.log "getSightingsBySerial serial: " + filterBySerial \
+      + " (or all if serial is null)"
     filter = {}
     if filterBySerial
       filter = { serial: filterBySerial }
@@ -82,7 +84,8 @@ module.exports = class DB
         callback result
 
   @getSightingsBySubmitter: (filterBySubmitterId, callback) =>
-    console.log "getSightingsBySubmitter id: " + filterBySubmitterId + " (or all if id is null)"
+    console.log "getSightingsBySubmitter id: " + filterBySubmitterId \
+      + " (or all if id is null)"
     filter = {}
     if filterBySubmitterId
       filter = { submitterId: filterBySubmitterId }
@@ -91,20 +94,20 @@ module.exports = class DB
         console.log "getSightingsBySubmitter error: " + error
       console.log "getSightingsBySubmitter results: " + result
       if !callback
-        console.log "Warning: getSightingsBySubmitter requested without callback"
+        console.log "Warning: getSightingsBySubmitter requested sin callback"
       else
         callback result
 
   # No longer used?
-  # 
+  #
   # function getUser(id, callback) {
   #   console.log("getting user of id: " + id)
   #   User.findOne( { id: id }, function(error, result) {
-  #     if(error) console.log("Error getting user: " + error);
+  #     if(error) console.log("Error getting user: " + error)
   #     console.log("results: " + result)
-  #     if(!callback) console.log("Warning: sightings requested without callback")
-  #     else callback(result);
-  #   });
+  #     if(!callback) console.log("Warning: sightings requested sin callback")
+  #     else callback(result)
+  #   })
   # }
 
   # ===================
@@ -122,7 +125,7 @@ module.exports = class DB
 
   @getRandomLetter: () =>
     @alphabet[Math.floor(Math.random() * @alphabet.length)]
-  
+
   @getRandomDigit: () =>
     Math.floor Math.random() * 10
 
@@ -156,7 +159,7 @@ module.exports = class DB
 
         for n in [0..10]
           s = @getRandomSighting()
-          b = new @Bill       
+          b = new @Bill
             serial: s.serial
             denomination: 20
             currency: 'Euro'

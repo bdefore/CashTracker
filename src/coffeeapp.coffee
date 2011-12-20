@@ -1,8 +1,8 @@
 class MVC
 
-  conf = require('./conf')
-  connect = require('connect')
-  express = require('express')
+  conf = require './conf'
+  connect = require 'connect'
+  express = require 'express'
 
   # Bootstrap controllers
 
@@ -17,8 +17,8 @@ class MVC
   # Example (simplistic) controller support
 
   bootController = (app, file) ->
-    name = file.replace('.js', '')
-    actions = require('./controllers/' + name)
+    name = file.replace '.js', ''
+    actions = require './controllers/' + name
     plural = name + 's' # realistically we would use an inflection lib
     prefix = '/' + plural
 
@@ -34,7 +34,7 @@ class MVC
       prefix = "/account"
 
     Object.keys(actions).map (action) ->
-      fn = controllerAction(name, plural, action, actions[action])
+      fn = controllerAction name, plural, action, actions[action]
       switch action
         when 'index' then app.get prefix, fn
         when 'add' then app.get prefix + '/add', fn
@@ -83,17 +83,17 @@ class MVC
 
 class Auth
 
-  fs = require('fs')
-  conf = require('./conf')
-  express = require('express')
-  mongoose = require('mongoose')
+  fs = require 'fs'
+  conf = require './conf'
+  express = require 'express'
+  mongoose = require 'mongoose'
 
-  mongoose.connect(conf.database)
+  mongoose.connect conf.database
 
-  UserSchema = new mongoose.Schema({
+  UserSchema = new mongoose.Schema {
     name        : String
     fbId        : Number
-  })
+  }
   mongoose.model 'User', UserSchema
   User = mongoose.model 'User'
 
@@ -103,7 +103,7 @@ class Auth
 
   addUser = (source, sourceUser) ->
 
-    if (arguments.length == 1)
+    if arguments.length == 1
       user = sourceUser = source
       user.id = ++nextUserId
       return usersById[nextUserId] = user
@@ -126,7 +126,7 @@ class Auth
 
   @bootEveryAuth: (app) ->
 
-    everyauth = require('everyauth')
+    everyauth = require 'everyauth'
 
     # everyauth requires this override in order to store
     # local version of facebook user data
@@ -153,9 +153,9 @@ class Auth
       # Check if this user has already been added to our list of users
       # If not, add. Then return this user
       userByFbId = usersByFbId[fbUserMetadata.id]
-      if(!userByFbId)
+      if !userByFbId
         userByFbId = usersByFbId[fbUserMetadata.id] = \
-          addUser('facebook', fbUserMetadata)
+          addUser 'facebook', fbUserMetadata
 
       return userByFbId
 
@@ -185,19 +185,19 @@ class DB
 
   Schema = mongoose.Schema
 
-  BillSchema = new Schema({
+  BillSchema = new Schema {
     serial        : String,
     denomination  : Number,
     currency      : String
-  })
+  }
 
-  SightingSchema = new Schema({
+  SightingSchema = new Schema {
     serial        : String,
     latitude      : Number,
     longitude     : Number,
     comment       : String,
     submitterId   : String
-  })
+  }
 
   mongoose.model 'Bill', BillSchema
   Bill = mongoose.model 'Bill'
@@ -280,18 +280,18 @@ DB.prepopulate()
 # Note: express.session call MUST precede auth init
 # Note: Auth.bootEveryAuth MUST precede app.router call, or else 
 # req.user is not assigned
-express = require('express')
+express = require 'express'
 app = express.createServer()
-app.use(express.logger(':method :url :status'))
-app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
-app.use(express.bodyParser())
-app.use(express.methodOverride())
-app.use(express.cookieParser())
-app.use(express.favicon())
-app.use(express.session({ secret: 'bunniesonfire' }))
+app.use express.logger ':method :url :status'
+app.use express.errorHandler { dumpExceptions: true, showStack: true }
+app.use express.bodyParser()
+app.use express.methodOverride()
+app.use express.cookieParser()
+app.use express.favicon()
+app.use express.session { secret: 'bunniesonfire' }
 Auth.bootEveryAuth app
-app.use(app.router)
-app.use(express.static(__dirname + '/public'))
+app.use app.router
+app.use express.static __dirname + '/public'
 
 conf = require './conf'
 
@@ -304,8 +304,8 @@ conf = require './conf'
   # inline'.split ' '
 # @register jade: @zappa.adapter 'jade', blacklist
 
-app.set('views', __dirname + '/views/' + conf.template_engine)
-app.set('view engine', conf.template_engine)
+app.set 'views', __dirname + '/views/' + conf.template_engine
+app.set 'view engine', conf.template_engine
 
 # @register coffee: require('coffeekup').adapters.express
 
@@ -332,7 +332,7 @@ request = (req) ->
 messages = (req) ->
   return ->
     msgs = req.flash()
-    temp1 = Object.keys(msgs)
+    temp1 = Object.keys msgs
     return temp1.reduce ((arr, type) ->
       return arr.concat msgs[type]
     ), []
@@ -341,4 +341,4 @@ app.dynamicHelpers { hasMessages, request, messages }
 
 MVC.bootControllers app
 
-app.listen(3000)
+app.listen 3000

@@ -19,7 +19,7 @@ module.exports = {
     // TO FIX: Blank object construction shouldn't be necessary. Validate forms instead.
     // TO FIX: Default to 10?
     var bill = new Bill( { serial: "", currency: "Euro", denomination: 10 } );
-    var sighting = new Sighting( { serial: bill.serial, latitude: "", longitude: "", comment: "" });
+    var sighting = new Sighting( { date: new Date(), serial: bill.serial, latitude: "", longitude: "", comment: "" });
   	res.render( sighting, { bill: bill } );
   },
 
@@ -71,7 +71,7 @@ module.exports = {
     }
     else
     {
-      var s = new Sighting( { serial: sighting.serial, latitude: sighting.latitude, longitude: sighting.longitude, comment: sighting.comment } )
+      var s = new Sighting( { date: new Date(), serial: sighting.serial, latitude: sighting.latitude, longitude: sighting.longitude, comment: sighting.comment } )
       
       // If user is logged in, tag their id to this submission
       if(req.user)

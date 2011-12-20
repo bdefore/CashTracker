@@ -12,6 +12,7 @@ module.exports = class DB
   }
 
   @Sighting = mongoose.model 'Sighting', new mongoose.Schema {
+    date          : Date,
     serial        : String,
     latitude      : Number,
     longitude     : Number,
@@ -110,6 +111,36 @@ module.exports = class DB
     mongoose.connect conf.database
     console.log "MongoDB connection success..."
 
+  # TO FIX: These shouldn't be publicly exposed (@ prefix) but the scope
+  # of prepopulate's sighting.findOne callback is doing something surprising
+
+  @alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+  @getRandomLetter: () =>
+    @alphabet[Math.floor(Math.random() * @alphabet.length)]
+  
+  @getRandomDigit: () =>
+    Math.floor Math.random() * 10
+
+  @getRandomCoordinate: () =>
+    (Math.random() * 180) - 90
+
+  @getRandomSighting: () =>
+
+    # Euro serial is letter followed by 11 digits
+    fakeSerial = @getRandomLetter().toUpperCase()
+    fakeSerial += @getRandomDigit() for n in [0..10]
+
+    fakeComment = ""
+    fakeComment += @getRandomLetter() for n in [0..20]
+
+    sighting = new @Sighting
+      date: new Date()
+      serial: fakeSerial
+      latitude: @getRandomCoordinate()
+      longitude: @getRandomCoordinate()
+      comment: fakeComment
+
   @prepopulate: () =>
 
     console.log "Checking for existing data..."
@@ -120,44 +151,15 @@ module.exports = class DB
       else
         console.log "No sightings found, filling with dummy data..."
 
-        b = new @Bill
-          serial: 'X18084287225'
-          denomination: 20
-          currency: 'Euro'
-        b.save()
+        for n in [0..20]
+          s = @getRandomSighting()
+          b = new @Bill       
+            serial: s.serial
+            denomination: 20
+            currency: 'Euro'
+          b.save()
+          s.save()
 
-        b = new @Bill
-          serial: 'Y81450250492'
-          denomination: 10
-          currency: 'Euro'
-        b.save()
-
-        s = new @Sighting
-          serial: 'X18084287225'
-          latitude: "41.377301033335414"
-          longitude: "2.189307280815329"
-          comment: 'I got this from my mother'
-        s.save()
-
-        s = new @Sighting
-          serial: 'Y81450250492'
-          latitude: "31.377301033335414"
-          longitude: "-32.189307280815329"
-          comment: 'I got this from a restaurant'
-        s.save()
-
-        s = new @Sighting
-          serial: 'Y81450250492'
-          latitude: "61.377301033335414"
-          longitude: "-12.189307280815329"
-          comment: 'I got this from my sister'
-        s.save()
-
-        s = new @Sighting
-          serial: 'Y81450250492'
-          latitude: "11.377301033335414"
-          longitude: "-22.189307280815329"
-          comment: 'I got this from Bob'
-        s.save()
+          console.log 'Adding dummy sighting: ' + s
 
         console.log "Dummy data created..."

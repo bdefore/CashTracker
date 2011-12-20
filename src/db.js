@@ -17,6 +17,7 @@
     }));
 
     DB.Sighting = mongoose.model('Sighting', new mongoose.Schema({
+      date: Date,
       serial: String,
       latitude: Number,
       longitude: Number,
@@ -124,54 +125,58 @@
       return console.log("MongoDB connection success...");
     };
 
+    DB.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    DB.getRandomLetter = function() {
+      return DB.alphabet[Math.floor(Math.random() * DB.alphabet.length)];
+    };
+
+    DB.getRandomDigit = function() {
+      return Math.floor(Math.random() * 10);
+    };
+
+    DB.getRandomCoordinate = function() {
+      return (Math.random() * 180) - 90;
+    };
+
+    DB.getRandomSighting = function() {
+      var fakeComment, fakeSerial, n, sighting;
+      fakeSerial = DB.getRandomLetter().toUpperCase();
+      for (n = 0; n <= 10; n++) {
+        fakeSerial += DB.getRandomDigit();
+      }
+      fakeComment = "";
+      for (n = 0; n <= 20; n++) {
+        fakeComment += DB.getRandomLetter();
+      }
+      return sighting = new DB.Sighting({
+        date: new Date(),
+        serial: fakeSerial,
+        latitude: DB.getRandomCoordinate(),
+        longitude: DB.getRandomCoordinate(),
+        comment: fakeComment
+      });
+    };
+
     DB.prepopulate = function() {
       console.log("Checking for existing data...");
       return DB.Sighting.findOne(null, function(error, result) {
-        var b, s;
+        var b, n, s;
         if (result) {
           return console.log("Found a sighting... skipping dummy data creation...");
         } else {
           console.log("No sightings found, filling with dummy data...");
-          b = new DB.Bill({
-            serial: 'X18084287225',
-            denomination: 20,
-            currency: 'Euro'
-          });
-          b.save();
-          b = new DB.Bill({
-            serial: 'Y81450250492',
-            denomination: 10,
-            currency: 'Euro'
-          });
-          b.save();
-          s = new DB.Sighting({
-            serial: 'X18084287225',
-            latitude: "41.377301033335414",
-            longitude: "2.189307280815329",
-            comment: 'I got this from my mother'
-          });
-          s.save();
-          s = new DB.Sighting({
-            serial: 'Y81450250492',
-            latitude: "31.377301033335414",
-            longitude: "-32.189307280815329",
-            comment: 'I got this from a restaurant'
-          });
-          s.save();
-          s = new DB.Sighting({
-            serial: 'Y81450250492',
-            latitude: "61.377301033335414",
-            longitude: "-12.189307280815329",
-            comment: 'I got this from my sister'
-          });
-          s.save();
-          s = new DB.Sighting({
-            serial: 'Y81450250492',
-            latitude: "11.377301033335414",
-            longitude: "-22.189307280815329",
-            comment: 'I got this from Bob'
-          });
-          s.save();
+          for (n = 0; n <= 20; n++) {
+            s = DB.getRandomSighting();
+            b = new DB.Bill({
+              serial: s.serial,
+              denomination: 20,
+              currency: 'Euro'
+            });
+            b.save();
+            s.save();
+            console.log('Adding dummy sighting: ' + s);
+          }
           return console.log("Dummy data created...");
         }
       });

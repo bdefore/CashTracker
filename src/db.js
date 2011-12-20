@@ -24,6 +24,101 @@
       submitterId: String
     }));
 
+    DB.getBills = function(filterBySerial, callback) {
+      var filter;
+      console.log("getting bill by serial: " + filterBySerial + " (or all if serial is null)");
+      filter = {};
+      if (filterBySerial) {
+        filter = {
+          serial: filterBySerial
+        };
+      }
+      return DB.Bill.find(filter, function(error, result) {
+        if (error) console.log("Error getting bills: " + error);
+        console.log("results: " + result);
+        if (!callback) {
+          return console.log("Warning: bills requested without callback");
+        } else {
+          return callback(result);
+        }
+      });
+    };
+
+    DB.getBillBySerial = function(filterBySerial, callback) {
+      console.log("getting bill of serial: " + filterBySerial);
+      return DB.Bill.findOne({
+        serial: filterBySerial
+      }, function(error, result) {
+        if (error) console.log("Error getting bills: " + error);
+        console.log("bill results: " + result);
+        if (!callback) {
+          return console.log("Warning: bills requested without callback");
+        } else {
+          return callback(error, result);
+        }
+      });
+    };
+
+    DB.getSightings = function(filterById, callback) {
+      var filter;
+      console.log("getting sighting of id: " + filterById + " (or all if id is null)");
+      filter = {};
+      if (filterById) {
+        filter = {
+          _id: filterById
+        };
+      }
+      return DB.Sighting.find(filter, function(error, result) {
+        if (error) console.log("Error getting sightings: " + error);
+        console.log("results: " + result);
+        if (!callback) {
+          return console.log("Warning: sightings requested without callback");
+        } else {
+          return callback(result);
+        }
+      });
+    };
+
+    DB.getSightingsBySerial = function(filterBySerial, callback) {
+      var filter;
+      console.log("getting sighting of serial: " + filterBySerial + " (or all if serial is null)");
+      filter = {};
+      if (filterBySerial) {
+        filter = {
+          serial: filterBySerial
+        };
+      }
+      return DB.Sighting.find(filter, function(error, result) {
+        if (error) console.log("Error getting sightings: " + error);
+        console.log("results: " + result);
+        if (!callback) {
+          return console.log("Warning: sightings requested without callback");
+        } else {
+          return callback(result);
+        }
+      });
+    };
+
+    DB.getSightingsBySubmitter = function(filterBySubmitterId, callback) {
+      var filter;
+      console.log("getting sighting of id: " + filterBySubmitterId + " (or all if id is null)");
+      filter = {};
+      if (filterBySubmitterId) {
+        filter = {
+          submitterId: filterBySubmitterId
+        };
+      }
+      return DB.Sighting.find(filter, function(error, result) {
+        if (error) console.log("Error getting sightings: " + error);
+        console.log("results: " + result);
+        if (!callback) {
+          return console.log("Warning: sightings requested without callback");
+        } else {
+          return callback(result);
+        }
+      });
+    };
+
     DB.connect = function() {
       mongoose.connect(conf.database);
       return console.log("MongoDB connection success...");

@@ -19,6 +19,93 @@ module.exports = class DB
     submitterId   : String
   }
 
+  # ===================
+  # Begin service logic
+  # ===================
+
+  @getBills: (filterBySerial, callback) =>
+    console.log "getting bill by serial: " + filterBySerial + " (or all if serial is null)"
+    filter = {}
+    if filterBySerial
+      filter = { serial: filterBySerial }
+    @Bill.find filter, (error, result) =>
+      if error
+        console.log "Error getting bills: " + error
+      console.log "results: " + result
+      if !callback
+        console.log "Warning: bills requested without callback"
+      else
+        callback result
+
+  @getBillBySerial: (filterBySerial, callback) =>
+    console.log "getting bill of serial: " + filterBySerial
+    @Bill.findOne { serial: filterBySerial }, (error, result) =>
+      if error
+        console.log "Error getting bills: " + error
+      console.log "bill results: " + result
+      if !callback
+        console.log "Warning: bills requested without callback"
+      else
+        callback error, result
+
+  @getSightings: (filterById, callback) =>
+    console.log "getting sighting of id: " + filterById + " (or all if id is null)"
+    filter = {}
+    if filterById
+      filter = { _id: filterById }
+    @Sighting.find filter, (error, result) =>
+      if error
+        console.log "Error getting sightings: " + error
+      console.log "results: " + result
+      if !callback
+        console.log "Warning: sightings requested without callback"
+      else
+        callback result
+
+  @getSightingsBySerial: (filterBySerial, callback) =>
+    console.log "getting sighting of serial: " + filterBySerial + " (or all if serial is null)"
+    filter = {}
+    if filterBySerial
+      filter = { serial: filterBySerial }
+    @Sighting.find filter, (error, result) =>
+      if error
+        console.log "Error getting sightings: " + error
+      console.log "results: " + result
+      if !callback
+        console.log "Warning: sightings requested without callback"
+      else
+        callback result
+
+  @getSightingsBySubmitter: (filterBySubmitterId, callback) =>
+    console.log "getting sighting of id: " + filterBySubmitterId + " (or all if id is null)"
+    filter = {}
+    if filterBySubmitterId
+      filter = { submitterId: filterBySubmitterId }
+    @Sighting.find filter, (error, result) =>
+      if error
+        console.log "Error getting sightings: " + error
+      console.log "results: " + result
+      if !callback
+        console.log "Warning: sightings requested without callback"
+      else
+        callback result
+
+  # No longer used?
+  # 
+  # function getUser(id, callback) {
+  #   console.log("getting user of id: " + id)
+  #   User.findOne( { id: id }, function(error, result) {
+  #     if(error) console.log("Error getting user: " + error);
+  #     console.log("results: " + result)
+  #     if(!callback) console.log("Warning: sightings requested without callback")
+  #     else callback(result);
+  #   });
+  # }
+
+  # ===================
+  # End service logic
+  # ===================
+
   @connect: () =>
     mongoose.connect conf.database
     console.log "MongoDB connection success..."

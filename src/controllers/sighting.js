@@ -5,45 +5,12 @@ var conf = require('../conf')
 var Bill = DB.Bill;
 var Sighting = DB.Sighting;
 
-function getBillBySerial(filterBySerial, callback) {
-  console.log("getting bill of serial: " + filterBySerial)
-  Bill.findOne( { serial: filterBySerial }, function(error, result) {
-    if(error) console.log("Error getting bills: " + error);
-    console.log("results: " + result)
-    if(!callback) console.log("Warning: bills requested without callback")
-    else callback(error, result);
-  });
-}
-
-function getSightings(filterById, callback) {
-  console.log("getting sighting of id: " + filterById + " (or all if id is null)")
-  filter = {};
-  if(filterById) filter = { _id: filterById };
-  Sighting.find( filter, function(error, result) {
-    if(error) console.log("Error getting sightings: " + error);
-    console.log("results: " + result)
-    if(!callback) console.log("Warning: sightings requested without callback")
-    else callback(result);
-  });
-}
-
-function getUser(id, callback) {
-  console.log("getting user of id: " + id)
-  User.findOne( { id: id }, function(error, result) {
-    if(error) console.log("Error getting user: " + error);
-    console.log("results: " + result)
-    if(!callback) console.log("Warning: sightings requested without callback")
-    else callback(result);
-  });
-}
-
 module.exports = {
-  
+
   // /sightings
   
   index: function(req, res){
-    console.log('in index')
-    getSightings(null, res.render);
+    DB.getSightings(null, res.render);
   },
 
   // /sightings/add
@@ -59,10 +26,10 @@ module.exports = {
   // /sightings/:id
 
   show: function(req, res, next){
-   	getSightings(req.params.id, function(result){
+   	DB.getSightings(req.params.id, function(result){
       // TO FIX: Periodic server crashes when result appears to be null
       if(result || result[0]) {
-        getBillBySerial(result[0].serial, function(error, bill){
+        DB.getBillBySerial(result[0].serial, function(error, bill){
           res.render(result[0], { bill: bill });
         });
       }
@@ -74,8 +41,8 @@ module.exports = {
   edit: function(req, res, next){
   	if(req.params.id)
   	{
-	   	getSightings(req.params.id, function(result){
-		    getBillBySerial(result[0].serial, function(error, bill){
+	   	DB.getSightings(req.params.id, function(result){
+		    DB.getBillBySerial(result[0].serial, function(error, bill){
 		   		res.render(result[0], { bill: bill });
 		  	});
 	    });
@@ -114,7 +81,7 @@ module.exports = {
       s.save();
 
       // If there's no existing bill of this sighting, create an entry for it
-      getBillBySerial(sighting.serial, function(error, result){
+      DB.getBillBySerial(sighting.serial, function(error, result){
         if(!result)
         {
           new Bill( { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency } ).save();

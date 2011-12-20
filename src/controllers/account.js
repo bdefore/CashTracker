@@ -3,28 +3,6 @@ var DB = require('../db.js');
 var Bill = DB.Bill;
 var Sighting = DB.Sighting;
 
-function getSightingsBySubmitter(filterBySubmitterId, callback) {
-  console.log("getting sighting of id: " + filterBySubmitterId + " (or all if id is null)")
-  filter = {};
-  if(filterBySubmitterId) filter = { submitterId: filterBySubmitterId };
-  Sighting.find( filter, function(error, result) {
-    if(error) console.log("Error getting sightings: " + error);
-    console.log("results: " + result)
-    if(!callback) console.log("Warning: sightings requested without callback")
-    else callback(result);
-  });
-}
-
-function getBillBySerial(filterBySerial, callback) {
-  console.log("getting bill of serial: " + filterBySerial)
-  Bill.findOne( { serial: filterBySerial }, function(error, result) {
-    if(error) console.log("Error getting bills: " + error);
-    console.log("bill results: " + result)
-    if(!callback) console.log("Warning: bills requested without callback")
-    else callback(error, result);
-  });
-}
-
 module.exports = {
 
   index: function(req, res){
@@ -38,7 +16,7 @@ module.exports = {
 	}
 	else
 	{
-	   	getSightingsBySubmitter(req.user.id, function(result){
+	   	DB.getSightingsBySubmitter(req.user.id, function(result){
 
 	   		var relatedBills = [];
 			var sightings = result;
@@ -58,7 +36,7 @@ module.exports = {
 					var sighting = sightings[index];
 					console.log("sighting: " + sighting)
 
-					getBillBySerial(sighting.serial, function(error, bill) {
+					DB.getBillBySerial(sighting.serial, function(error, bill) {
 						relatedBills.push(bill);
 						currentCheck++;
 

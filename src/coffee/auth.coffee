@@ -1,5 +1,6 @@
 module.exports = class Auth
 
+  w = require 'winston'
   fs = require 'fs'
   express = require 'express'
   DB = require './db'
@@ -19,16 +20,16 @@ module.exports = class Auth
       user = usersById[++nextUserId] = { id: nextUserId }
       user[source] = sourceUser
 
-    console.log '-> addUser: adding user of id: ' + user.id
+    w.info '-> addUser: adding user of id: ' + user.id
     return user
 
   getStoredUser = (id, callback) ->
     User.findOne { fbId: id }, (error, result) ->
       if error
-        console.log "Error getting user: " + error
+        w.info "Error getting user: " + error
 
       if !callback
-        console.log "Warning: user requested without callback"
+        w.info "Warning: user requested without callback"
 
       else callback result
 
@@ -45,18 +46,18 @@ module.exports = class Auth
     # Create callback that will store user to db
     facebookResponseCallback = (session, token, extra, fbUserMetadata) ->
 
-      console.log "Checking to see if we have FB user: " + fbUserMetadata.id
-      console.log fbUserMetadata
+      w.info "Checking to see if we have FB user: " + fbUserMetadata.id
+      w.info fbUserMetadata
 
       getStoredUser fbUserMetadata.id, (result) ->
         if !result
-          console.log "Is new user record"
+          w.info "Is new user record"
           u = new User
             name:   fbUserMetadata.name
             fbId:   fbUserMetadata.id
           u.save()
         else
-          console.log "Stored user record found"
+          w.info "Stored user record found"
 
       # Check if this user has already been added to our list of users
       # If not, add. Then return this user

@@ -2,9 +2,11 @@
   var Auth;
 
   module.exports = Auth = (function() {
-    var DB, User, addUser, express, fs, getStoredUser, nextUserId, usersByFbId, usersById;
+    var DB, User, addUser, express, fs, getStoredUser, nextUserId, usersByFbId, usersById, w;
 
     function Auth() {}
+
+    w = require('winston');
 
     fs = require('fs');
 
@@ -32,7 +34,7 @@
         };
         user[source] = sourceUser;
       }
-      console.log('-> addUser: adding user of id: ' + user.id);
+      w.info('-> addUser: adding user of id: ' + user.id);
       return user;
     };
 
@@ -40,9 +42,9 @@
       return User.findOne({
         fbId: id
       }, function(error, result) {
-        if (error) console.log("Error getting user: " + error);
+        if (error) w.info("Error getting user: " + error);
         if (!callback) {
-          return console.log("Warning: user requested without callback");
+          return w.info("Warning: user requested without callback");
         } else {
           return callback(result);
         }
@@ -57,19 +59,19 @@
       });
       facebookResponseCallback = function(session, token, extra, fbUserMetadata) {
         var userByFbId;
-        console.log("Checking to see if we have FB user: " + fbUserMetadata.id);
-        console.log(fbUserMetadata);
+        w.info("Checking to see if we have FB user: " + fbUserMetadata.id);
+        w.info(fbUserMetadata);
         getStoredUser(fbUserMetadata.id, function(result) {
           var u;
           if (!result) {
-            console.log("Is new user record");
+            w.info("Is new user record");
             u = new User({
               name: fbUserMetadata.name,
               fbId: fbUserMetadata.id
             });
             return u.save();
           } else {
-            return console.log("Stored user record found");
+            return w.info("Stored user record found");
           }
         });
         userByFbId = usersByFbId[fbUserMetadata.id];

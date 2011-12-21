@@ -1,5 +1,6 @@
 module.exports = class DB
 
+  w = require 'winston'
   mongoose = require 'mongoose'
   
   # Mongodb schema
@@ -33,83 +34,83 @@ module.exports = class DB
   @debug = true
 
   @getBills: (filterBySerial, callback) =>
-    console.log "getBills serial: " + filterBySerial \
+    w.info "getBills serial: " + filterBySerial \
       + " (or all if serial is null)"
     filter = {}
     if filterBySerial
       filter = { serial: filterBySerial }
     @Bill.find filter, (error, result) =>
       if error
-        console.log "getBills error: " + error
-      console.log "getBills results: " + result
+        w.info "getBills error: " + error
+      w.info "getBills results: " + result
       if !callback
-        console.log "Warning: getBills requested without callback"
+        w.info "Warning: getBills requested without callback"
       else
         callback result
 
   @getBillBySerial: (filterBySerial, callback) =>
-    console.log "getBillBySerial serial: " + filterBySerial
+    w.info "getBillBySerial serial: " + filterBySerial
     @Bill.findOne { serial: filterBySerial }, (error, result) =>
       if error
-        console.log "getBillBySerial error: " + error
-      console.log "getBillBySerial results: " + result
+        w.info "getBillBySerial error: " + error
+      w.info "getBillBySerial results: " + result
       if !callback
-        console.log "Warning: getBillBySerial requested without callback"
+        w.info "Warning: getBillBySerial requested without callback"
       else
         callback error, result
 
   @getSightings: (filterById, callback) =>
-    console.log "getSightings id: " + filterById + " (or all if id is null)"
+    w.info "getSightings id: " + filterById + " (or all if id is null)"
     filter = {}
     if filterById
       filter = { _id: filterById }
     @Sighting.find filter, (error, result) =>
       if error
-        console.log "getSightings error: " + error
-      console.log "getSightings results: " + result
+        w.info "getSightings error: " + error
+      w.info "getSightings results: " + result
       if !callback
-        console.log "Warning: getSightings requested without callback"
+        w.info "Warning: getSightings requested without callback"
       else
         callback result
 
   @getSightingsBySerial: (filterBySerial, callback) =>
-    console.log "getSightingsBySerial serial: " + filterBySerial \
+    w.info "getSightingsBySerial serial: " + filterBySerial \
       + " (or all if serial is null)"
     filter = {}
     if filterBySerial
       filter = { serial: filterBySerial }
     @Sighting.find filter, (error, result) =>
       if error
-        console.log "getSightingsBySerial error: " + error
-      console.log "getSightingsBySerial results: " + result
+        w.info "getSightingsBySerial error: " + error
+      w.info "getSightingsBySerial results: " + result
       if !callback
-        console.log "Warning: getSightingsBySerial requested without callback"
+        w.info "Warning: getSightingsBySerial requested without callback"
       else
         callback result
 
   @getSightingsBySubmitter: (filterBySubmitterId, callback) =>
-    console.log "getSightingsBySubmitter id: " + filterBySubmitterId \
+    w.info "getSightingsBySubmitter id: " + filterBySubmitterId \
       + " (or all if id is null)"
     filter = {}
     if filterBySubmitterId
       filter = { submitterId: filterBySubmitterId }
     @Sighting.find filter, (error, result) =>
       if error
-        console.log "getSightingsBySubmitter error: " + error
-      console.log "getSightingsBySubmitter results: " + result
+        w.info "getSightingsBySubmitter error: " + error
+      w.info "getSightingsBySubmitter results: " + result
       if !callback
-        console.log "Warning: getSightingsBySubmitter requested sin callback"
+        w.info "Warning: getSightingsBySubmitter requested sin callback"
       else
         callback result
 
   # No longer used?
   #
   # function getUser(id, callback) {
-  #   console.log("getting user of id: " + id)
+  #   w.info("getting user of id: " + id)
   #   User.findOne( { id: id }, function(error, result) {
-  #     if(error) console.log("Error getting user: " + error)
-  #     console.log("results: " + result)
-  #     if(!callback) console.log("Warning: sightings requested sin callback")
+  #     if(error) w.info("Error getting user: " + error)
+  #     w.info("results: " + result)
+  #     if(!callback) w.info("Warning: sightings requested sin callback")
   #     else callback(result)
   #   })
   # }
@@ -120,7 +121,7 @@ module.exports = class DB
 
   @connect: (path) =>
     mongoose.connect path
-    console.log "MongoDB connection success..."
+    w.info "MongoDB connection success..."
 
   # TO FIX: These shouldn't be publicly exposed (@ prefix) but the scope
   # of prepopulate's sighting.findOne callback is doing something surprising
@@ -153,13 +154,13 @@ module.exports = class DB
 
   @prepopulate: () =>
 
-    console.log "Checking for existing data..."
+    w.info "Checking for existing data..."
 
     @Sighting.findOne null, (error, result) =>
       if result
-        console.log "Found a sighting... skipping dummy data creation..."
+        w.info "Found a sighting... skipping dummy data creation..."
       else
-        console.log "No sightings found, filling with dummy data..."
+        w.info "No sightings found, filling with dummy data..."
 
         for n in [0..10]
           s = @getRandomSighting()
@@ -170,6 +171,6 @@ module.exports = class DB
           b.save()
           s.save()
 
-          console.log 'Adding dummy sighting: ' + s
+          w.info 'Adding dummy sighting: ' + s
 
-        console.log "Dummy data created..."
+        w.info "Dummy data created..."

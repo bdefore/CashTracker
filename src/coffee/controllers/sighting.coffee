@@ -1,5 +1,6 @@
 module.exports = class Account
 
+  w = require 'winston'
   DB = require '../db.js'
   Bill = DB.Bill
   Sighting = DB.Sighting
@@ -66,15 +67,15 @@ module.exports = class Account
 
       Sighting.findById sighting.id, (error, result) =>
         if result
-          console.log "Updating existing entry"
+          w.info "Updating existing entry"
 
           updateCallback = (error) =>
             if error
-              console.log "Error updating entry: " + error
+              w.info "Error updating entry: " + error
               req.flash 'error', 'Failed to update entry.'
               res.redirect '/sightings'
             else
-              console.log "=== Successful update === "
+              w.info "=== Successful update === "
               req.flash 'success', 'Successfully updated entry.'
               res.redirect '/sightings'
 
@@ -86,7 +87,7 @@ module.exports = class Account
             updateCallback
         else
           # New sighting, save new entry
-          console.log "Saving new entry: '" + result + "'"
+          w.info "Saving new entry: '" + result + "'"
           sighting.save()
 
           # If there's no existing bill of this sighting, create an entry for it
@@ -96,12 +97,12 @@ module.exports = class Account
                 denomination: sighting.denomination, \
                 currency: sighting.currency }
               b.save()
-              console.log "saved new sighting to new record"
+              w.info "saved new sighting to new record"
               req.flash 'success', \
                 'Successfully saved sighting. First record of this bill!'
               res.redirect '/sightings'
             else
-              console.log "saved new sighting to preexisting record: " + result
+              w.info "saved new sighting to preexisting record: " + result
               req.flash 'success', \
                 'Successfully saved sighting. Bill has been seen before!'
               res.redirect '/sightings'

@@ -1,6 +1,7 @@
 module.exports = class Account
 
-  DB = require('../db.js')
+  w = require 'winston'
+  DB = require '../db.js'
   Bill = DB.Bill
   Sighting = DB.Sighting
 
@@ -30,13 +31,13 @@ module.exports = class Account
 
         # if sightings.length > 0
         #   for sighting in sightings
-        #     console.log "sighting: " + sighting
+        #     w.info "sighting: " + sighting
 
         #     DB.getBillBySerial sighting.serial, (error, bill) =>
         #       relatedBills.push bill
         #       currentCheck++
 
-        #       console.log 'Related bill received: ' + bill.serial + \
+        #       w.info 'Related bill received: ' + bill.serial + \
         #         " lookup: " + currentCheck + " of " + totalToCheck
 
         #       if currentCheck == totalToCheck

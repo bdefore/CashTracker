@@ -1,6 +1,7 @@
 module.exports = class Bill
 
-  DB = require('../db.js')
+  w = require 'winston'
+  DB = require '../db.js'
   Bill = DB.Bill
   Sighting = DB.Sighting
 
@@ -13,7 +14,7 @@ module.exports = class Bill
 
   @show: (req, res, next) ->
 
-    console.log "id: " + req.params.id
+    w.info "id: " + req.params.id
 
     DB.getSightingsBySerial req.params.id, (result) =>
 

@@ -2,9 +2,11 @@
   var Account;
 
   module.exports = Account = (function() {
-    var Bill, DB, Sighting;
+    var Bill, DB, Sighting, w;
 
     function Account() {}
+
+    w = require('winston');
 
     DB = require('../db.js');
 
@@ -82,14 +84,14 @@
         return Sighting.findById(sighting.id, function(error, result) {
           var updateCallback;
           if (result) {
-            console.log("Updating existing entry");
+            w.info("Updating existing entry");
             updateCallback = function(error) {
               if (error) {
-                console.log("Error updating entry: " + error);
+                w.info("Error updating entry: " + error);
                 req.flash('error', 'Failed to update entry.');
                 return res.redirect('/sightings');
               } else {
-                console.log("=== Successful update === ");
+                w.info("=== Successful update === ");
                 req.flash('success', 'Successfully updated entry.');
                 return res.redirect('/sightings');
               }
@@ -103,7 +105,7 @@
               comment: sighting.comment
             }, null, updateCallback);
           } else {
-            console.log("Saving new entry: '" + result + "'");
+            w.info("Saving new entry: '" + result + "'");
             sighting.save();
             return DB.getBillBySerial(sighting.serial, function(error, result) {
               var b;
@@ -114,11 +116,11 @@
                   currency: sighting.currency
                 });
                 b.save();
-                console.log("saved new sighting to new record");
+                w.info("saved new sighting to new record");
                 req.flash('success', 'Successfully saved sighting. First record of this bill!');
                 return res.redirect('/sightings');
               } else {
-                console.log("saved new sighting to preexisting record: " + result);
+                w.info("saved new sighting to preexisting record: " + result);
                 req.flash('success', 'Successfully saved sighting. Bill has been seen before!');
                 return res.redirect('/sightings');
               }

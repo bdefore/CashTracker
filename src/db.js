@@ -2,9 +2,11 @@
   var DB;
 
   module.exports = DB = (function() {
-    var mongoose;
+    var mongoose, w;
 
     function DB() {}
+
+    w = require('winston');
 
     mongoose = require('mongoose');
 
@@ -38,7 +40,7 @@
 
     DB.getBills = function(filterBySerial, callback) {
       var filter;
-      console.log("getBills serial: " + filterBySerial + " (or all if serial is null)");
+      w.info("getBills serial: " + filterBySerial + " (or all if serial is null)");
       filter = {};
       if (filterBySerial) {
         filter = {
@@ -46,10 +48,10 @@
         };
       }
       return DB.Bill.find(filter, function(error, result) {
-        if (error) console.log("getBills error: " + error);
-        console.log("getBills results: " + result);
+        if (error) w.info("getBills error: " + error);
+        w.info("getBills results: " + result);
         if (!callback) {
-          return console.log("Warning: getBills requested without callback");
+          return w.info("Warning: getBills requested without callback");
         } else {
           return callback(result);
         }
@@ -57,14 +59,14 @@
     };
 
     DB.getBillBySerial = function(filterBySerial, callback) {
-      console.log("getBillBySerial serial: " + filterBySerial);
+      w.info("getBillBySerial serial: " + filterBySerial);
       return DB.Bill.findOne({
         serial: filterBySerial
       }, function(error, result) {
-        if (error) console.log("getBillBySerial error: " + error);
-        console.log("getBillBySerial results: " + result);
+        if (error) w.info("getBillBySerial error: " + error);
+        w.info("getBillBySerial results: " + result);
         if (!callback) {
-          return console.log("Warning: getBillBySerial requested without callback");
+          return w.info("Warning: getBillBySerial requested without callback");
         } else {
           return callback(error, result);
         }
@@ -73,7 +75,7 @@
 
     DB.getSightings = function(filterById, callback) {
       var filter;
-      console.log("getSightings id: " + filterById + " (or all if id is null)");
+      w.info("getSightings id: " + filterById + " (or all if id is null)");
       filter = {};
       if (filterById) {
         filter = {
@@ -81,10 +83,10 @@
         };
       }
       return DB.Sighting.find(filter, function(error, result) {
-        if (error) console.log("getSightings error: " + error);
-        console.log("getSightings results: " + result);
+        if (error) w.info("getSightings error: " + error);
+        w.info("getSightings results: " + result);
         if (!callback) {
-          return console.log("Warning: getSightings requested without callback");
+          return w.info("Warning: getSightings requested without callback");
         } else {
           return callback(result);
         }
@@ -93,7 +95,7 @@
 
     DB.getSightingsBySerial = function(filterBySerial, callback) {
       var filter;
-      console.log("getSightingsBySerial serial: " + filterBySerial + " (or all if serial is null)");
+      w.info("getSightingsBySerial serial: " + filterBySerial + " (or all if serial is null)");
       filter = {};
       if (filterBySerial) {
         filter = {
@@ -101,10 +103,10 @@
         };
       }
       return DB.Sighting.find(filter, function(error, result) {
-        if (error) console.log("getSightingsBySerial error: " + error);
-        console.log("getSightingsBySerial results: " + result);
+        if (error) w.info("getSightingsBySerial error: " + error);
+        w.info("getSightingsBySerial results: " + result);
         if (!callback) {
-          return console.log("Warning: getSightingsBySerial requested without callback");
+          return w.info("Warning: getSightingsBySerial requested without callback");
         } else {
           return callback(result);
         }
@@ -113,7 +115,7 @@
 
     DB.getSightingsBySubmitter = function(filterBySubmitterId, callback) {
       var filter;
-      console.log("getSightingsBySubmitter id: " + filterBySubmitterId + " (or all if id is null)");
+      w.info("getSightingsBySubmitter id: " + filterBySubmitterId + " (or all if id is null)");
       filter = {};
       if (filterBySubmitterId) {
         filter = {
@@ -121,10 +123,10 @@
         };
       }
       return DB.Sighting.find(filter, function(error, result) {
-        if (error) console.log("getSightingsBySubmitter error: " + error);
-        console.log("getSightingsBySubmitter results: " + result);
+        if (error) w.info("getSightingsBySubmitter error: " + error);
+        w.info("getSightingsBySubmitter results: " + result);
         if (!callback) {
-          return console.log("Warning: getSightingsBySubmitter requested sin callback");
+          return w.info("Warning: getSightingsBySubmitter requested sin callback");
         } else {
           return callback(result);
         }
@@ -133,7 +135,7 @@
 
     DB.connect = function(path) {
       mongoose.connect(path);
-      return console.log("MongoDB connection success...");
+      return w.info("MongoDB connection success...");
     };
 
     DB.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -169,13 +171,13 @@
     };
 
     DB.prepopulate = function() {
-      console.log("Checking for existing data...");
+      w.info("Checking for existing data...");
       return DB.Sighting.findOne(null, function(error, result) {
         var b, n, s;
         if (result) {
-          return console.log("Found a sighting... skipping dummy data creation...");
+          return w.info("Found a sighting... skipping dummy data creation...");
         } else {
-          console.log("No sightings found, filling with dummy data...");
+          w.info("No sightings found, filling with dummy data...");
           for (n = 0; n <= 10; n++) {
             s = DB.getRandomSighting();
             b = new DB.Bill({
@@ -185,9 +187,9 @@
             });
             b.save();
             s.save();
-            console.log('Adding dummy sighting: ' + s);
+            w.info('Adding dummy sighting: ' + s);
           }
-          return console.log("Dummy data created...");
+          return w.info("Dummy data created...");
         }
       });
     };

@@ -2,9 +2,11 @@
   var Account;
 
   module.exports = Account = (function() {
-    var Bill, DB, Sighting;
+    var Bill, DB, Sighting, w;
 
     function Account() {}
+
+    w = require('winston');
 
     DB = require('../db.js');
 

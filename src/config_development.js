@@ -21,7 +21,12 @@ module.exports = {
 		// },
 		logfile: {
 			filename: "winston.log",
+			colorize: true,
 			handleExceptions: true
+		},
+		console: {
+			colorize: true,
+			timestamp: true
 		}
 	}
 };

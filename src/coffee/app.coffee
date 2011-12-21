@@ -7,14 +7,17 @@ Auth = require './auth'
 config = require './config_' + process.env['NODE_ENV']
 
 if config.logging
+  if config.logging.console
+    w.remove w.transports.Console
+    w.add w.transports.Console, config.logging.console
   if config.logging.logfile
     w.add w.transports.File, config.logging.logfile
   if config.logging.loggly
     w.add w.transports.Loggly, config.logging.loggly
 
-w.info "============================================="
-w.info "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
-w.info "============================================="
+w.warn "============================================="
+w.warn "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
+w.warn "============================================="
 
 DB.connect(config.database)
 DB.prepopulate()

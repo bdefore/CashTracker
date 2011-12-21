@@ -20,7 +20,7 @@
 
     Bill.show = function(req, res, next) {
       var _this = this;
-      w.info("id: " + req.params.id);
+      w.info("Bill ID: " + req.params.id);
       return DB.getSightingsBySerial(req.params.id, function(result) {
         return res.render(null, {
           sightings: result

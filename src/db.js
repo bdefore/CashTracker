@@ -36,11 +36,13 @@
       fbId: Number
     }));
 
-    DB.debug = true;
+    DB.DATA_SERVICE_DEBUG = false;
 
     DB.getBills = function(filterBySerial, callback) {
       var filter;
-      w.info("getBills serial: " + filterBySerial + " (or all if serial is null)");
+      if (DB.DATA_SERVICE_DEBUG) {
+        w.info("getBills serial: " + filterBySerial + " (or all if serial is null)");
+      }
       filter = {};
       if (filterBySerial) {
         filter = {
@@ -48,10 +50,12 @@
         };
       }
       return DB.Bill.find(filter, function(error, result) {
-        if (error) w.info("getBills error: " + error);
-        w.info("getBills results: " + result);
+        if (error) if (DB.DATA_SERVICE_DEBUG) w.info("getBills error: " + error);
+        if (DB.DATA_SERVICE_DEBUG) w.info("getBills results: " + result);
         if (!callback) {
-          return w.info("Warning: getBills requested without callback");
+          if (DB.DATA_SERVICE_DEBUG) {
+            return w.info("Warning: getBills requested without callback");
+          }
         } else {
           return callback(result);
         }
@@ -59,14 +63,20 @@
     };
 
     DB.getBillBySerial = function(filterBySerial, callback) {
-      w.info("getBillBySerial serial: " + filterBySerial);
+      if (DB.DATA_SERVICE_DEBUG) {
+        w.info("getBillBySerial serial: " + filterBySerial);
+      }
       return DB.Bill.findOne({
         serial: filterBySerial
       }, function(error, result) {
-        if (error) w.info("getBillBySerial error: " + error);
-        w.info("getBillBySerial results: " + result);
+        if (error) {
+          if (DB.DATA_SERVICE_DEBUG) w.info("getBillBySerial error: " + error);
+        }
+        if (DB.DATA_SERVICE_DEBUG) w.info("getBillBySerial results: " + result);
         if (!callback) {
-          return w.info("Warning: getBillBySerial requested without callback");
+          if (DB.DATA_SERVICE_DEBUG) {
+            return w.info("Warning: getBillBySerial requested without callback");
+          }
         } else {
           return callback(error, result);
         }
@@ -75,7 +85,9 @@
 
     DB.getSightings = function(filterById, callback) {
       var filter;
-      w.info("getSightings id: " + filterById + " (or all if id is null)");
+      if (DB.DATA_SERVICE_DEBUG) {
+        w.info("getSightings id: " + filterById + " (or all if id is null)");
+      }
       filter = {};
       if (filterById) {
         filter = {
@@ -83,10 +95,14 @@
         };
       }
       return DB.Sighting.find(filter, function(error, result) {
-        if (error) w.info("getSightings error: " + error);
-        w.info("getSightings results: " + result);
+        if (error) {
+          if (DB.DATA_SERVICE_DEBUG) w.info("getSightings error: " + error);
+        }
+        if (DB.DATA_SERVICE_DEBUG) w.info("getSightings results: " + result);
         if (!callback) {
-          return w.info("Warning: getSightings requested without callback");
+          if (DB.DATA_SERVICE_DEBUG) {
+            return w.info("Warning: getSightings requested without callback");
+          }
         } else {
           return callback(result);
         }
@@ -95,7 +111,9 @@
 
     DB.getSightingsBySerial = function(filterBySerial, callback) {
       var filter;
-      w.info("getSightingsBySerial serial: " + filterBySerial + " (or all if serial is null)");
+      if (DB.DATA_SERVICE_DEBUG) {
+        w.info("getSightingsBySerial serial: " + filterBySerial + " (or all if serial is null)");
+      }
       filter = {};
       if (filterBySerial) {
         filter = {
@@ -103,10 +121,18 @@
         };
       }
       return DB.Sighting.find(filter, function(error, result) {
-        if (error) w.info("getSightingsBySerial error: " + error);
-        w.info("getSightingsBySerial results: " + result);
+        if (error) {
+          if (DB.DATA_SERVICE_DEBUG) {
+            w.info("getSightingsBySerial error: " + error);
+          }
+        }
+        if (DB.DATA_SERVICE_DEBUG) {
+          w.info("getSightingsBySerial results: " + result);
+        }
         if (!callback) {
-          return w.info("Warning: getSightingsBySerial requested without callback");
+          if (DB.DATA_SERVICE_DEBUG) {
+            return w.info("Warning: getSightingsBySerial requested without callback");
+          }
         } else {
           return callback(result);
         }
@@ -115,7 +141,9 @@
 
     DB.getSightingsBySubmitter = function(filterBySubmitterId, callback) {
       var filter;
-      w.info("getSightingsBySubmitter id: " + filterBySubmitterId + " (or all if id is null)");
+      if (DB.DATA_SERVICE_DEBUG) {
+        w.info("getSightingsBySubmitter id: " + filterBySubmitterId + " (or all if id is null)");
+      }
       filter = {};
       if (filterBySubmitterId) {
         filter = {
@@ -123,10 +151,18 @@
         };
       }
       return DB.Sighting.find(filter, function(error, result) {
-        if (error) w.info("getSightingsBySubmitter error: " + error);
-        w.info("getSightingsBySubmitter results: " + result);
+        if (error) {
+          if (DB.DATA_SERVICE_DEBUG) {
+            w.info("getSightingsBySubmitter error: " + error);
+          }
+        }
+        if (DB.DATA_SERVICE_DEBUG) {
+          w.info("getSightingsBySubmitter results: " + result);
+        }
         if (!callback) {
-          return w.info("Warning: getSightingsBySubmitter requested sin callback");
+          if (DB.DATA_SERVICE_DEBUG) {
+            return w.info("Warning: getSightingsBySubmitter requested sin callback");
+          }
         } else {
           return callback(result);
         }

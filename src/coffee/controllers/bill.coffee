@@ -14,7 +14,7 @@ module.exports = class Bill
 
   @show: (req, res, next) ->
 
-    w.info "id: " + req.params.id
+    w.info "Bill ID: " + req.params.id
 
     DB.getSightingsBySerial req.params.id, (result) =>
 

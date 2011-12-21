@@ -31,75 +31,95 @@ module.exports = class DB
   # Begin service logic
   # ===================
 
-  @debug = true
+  @DATA_SERVICE_DEBUG = false
 
   @getBills: (filterBySerial, callback) =>
-    w.info "getBills serial: " + filterBySerial \
+    if @DATA_SERVICE_DEBUG
+      w.info "getBills serial: " + filterBySerial \
       + " (or all if serial is null)"
     filter = {}
     if filterBySerial
       filter = { serial: filterBySerial }
     @Bill.find filter, (error, result) =>
       if error
-        w.info "getBills error: " + error
-      w.info "getBills results: " + result
+        if @DATA_SERVICE_DEBUG
+          w.info "getBills error: " + error
+      if @DATA_SERVICE_DEBUG
+        w.info "getBills results: " + result
       if !callback
-        w.info "Warning: getBills requested without callback"
+        if @DATA_SERVICE_DEBUG
+          w.info "Warning: getBills requested without callback"
       else
         callback result
 
   @getBillBySerial: (filterBySerial, callback) =>
-    w.info "getBillBySerial serial: " + filterBySerial
+    if @DATA_SERVICE_DEBUG
+      w.info "getBillBySerial serial: " + filterBySerial
     @Bill.findOne { serial: filterBySerial }, (error, result) =>
       if error
-        w.info "getBillBySerial error: " + error
-      w.info "getBillBySerial results: " + result
+        if @DATA_SERVICE_DEBUG
+          w.info "getBillBySerial error: " + error
+      if @DATA_SERVICE_DEBUG
+          w.info "getBillBySerial results: " + result
       if !callback
-        w.info "Warning: getBillBySerial requested without callback"
+        if @DATA_SERVICE_DEBUG
+          w.info "Warning: getBillBySerial requested without callback"
       else
         callback error, result
 
   @getSightings: (filterById, callback) =>
-    w.info "getSightings id: " + filterById + " (or all if id is null)"
+    if @DATA_SERVICE_DEBUG
+      w.info "getSightings id: " + filterById + " (or all if id is null)"
     filter = {}
     if filterById
       filter = { _id: filterById }
     @Sighting.find filter, (error, result) =>
       if error
-        w.info "getSightings error: " + error
-      w.info "getSightings results: " + result
+        if @DATA_SERVICE_DEBUG
+          w.info "getSightings error: " + error
+      if @DATA_SERVICE_DEBUG
+          w.info "getSightings results: " + result
       if !callback
-        w.info "Warning: getSightings requested without callback"
+        if @DATA_SERVICE_DEBUG
+          w.info "Warning: getSightings requested without callback"
       else
         callback result
 
   @getSightingsBySerial: (filterBySerial, callback) =>
-    w.info "getSightingsBySerial serial: " + filterBySerial \
+    if @DATA_SERVICE_DEBUG
+      w.info "getSightingsBySerial serial: " + filterBySerial \
       + " (or all if serial is null)"
     filter = {}
     if filterBySerial
       filter = { serial: filterBySerial }
     @Sighting.find filter, (error, result) =>
       if error
-        w.info "getSightingsBySerial error: " + error
-      w.info "getSightingsBySerial results: " + result
+        if @DATA_SERVICE_DEBUG
+          w.info "getSightingsBySerial error: " + error
+      if @DATA_SERVICE_DEBUG
+        w.info "getSightingsBySerial results: " + result
       if !callback
-        w.info "Warning: getSightingsBySerial requested without callback"
+        if @DATA_SERVICE_DEBUG
+          w.info "Warning: getSightingsBySerial requested without callback"
       else
         callback result
 
   @getSightingsBySubmitter: (filterBySubmitterId, callback) =>
-    w.info "getSightingsBySubmitter id: " + filterBySubmitterId \
+    if @DATA_SERVICE_DEBUG
+      w.info "getSightingsBySubmitter id: " + filterBySubmitterId \
       + " (or all if id is null)"
     filter = {}
     if filterBySubmitterId
       filter = { submitterId: filterBySubmitterId }
     @Sighting.find filter, (error, result) =>
       if error
-        w.info "getSightingsBySubmitter error: " + error
-      w.info "getSightingsBySubmitter results: " + result
+        if @DATA_SERVICE_DEBUG
+          w.info "getSightingsBySubmitter error: " + error
+      if @DATA_SERVICE_DEBUG
+        w.info "getSightingsBySubmitter results: " + result
       if !callback
-        w.info "Warning: getSightingsBySubmitter requested sin callback"
+        if @DATA_SERVICE_DEBUG
+          w.info "Warning: getSightingsBySubmitter requested sin callback"
       else
         callback result
 

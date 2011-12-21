@@ -1,11 +1,20 @@
 # require('zappa') ->
 
-console.log "Starting in NODE_ENV: " + process.env['NODE_ENV']
-
+w = require 'winston'
 DB = require './db'
 MVC = require './mvc'
 Auth = require './auth'
 config = require './config_' + process.env['NODE_ENV']
+
+if config.logging
+  if config.logging.logfile
+    w.add w.transports.File, config.logging.logfile
+  if config.logging.loggly
+    w.add w.transports.Loggly, config.logging.loggly
+
+w.info "============================================="
+w.info "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
+w.info "============================================="
 
 DB.connect(config.database)
 DB.prepopulate()

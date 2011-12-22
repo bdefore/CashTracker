@@ -3,8 +3,7 @@ module.exports = class Auth
   w = require 'winston'
   fs = require 'fs'
   express = require 'express'
-  DB = require './db'
-  User = DB.User
+  model = require './model'
 
   usersByFbId = {}
   usersById = {}
@@ -24,7 +23,7 @@ module.exports = class Auth
     return user
 
   getStoredUser = (id, callback) ->
-    User.findOne { fbId: id }, (error, result) ->
+    model.user.findOne { fbId: id }, (error, result) ->
       if error
         w.info "Error getting user: " + error
 
@@ -40,7 +39,7 @@ module.exports = class Auth
     # everyauth requires this override in order to store
     # local version of facebook user data
     everyauth.everymodule.findUserById (userId, callback) ->
-      User.findOne userId, callback
+      model.user.findOne userId, callback
       # callback null, { userId: userId }
 
     # Create callback that will store user to db

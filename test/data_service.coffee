@@ -5,7 +5,7 @@ assert = require 'assert'
 mongoose = require 'mongoose'
 
 config = require '../src/config_development'
-DB = require '../src/db'
+db = require '../src/db'
 
 vows
   .describe('Data service related')
@@ -20,7 +20,7 @@ vows
         assert.isString topic.template_engine
   .addBatch
     'Mongoose (MongoDB) connection test with config':
-      topic: -> mongoose.connect config.database, this.callback
+      topic: -> db.connect config.database, this.callback
 
       'results in successful connection': (err, result) ->
         assert.isNull err

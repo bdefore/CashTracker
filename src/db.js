@@ -2,7 +2,7 @@
   var DB;
 
   module.exports = DB = (function() {
-    var mongoose, w;
+    var model, mongoose, w;
 
     function DB() {}
 
@@ -10,164 +10,7 @@
 
     mongoose = require('mongoose');
 
-    DB.Bill = mongoose.model('Bill', new mongoose.Schema({
-      serial: String,
-      denomination: Number,
-      currency: {
-        type: String,
-        "default": "Euro"
-      }
-    }));
-
-    DB.Sighting = mongoose.model('Sighting', new mongoose.Schema({
-      date: {
-        type: Date,
-        "default": Date.now
-      },
-      serial: String,
-      latitude: Number,
-      longitude: Number,
-      comment: String,
-      submitterId: String
-    }));
-
-    DB.User = mongoose.model('User', new mongoose.Schema({
-      name: String,
-      fbId: Number
-    }));
-
-    DB.DATA_SERVICE_DEBUG = false;
-
-    DB.getBills = function(filterBySerial, callback) {
-      var filter;
-      if (DB.DATA_SERVICE_DEBUG) {
-        w.info("getBills serial: " + filterBySerial + " (or all if serial is null)");
-      }
-      filter = {};
-      if (filterBySerial) {
-        filter = {
-          serial: filterBySerial
-        };
-      }
-      return DB.Bill.find(filter, function(error, result) {
-        if (error) if (DB.DATA_SERVICE_DEBUG) w.info("getBills error: " + error);
-        if (DB.DATA_SERVICE_DEBUG) w.info("getBills results: " + result);
-        if (!callback) {
-          if (DB.DATA_SERVICE_DEBUG) {
-            return w.info("Warning: getBills requested without callback");
-          }
-        } else {
-          return callback(result);
-        }
-      });
-    };
-
-    DB.getBillBySerial = function(filterBySerial, callback) {
-      if (DB.DATA_SERVICE_DEBUG) {
-        w.info("getBillBySerial serial: " + filterBySerial);
-      }
-      return DB.Bill.findOne({
-        serial: filterBySerial
-      }, function(error, result) {
-        if (error) {
-          if (DB.DATA_SERVICE_DEBUG) w.info("getBillBySerial error: " + error);
-        }
-        if (DB.DATA_SERVICE_DEBUG) w.info("getBillBySerial results: " + result);
-        if (!callback) {
-          if (DB.DATA_SERVICE_DEBUG) {
-            return w.info("Warning: getBillBySerial requested without callback");
-          }
-        } else {
-          return callback(error, result);
-        }
-      });
-    };
-
-    DB.getSightings = function(filterById, callback) {
-      var filter;
-      if (DB.DATA_SERVICE_DEBUG) {
-        w.info("getSightings id: " + filterById + " (or all if id is null)");
-      }
-      filter = {};
-      if (filterById) {
-        filter = {
-          _id: filterById
-        };
-      }
-      return DB.Sighting.find(filter, function(error, result) {
-        if (error) {
-          if (DB.DATA_SERVICE_DEBUG) w.info("getSightings error: " + error);
-        }
-        if (DB.DATA_SERVICE_DEBUG) w.info("getSightings results: " + result);
-        if (!callback) {
-          if (DB.DATA_SERVICE_DEBUG) {
-            return w.info("Warning: getSightings requested without callback");
-          }
-        } else {
-          return callback(result);
-        }
-      });
-    };
-
-    DB.getSightingsBySerial = function(filterBySerial, callback) {
-      var filter;
-      if (DB.DATA_SERVICE_DEBUG) {
-        w.info("getSightingsBySerial serial: " + filterBySerial + " (or all if serial is null)");
-      }
-      filter = {};
-      if (filterBySerial) {
-        filter = {
-          serial: filterBySerial
-        };
-      }
-      return DB.Sighting.find(filter, function(error, result) {
-        if (error) {
-          if (DB.DATA_SERVICE_DEBUG) {
-            w.info("getSightingsBySerial error: " + error);
-          }
-        }
-        if (DB.DATA_SERVICE_DEBUG) {
-          w.info("getSightingsBySerial results: " + result);
-        }
-        if (!callback) {
-          if (DB.DATA_SERVICE_DEBUG) {
-            return w.info("Warning: getSightingsBySerial requested without callback");
-          }
-        } else {
-          return callback(result);
-        }
-      });
-    };
-
-    DB.getSightingsBySubmitter = function(filterBySubmitterId, callback) {
-      var filter;
-      if (DB.DATA_SERVICE_DEBUG) {
-        w.info("getSightingsBySubmitter id: " + filterBySubmitterId + " (or all if id is null)");
-      }
-      filter = {};
-      if (filterBySubmitterId) {
-        filter = {
-          submitterId: filterBySubmitterId
-        };
-      }
-      return DB.Sighting.find(filter, function(error, result) {
-        if (error) {
-          if (DB.DATA_SERVICE_DEBUG) {
-            w.info("getSightingsBySubmitter error: " + error);
-          }
-        }
-        if (DB.DATA_SERVICE_DEBUG) {
-          w.info("getSightingsBySubmitter results: " + result);
-        }
-        if (!callback) {
-          if (DB.DATA_SERVICE_DEBUG) {
-            return w.info("Warning: getSightingsBySubmitter requested sin callback");
-          }
-        } else {
-          return callback(result);
-        }
-      });
-    };
+    model = require('./model');
 
     DB.connect = function(path) {
       mongoose.connect(path);
@@ -198,7 +41,7 @@
       for (n = 0; n <= 20; n++) {
         fakeComment += DB.getRandomLetter();
       }
-      return sighting = new DB.Sighting({
+      return sighting = new model.sighting({
         serial: fakeSerial,
         latitude: DB.getRandomCoordinate(),
         longitude: DB.getRandomCoordinate(),
@@ -208,7 +51,7 @@
 
     DB.prepopulate = function() {
       w.info("Checking for existing data...");
-      return DB.Sighting.findOne(null, function(error, result) {
+      return model.sighting.findOne(null, function(error, result) {
         var b, n, s;
         if (result) {
           return w.info("Found a sighting... skipping dummy data creation...");
@@ -216,7 +59,7 @@
           w.info("No sightings found, filling with dummy data...");
           for (n = 0; n <= 10; n++) {
             s = DB.getRandomSighting();
-            b = new DB.Bill({
+            b = new model.bill({
               serial: s.serial,
               denomination: 20,
               currency: 'Euro'

@@ -1,9 +1,7 @@
 module.exports = class Account
 
   w = require 'winston'
-  DB = require '../db.js'
-  Bill = DB.Bill
-  Sighting = DB.Sighting
+  model = require '../model'
 
   @index: (req, res) ->
 
@@ -11,7 +9,7 @@ module.exports = class Account
       req.flash 'error', "Oi! You're not logged in."
       res.redirect '/'
     else
-      DB.getSightingsBySubmitter req.user.id, (result) =>
+      model.sighting.getSightingsBySubmitter req.user.id, (result) =>
         sightings = result
 
         res.render null, { sightings: sightings }
@@ -33,7 +31,7 @@ module.exports = class Account
         #   for sighting in sightings
         #     w.info "sighting: " + sighting
 
-        #     DB.getBillBySerial sighting.serial, (error, bill) =>
+        #     model.getBillBySerial sighting.serial, (error, bill) =>
         #       relatedBills.push bill
         #       currentCheck++
 

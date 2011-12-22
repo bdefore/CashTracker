@@ -3,13 +3,13 @@
 vows = require 'vows'
 assert = require 'assert'
 
-DB = require '../src/db'
+model = require '../src/model'
 
 vows
   .describe('Geography related')
   .addBatch
     'Provides a basic sighting model':
-      topic: -> new DB.Sighting
+      topic: -> new model.sighting
 
       'exists': (sighting) ->
         assert.isNotNull sighting

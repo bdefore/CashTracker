@@ -2,30 +2,26 @@
   var Account;
 
   module.exports = Account = (function() {
-    var Bill, DB, Sighting, w;
+    var model, w;
 
     function Account() {}
 
     w = require('winston');
 
-    DB = require('../db.js');
-
-    Bill = DB.Bill;
-
-    Sighting = DB.Sighting;
+    model = require('../model');
 
     Account.index = function(req, res) {
-      return DB.getSightings(null, res.render);
+      return model.sighting.getSightings(null, res.render);
     };
 
     Account.add = function(req, res, next) {
       var bill, sighting;
-      bill = new Bill({
+      bill = new model.bill({
         serial: "",
         currency: "Euro",
         denomination: 10
       });
-      sighting = new Sighting({
+      sighting = new model.sighting({
         serial: bill.serial,
         latitude: "",
         longitude: "",
@@ -38,9 +34,9 @@
 
     Account.show = function(req, res, next) {
       var _this = this;
-      return DB.getSightings(req.params.id, function(result) {
+      return model.sighting.getSightings(req.params.id, function(result) {
         if (result && result[0]) {
-          return DB.getBillBySerial(result[0].serial, function(error, bill) {
+          return model.bill.getBillBySerial(result[0].serial, function(error, bill) {
             return res.render(result[0], {
               bill: bill
             });
@@ -56,9 +52,9 @@
     Account.edit = function(req, res, next) {
       var _this = this;
       if (req.params.id) {
-        return DB.getSightings(req.params.id, function(result) {
+        return model.sighting.getSightings(req.params.id, function(result) {
           if (result && result[0]) {
-            return DB.getBillBySerial(result[0].serial, function(error, bill) {
+            return model.bill.getBillBySerial(result[0].serial, function(error, bill) {
               return res.render(result[0], {
                 bill: bill
               });
@@ -75,13 +71,13 @@
     Account.update = function(req, res, next) {
       var sighting,
         _this = this;
-      sighting = new Sighting(req.body.sighting);
+      sighting = new model.sighting(req.body.sighting);
       if (sighting.serial.length !== 12) {
         req.flash('info', 'Serial must contain 12 characters, the first beginning with a letter');
         return res.redirect('/sightings/add');
       } else {
         if (req.user) sighting.submitterId = req.user.id;
-        return Sighting.findById(sighting.id, function(error, result) {
+        return model.sighting.findById(sighting.id, function(error, result) {
           var updateCallback;
           if (result) {
             w.info("Updating existing entry");
@@ -96,7 +92,7 @@
                 return res.redirect('/sightings');
               }
             };
-            return Sighting.update({
+            return model.sighting.update({
               _id: sighting._id
             }, {
               serial: sighting.serial,
@@ -107,10 +103,10 @@
           } else {
             w.info("Saving new entry: '" + result + "'");
             sighting.save();
-            return DB.getBillBySerial(sighting.serial, function(error, result) {
+            return model.bill.getBillBySerial(sighting.serial, function(error, result) {
               var b;
               if (!result) {
-                b = new Bill({
+                b = new model.bill({
                   serial: sighting.serial,
                   denomination: sighting.denomination,
                   currency: sighting.currency

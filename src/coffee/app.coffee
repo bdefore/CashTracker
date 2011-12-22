@@ -1,9 +1,9 @@
 # require('zappa') ->
 
 w = require 'winston'
-DB = require './db'
-MVC = require './mvc'
-Auth = require './auth'
+db = require './db'
+mvc = require './mvc'
+auth = require './auth'
 config = require './config_' + process.env['NODE_ENV']
 
 if config.logging
@@ -19,8 +19,8 @@ w.warn "============================================="
 w.warn "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
 w.warn "============================================="
 
-DB.connect(config.database)
-DB.prepopulate()
+db.connect(config.database)
+db.prepopulate()
 
 # @use 'bodyParser', 'cookieParser', 'methodOverride', app.router, \
   # static: __dirname + '/public'
@@ -45,7 +45,7 @@ app.use express.methodOverride()
 app.use express.cookieParser()
 app.use express.favicon()
 app.use express.session { secret: 'bunniesonfire' }
-Auth.bootEveryAuth app, config.creds
+auth.bootEveryAuth app, config.creds
 app.use app.router
 app.use express.static __dirname + '/public'
 
@@ -93,6 +93,6 @@ messages = (req) ->
 
 app.dynamicHelpers { hasMessages, request, messages }
 
-MVC.bootControllers app, config.template_engine
+mvc.bootControllers app, config.template_engine
 
 app.listen 3000

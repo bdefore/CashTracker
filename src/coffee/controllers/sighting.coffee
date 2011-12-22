@@ -1,14 +1,12 @@
 module.exports = class Account
 
   w = require 'winston'
-  DB = require '../db.js'
-  Bill = DB.Bill
-  Sighting = DB.Sighting
+  model = require '../model'
 
   # /sightings
 
   @index: (req, res) ->
-    DB.getSightings null, res.render
+    model.sighting.getSightings null, res.render
 
   # /sightings/add
 
@@ -17,8 +15,8 @@ module.exports = class Account
     # Validate forms instead.
 
     # TO FIX: Default to 10?
-    bill = new Bill { serial: "", currency: "Euro", denomination: 10 }
-    sighting = new Sighting \
+    bill = new model.bill { serial: "", currency: "Euro", denomination: 10 }
+    sighting = new model.sighting \
       { serial: bill.serial, latitude: "", longitude: "", comment: "" }
 
     res.render sighting, { bill: bill }
@@ -26,10 +24,10 @@ module.exports = class Account
   # /sightings/:id
 
   @show: (req, res, next) ->
-    DB.getSightings req.params.id, (result) =>
+    model.sighting.getSightings req.params.id, (result) =>
       # TO FIX: Periodic server crashes when result appears to be null
       if result && result[0]
-        DB.getBillBySerial result[0].serial, (error, bill) =>
+        model.bill.getBillBySerial result[0].serial, (error, bill) =>
           res.render result[0], { bill: bill }
       else
         # TO FIX: Better than pass empty object? Inform user of error?
@@ -39,9 +37,9 @@ module.exports = class Account
 
   @edit: (req, res, next) ->
     if req.params.id
-      DB.getSightings req.params.id, (result) =>
+      model.sighting.getSightings req.params.id, (result) =>
         if result && result[0]
-          DB.getBillBySerial result[0].serial, (error, bill) =>
+          model.bill.getBillBySerial result[0].serial, (error, bill) =>
             res.render result[0], { bill: bill }
         else
           res.redirect '/sightings/add'
@@ -51,7 +49,7 @@ module.exports = class Account
   # PUT /sightings/:id
 
   @update: (req, res, next) ->
-    sighting = new Sighting req.body.sighting
+    sighting = new model.sighting req.body.sighting
 
     # Validate
     # Euro example: X18084287225
@@ -65,7 +63,7 @@ module.exports = class Account
       if req.user
         sighting.submitterId = req.user.id
 
-      Sighting.findById sighting.id, (error, result) =>
+      model.sighting.findById sighting.id, (error, result) =>
         if result
           w.info "Updating existing entry"
 
@@ -79,7 +77,7 @@ module.exports = class Account
               req.flash 'success', 'Successfully updated entry.'
               res.redirect '/sightings'
 
-          Sighting.update \
+          model.sighting.update \
             { _id: sighting._id }, \
             { serial: sighting.serial, latitude: sighting.latitude, longitude: \
               sighting.longitude, comment: sighting.comment }, \
@@ -91,9 +89,9 @@ module.exports = class Account
           sighting.save()
 
           # If there's no existing bill of this sighting, create an entry for it
-          DB.getBillBySerial sighting.serial, (error, result) =>
+          model.bill.getBillBySerial sighting.serial, (error, result) =>
             if !result
-              b = new Bill { serial: sighting.serial, \
+              b = new model.bill { serial: sighting.serial, \
                 denomination: sighting.denomination, \
                 currency: sighting.currency }
               b.save()

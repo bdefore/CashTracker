@@ -2,26 +2,22 @@
   var Bill;
 
   module.exports = Bill = (function() {
-    var DB, Sighting, w;
+    var model, w;
 
     function Bill() {}
 
     w = require('winston');
 
-    DB = require('../db.js');
-
-    Bill = DB.Bill;
-
-    Sighting = DB.Sighting;
+    model = require('../model');
 
     Bill.index = function(req, res) {
-      return DB.getBills(null, res.render);
+      return model.bill.getBills(null, res.render);
     };
 
     Bill.show = function(req, res, next) {
       var _this = this;
       w.info("Bill ID: " + req.params.id);
-      return DB.getSightingsBySerial(req.params.id, function(result) {
+      return model.sighting.getSightingsBySerial(req.params.id, function(result) {
         return res.render(null, {
           sightings: result
         });

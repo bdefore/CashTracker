@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "src/app.js"
+    "start": "src/app.js",
+    "test": "vows test/* --spec"
   },
   "dependencies": {
     "connect": "1.8.x",
@@ -23,7 +24,12 @@
     "yaml": "*",
     "xml2js": "*",
     "sax": "*",
-    "growl": "*"
+    "growl": "*",
+    "winston": "*",
+    "pkginfo": "*",
+    "colors": "*",
+    "stack-trace": "*",
+    "async": "*"
   },
   "devDependencies": {
     "connect-form": "0.2.1",
@@ -41,7 +47,7 @@
   },
   "name": "cashtracker",
   "subdomain": "cashtracker",
-  "version": "0.0.0-24",
+  "version": "0.0.0-25",
   "repository": {},
   "env": {
     "SUBDOMAIN": "cashtracker",

@@ -1,13 +1,13 @@
 (function() {
-  var Auth, DB, MVC, app, config, express, hasMessages, messages, request, w;
+  var app, auth, config, db, express, hasMessages, messages, mvc, request, w;
 
   w = require('winston');
 
-  DB = require('./db');
+  db = require('./db');
 
-  MVC = require('./mvc');
+  mvc = require('./mvc');
 
-  Auth = require('./auth');
+  auth = require('./auth');
 
   config = require('./config_' + process.env['NODE_ENV']);
 
@@ -26,9 +26,9 @@
 
   w.warn("=============================================");
 
-  DB.connect(config.database);
+  db.connect(config.database);
 
-  DB.prepopulate();
+  db.prepopulate();
 
   express = require('express');
 
@@ -53,7 +53,7 @@
     secret: 'bunniesonfire'
   }));
 
-  Auth.bootEveryAuth(app, config.creds);
+  auth.bootEveryAuth(app, config.creds);
 
   app.use(app.router);
 
@@ -95,7 +95,7 @@
     messages: messages
   });
 
-  MVC.bootControllers(app, config.template_engine);
+  mvc.bootControllers(app, config.template_engine);
 
   app.listen(3000);
 

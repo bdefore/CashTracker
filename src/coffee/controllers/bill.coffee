@@ -1,14 +1,12 @@
 module.exports = class Bill
 
   w = require 'winston'
-  DB = require '../db.js'
-  Bill = DB.Bill
-  Sighting = DB.Sighting
+  model = require '../model'
 
   # /bills
 
   @index: (req, res) ->
-    DB.getBills null, res.render
+    model.bill.getBills null, res.render
 
   # /bills/:id
 
@@ -16,7 +14,7 @@ module.exports = class Bill
 
     w.info "Bill ID: " + req.params.id
 
-    DB.getSightingsBySerial req.params.id, (result) =>
+    model.sighting.getSightingsBySerial req.params.id, (result) =>
 
       # TO FIX: Poor form. Hijacking the framework here.
       res.render null, { sightings: result }

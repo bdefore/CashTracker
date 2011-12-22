@@ -2,7 +2,7 @@
   var Auth;
 
   module.exports = Auth = (function() {
-    var DB, User, addUser, express, fs, getStoredUser, nextUserId, usersByFbId, usersById, w;
+    var addUser, express, fs, getStoredUser, model, nextUserId, usersByFbId, usersById, w;
 
     function Auth() {}
 
@@ -12,9 +12,7 @@
 
     express = require('express');
 
-    DB = require('./db');
-
-    User = DB.User;
+    model = require('./model');
 
     usersByFbId = {};
 
@@ -39,7 +37,7 @@
     };
 
     getStoredUser = function(id, callback) {
-      return User.findOne({
+      return model.user.findOne({
         fbId: id
       }, function(error, result) {
         if (error) w.info("Error getting user: " + error);
@@ -55,7 +53,7 @@
       var daisyChain, everyauth, facebookResponseCallback;
       everyauth = require('everyauth');
       everyauth.everymodule.findUserById(function(userId, callback) {
-        return User.findOne(userId, callback);
+        return model.user.findOne(userId, callback);
       });
       facebookResponseCallback = function(session, token, extra, fbUserMetadata) {
         var userByFbId;

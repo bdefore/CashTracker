@@ -2,13 +2,11 @@
   var Auth;
 
   module.exports = Auth = (function() {
-    var addUser, express, fs, getStoredUser, model, nextUserId, usersByFbId, usersById, w;
+    var addUser, express, getStoredUser, model, nextUserId, usersByFbId, usersById, w;
 
     function Auth() {}
 
     w = require('winston');
-
-    fs = require('fs');
 
     express = require('express');
 

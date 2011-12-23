@@ -1,100 +1,114 @@
-# require('zappa') ->
-
 w = require 'winston'
+fs = require 'fs'
+
 db = require './db'
 mvc = require './mvc'
 auth = require './auth'
-config = require '../config_' + process.env['NODE_ENV']
 
-if config.logging
-  if config.logging.console
-    w.remove w.transports.Console
-    w.add w.transports.Console, config.logging.console
-  if config.logging.logfile
-    w.add w.transports.File, config.logging.logfile
-  if config.logging.loggly
-    w.add w.transports.Loggly, config.logging.loggly
+pathToConfig = __dirname + '/../config/' + process.env['NODE_ENV'] + '.json'
 
-w.warn "============================================="
-w.warn "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
-w.warn "============================================="
+w.warn "===================="
+w.warn "Starting CashTracker"
+w.warn "===================="
+w.info "Loading configuration from: " + pathToConfig
 
-db.connect(config.database)
-db.prepopulate()
+fs.readFile pathToConfig, (error, data) ->
+  if error
+    w.error error
+    w.error "Be sure you have specified NODE_ENV!"
+  else
+    config = JSON.parse data
+    w.info "Configuration file loaded: " + config
 
-baseDir = __dirname + "/.."
+    if config.logging
+      if config.logging.console
+        w.remove w.transports.Console
+        w.add w.transports.Console, config.logging.console
+      if config.logging.logfile
+        w.add w.transports.File, config.logging.logfile
+      if config.logging.loggly
+        w.add w.transports.Loggly, config.logging.loggly
 
-# @use 'bodyParser', 'cookieParser', 'methodOverride', app.router, \
-  # static: baseDir + '/public'
+    w.warn "============================================="
+    w.warn "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
+    w.warn "============================================="
 
-# @use 'bodyParser', 'cookieParser', 'methodOverride', session: \
-  # { secret: 'bunniesonfire' }, app router, static: baseDir + '/public'
+    db.connect(config.database)
+    db.prepopulate()
 
-# @configure
-#   development: => @use errorHandler: {dumpExceptions: on}
-#   production: => @use 'errorHandler'
+    baseDir = __dirname + "/.."
 
-# BEWARE: Sequence matters.
-# Note: express.session call MUST precede auth init
-# Note: Auth.bootEveryAuth MUST precede app.router call, or else
-# req.user is not assigned
-express = require 'express'
-app = express.createServer()
-app.use express.logger ':method :url :status'
-app.use express.errorHandler { dumpExceptions: true, showStack: true }
-app.use express.bodyParser()
-app.use express.methodOverride()
-app.use express.cookieParser()
-app.use express.favicon()
-app.use express.session { secret: 'bunniesonfire' }
-auth.bootEveryAuth app, config.creds
-app.use app.router
-app.use express.static baseDir + '/public'
+    # @use 'bodyParser', 'cookieParser', 'methodOverride', app.router, \
+      # static: baseDir + '/public'
 
-# @set 'views': baseDir + '/views/' + conf.template_engine
-# @set 'view engine': conf.template_engine
-# # get '/': -> render 'index.jade'
-# @get '/': "hi!"
+    # @use 'bodyParser', 'cookieParser', 'methodOverride', session: \
+      # { secret: 'bunniesonfire' }, app router, static: baseDir + '/public'
 
-# blacklist = 'scope self locals filename debug compiler compileDebug \
-  # inline'.split ' '
-# @register jade: @zappa.adapter 'jade', blacklist
+    # @configure
+    #   development: => @use errorHandler: {dumpExceptions: on}
+    #   production: => @use 'errorHandler'
 
-app.set 'views', baseDir + '/views/' + config.template_engine
-app.set 'view engine', config.template_engine
+    # BEWARE: Sequence matters.
+    # Note: express.session call MUST precede auth init
+    # Note: Auth.bootEveryAuth MUST precede app.router call, or else
+    # req.user is not assigned
+    express = require 'express'
+    app = express.createServer()
+    app.use express.logger ':method :url :status'
+    app.use express.errorHandler { dumpExceptions: true, showStack: true }
+    app.use express.bodyParser()
+    app.use express.methodOverride()
+    app.use express.cookieParser()
+    app.use express.favicon()
+    app.use express.session { secret: 'bunniesonfire' }
+    auth.bootEveryAuth app, config.creds
+    app.use app.router
+    app.use express.static baseDir + '/public'
 
-# @register coffee: require('coffeekup').adapters.express
+    # @set 'views': baseDir + '/views/' + conf.template_engine
+    # @set 'view engine': conf.template_engine
+    # # get '/': -> render 'index.jade'
+    # @get '/': "hi!"
 
-# Example 500 page
-app.error = (err, req, res) -> render '500'
+    # blacklist = 'scope self locals filename debug compiler compileDebug \
+      # inline'.split ' '
+    # @register jade: @zappa.adapter 'jade', blacklist
 
-# TO FIX: 404 not hooked up right since coffeescript migration. Confusion
-# between use and app.use
+    app.set 'views', baseDir + '/views/' + config.template_engine
+    app.set 'view engine', config.template_engine
 
-# Example 404 page via simple Connect middleware
-# use(function(req, res){
-#   res.render('404')
-# })
+    # @register coffee: require('coffeekup').adapters.express
 
-hasMessages = (req) ->
-  if !req.session
-    return false
-  huh = Object.keys req.session.flash || {}
-  return huh.length
+    # Example 500 page
+    app.error = (err, req, res) -> render '500'
 
-request = (req) ->
-  return req
+    # TO FIX: 404 not hooked up right since coffeescript migration. Confusion
+    # between use and app.use
 
-messages = (req) ->
-  return ->
-    msgs = req.flash()
-    temp1 = Object.keys msgs
-    return temp1.reduce ((arr, type) ->
-      return arr.concat msgs[type]
-    ), []
+    # Example 404 page via simple Connect middleware
+    # use(function(req, res){
+    #   res.render('404')
+    # })
 
-app.dynamicHelpers { hasMessages, request, messages }
+    hasMessages = (req) ->
+      if !req.session
+        return false
+      huh = Object.keys req.session.flash || {}
+      return huh.length
 
-mvc.bootControllers app, config.template_engine
+    request = (req) ->
+      return req
 
-app.listen 3000
+    messages = (req) ->
+      return ->
+        msgs = req.flash()
+        temp1 = Object.keys msgs
+        return temp1.reduce ((arr, type) ->
+          return arr.concat msgs[type]
+        ), []
+
+    app.dynamicHelpers { hasMessages, request, messages }
+
+    mvc.bootControllers app, config.template_engine
+
+    app.listen 3000

@@ -1,7 +1,6 @@
 module.exports = class Auth
 
   w = require 'winston'
-  fs = require 'fs'
   express = require 'express'
   model = require './model'
 

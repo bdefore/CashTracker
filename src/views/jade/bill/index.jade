@@ -2,7 +2,7 @@
     h1 Bills in the System 
         small as opposed to bills not in the system
 .row
-    .span10
+    .span7
         !=partial('messages')
 
         ul
@@ -11,5 +11,5 @@
                     a(href="/bills/#{bill.serial}")
                         = bill.serial
             - })
-    .span4
+    .span3
         h3 Secondary content

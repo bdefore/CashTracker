@@ -2,7 +2,7 @@
   h1 Sighting Details 
     small #{sighting._id}
 .row
-  .span10
+  .span7
     !=partial('messages')
 
     script(src="http://maps.google.com/maps/api/js?sensor=false")
@@ -40,5 +40,5 @@
         - if (sighting.submitterId == everyauth.user.id)
           a(href="#{sighting._id}/edit")
             button(class="btn primary", type="submit", value="Update") Edit
-  .span4
+  .span3
       h3 Secondary content

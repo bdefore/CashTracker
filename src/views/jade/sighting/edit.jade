@@ -2,7 +2,7 @@
   h1 Edit Sighting 
     small oh noes, uncle joe never lies!
 .row
-  .span10
+  .span7
     !=partial('messages')
     
     form(method="post", action="/sightings/!=sighting.id")
@@ -25,5 +25,5 @@
         input(type="text", name="sighting[comment]", value="#{sighting.comment}")
       p
         button(class="btn primary", type="submit", value="Update") Fire away
-  .span4
+  .span3
       h3 Secondary content

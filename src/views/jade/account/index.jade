@@ -2,7 +2,7 @@
     h1 User Account 
         small yon vittles be waiting
 .row
-    .span10
+    .span7
         !=partial('messages')
 
         - if (everyauth.loggedIn)
@@ -33,7 +33,7 @@
         - else
             p You are not linked with your Facebook account yet. 
                 a(href="/auth/facebook") Log in via Facebook
-    .span4
+    .span3
         p Name: #{everyauth.facebook.user.name}
         p FB ID: #{everyauth.facebook.user.id}
         p CashTracker ID: #{everyauth.user.id}

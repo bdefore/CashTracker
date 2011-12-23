@@ -1,5 +1,5 @@
 (function() {
-  var app, auth, config, db, express, hasMessages, messages, mvc, request, w;
+  var app, auth, baseDir, config, db, express, hasMessages, messages, mvc, request, w;
 
   w = require('winston');
 
@@ -9,7 +9,7 @@
 
   auth = require('./auth');
 
-  config = require('./config_' + process.env['NODE_ENV']);
+  config = require('../config_' + process.env['NODE_ENV']);
 
   if (config.logging) {
     if (config.logging.console) {
@@ -29,6 +29,8 @@
   db.connect(config.database);
 
   db.prepopulate();
+
+  baseDir = __dirname + "/..";
 
   express = require('express');
 
@@ -57,9 +59,9 @@
 
   app.use(app.router);
 
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(baseDir + '/public'));
 
-  app.set('views', __dirname + '/views/' + config.template_engine);
+  app.set('views', baseDir + '/views/' + config.template_engine);
 
   app.set('view engine', config.template_engine);
 

@@ -6,8 +6,11 @@ module.exports = class DB
   model = require './model'
   
   @connect: (path) =>
-    mongoose.connect path
-    w.info "MongoDB connection success..."
+    mongoose.connect path, (err, success) ->
+      if(err)
+        w.error err
+      else
+        w.info "MongoDB connection success"
 
   # TO FIX: These shouldn't be publicly exposed (@ prefix) but the scope
   # of prepopulate's sighting.findOne callback is doing something surprising

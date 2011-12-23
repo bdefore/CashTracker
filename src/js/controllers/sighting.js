@@ -101,7 +101,7 @@
               comment: sighting.comment
             }, null, updateCallback);
           } else {
-            w.info("Saving new entry: '" + result + "'");
+            w.info("Saving new entry: '" + sighting + "'");
             sighting.save();
             return model.bill.getBillBySerial(sighting.serial, function(error, result) {
               var b;

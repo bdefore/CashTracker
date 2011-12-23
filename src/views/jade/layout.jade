@@ -2,14 +2,11 @@ html
   head
     title
       CashTracker
-    //- link(rel="stylesheet", href="/style.css")
-    //- link(rel="stylesheet/less", type="text/css", href="/bootstrap/bootstrap.less")
     link(href="/bootstrap/bootstrap.css", rel="stylesheet")
-    // script(src="less-1.1.6.js", type="text/javascript")
+    link(type="text/css", rel="stylesheet", href="/style.css")
     script(type="text/javascript", src="http://use.typekit.com/hcc0mfz.js")
     script(type="text/javascript")
         try{Typekit.load();}catch(e){}
-    link(type="text/css", rel="stylesheet", href="/bootstrap_styles.css")
   body
     !=partial('header')
     .container

@@ -85,7 +85,7 @@ module.exports = class Account
             updateCallback
         else
           # New sighting, save new entry
-          w.info "Saving new entry: '" + result + "'"
+          w.info "Saving new entry: '" + sighting + "'"
           sighting.save()
 
           # If there's no existing bill of this sighting, create an entry for it

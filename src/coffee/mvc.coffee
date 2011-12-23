@@ -50,7 +50,8 @@ module.exports = class MVC
     return (req, res, next) ->
       render = res.render
       format = req.params.format
-      path = __dirname + '/views/' + MVC.template_engine + '/' + name + '/' +
+      baseDir = __dirname + "/.."
+      path = baseDir + '/views/' + MVC.template_engine + '/' + name + '/' +
         action + '.' + MVC.template_engine
 
       res.render = (obj, options, fn) ->

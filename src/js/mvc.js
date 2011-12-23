@@ -57,10 +57,11 @@
 
     controllerAction = function(name, plural, action, fn) {
       return function(req, res, next) {
-        var format, path, render;
+        var baseDir, format, path, render;
         render = res.render;
         format = req.params.format;
-        path = __dirname + '/views/' + MVC.template_engine + '/' + name + '/' + action + '.' + MVC.template_engine;
+        baseDir = __dirname + "/..";
+        path = baseDir + '/views/' + MVC.template_engine + '/' + name + '/' + action + '.' + MVC.template_engine;
         res.render = function(obj, options, fn) {
           res.render = render;
           if (typeof obj === 'string') return res.render(obj, options, fn);

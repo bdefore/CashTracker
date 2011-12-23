@@ -4,8 +4,8 @@ vows = require 'vows'
 assert = require 'assert'
 mongoose = require 'mongoose'
 
-config = require '../src/config_development'
-db = require '../src/db'
+config = require '../src/config_' + process.env['NODE_ENV']
+db = require '../src/coffee/db'
 
 vows
   .describe('Data service related')

@@ -4,7 +4,7 @@ w = require 'winston'
 db = require './db'
 mvc = require './mvc'
 auth = require './auth'
-config = require './config_' + process.env['NODE_ENV']
+config = require '../config_' + process.env['NODE_ENV']
 
 if config.logging
   if config.logging.console
@@ -22,11 +22,13 @@ w.warn "============================================="
 db.connect(config.database)
 db.prepopulate()
 
+baseDir = __dirname + "/.."
+
 # @use 'bodyParser', 'cookieParser', 'methodOverride', app.router, \
-  # static: __dirname + '/public'
+  # static: baseDir + '/public'
 
 # @use 'bodyParser', 'cookieParser', 'methodOverride', session: \
-  # { secret: 'bunniesonfire' }, app router, static: __dirname + '/public'
+  # { secret: 'bunniesonfire' }, app router, static: baseDir + '/public'
 
 # @configure
 #   development: => @use errorHandler: {dumpExceptions: on}
@@ -47,9 +49,9 @@ app.use express.favicon()
 app.use express.session { secret: 'bunniesonfire' }
 auth.bootEveryAuth app, config.creds
 app.use app.router
-app.use express.static __dirname + '/public'
+app.use express.static baseDir + '/public'
 
-# @set 'views': __dirname + '/views/' + conf.template_engine
+# @set 'views': baseDir + '/views/' + conf.template_engine
 # @set 'view engine': conf.template_engine
 # # get '/': -> render 'index.jade'
 # @get '/': "hi!"
@@ -58,7 +60,7 @@ app.use express.static __dirname + '/public'
   # inline'.split ' '
 # @register jade: @zappa.adapter 'jade', blacklist
 
-app.set 'views', __dirname + '/views/' + config.template_engine
+app.set 'views', baseDir + '/views/' + config.template_engine
 app.set 'view engine', config.template_engine
 
 # @register coffee: require('coffeekup').adapters.express

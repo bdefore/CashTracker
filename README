@@ -4,14 +4,19 @@ Dev workflow tips:
 
 Note the local.host:3000 nonsense, due to FB security localhost:3000 is not allowed
 
+== Running development server
+
+Be sure you have a valid MongoDB running. You initiate a local database with 'mongodb'.
+Ensure your configuration files are pointing to the correct path.
+
 == CoffeeScript, watching and redeploying per change
 
 At the moment, there's a two terminal solution:
 
 Terminal 1:
-	From main dir, run: jitter src/coffee src
+	From main dir, run: jitter src/coffee src/js test
 Terminal 2:
-	From main dir, run: nodemon src/app.js local.host:3000
+	From main dir, run: NODE_ENV=development nodemon src/app.js local.host:3000
 	Add the --debug switch to get node-monitor debugging
 
 This will then compile CS down to JS per change and then nodemon will restart node.js

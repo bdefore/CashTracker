@@ -13,8 +13,13 @@
     model = require('./model');
 
     DB.connect = function(path) {
-      mongoose.connect(path);
-      return w.info("MongoDB connection success...");
+      return mongoose.connect(path, function(err, success) {
+        if (err) {
+          return w.error(err);
+        } else {
+          return w.info("MongoDB connection success");
+        }
+      });
     };
 
     DB.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

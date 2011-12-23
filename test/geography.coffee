@@ -3,7 +3,7 @@
 vows = require 'vows'
 assert = require 'assert'
 
-model = require '../src/model'
+model = require '../src/coffee/model'
 
 vows
   .describe('Geography related')

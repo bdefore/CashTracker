@@ -4,7 +4,7 @@ module.exports = class DB
   mongoose = require 'mongoose'
 
   model = require './model'
-  
+
   @connect: (path) =>
     mongoose.connect path, (err, success) ->
       if(err)

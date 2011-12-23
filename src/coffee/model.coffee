@@ -21,7 +21,7 @@ module.exports = class Model
         if @DEBUG
           w.info "getBillBySerial error: " + error
       if @DEBUG
-          w.info "getBillBySerial results: " + result
+        w.info "getBillBySerial results: " + result
       if !callback
         if @DEBUG
           w.info "Warning: getBillBySerial requested without callback"
@@ -68,7 +68,7 @@ module.exports = class Model
         if @DEBUG
           w.info "getSightings error: " + error
       if @DEBUG
-          w.info "getSightings results: " + result
+        w.info "getSightings results: " + result
       if !callback
         if @DEBUG
           w.info "Warning: getSightings requested without callback"

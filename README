@@ -18,3 +18,5 @@ nonsense
 == Lint
 
 Passes Coffeelint (http://www.coffeelint.org/)
+
+find src/coffee -name '*.coffee' -exec node_modules/coffeelint/bin/coffeelint {} \;

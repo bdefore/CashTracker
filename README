@@ -1,27 +1,20 @@
 Dev workflow tips:
 
-== Facebook integration
-
-Note the local.host:3000 nonsense, due to FB security localhost:3000 is not allowed
-
 == Running development server
 
 Be sure you have a valid MongoDB running. You initiate a local database with 'mongodb'.
 Ensure your configuration files are pointing to the correct path.
 
-== CoffeeScript, watching and redeploying per change
+Run the following from the main root dir:
 
-At the moment, there's a two terminal solution:
+NODE_ENV=development node_modulesitter/bin/jitter src/coffee src/js src/js/app.js
 
-Terminal 1:
-	From main dir, run: jitter src/coffee src/js test
-Terminal 2:
-	From main dir, run: NODE_ENV=development nodemon src/app.js local.host:3000
-	Add the --debug switch to get node-monitor debugging
+As changes are made to the src/coffee directory, they are recompiled into src/js,
+tests are run, and the node server restarted. This workflow is enabled by Jitter.
 
-This will then compile CS down to JS per change and then nodemon will restart node.js
+Note you'll need to map your /etc/hosts and test on local.host:3000, due to FB security
+nonsense
 
 == Lint
 
-coffeelint 
-http://www.coffeelint.org/
+Passes Coffeelint (http://www.coffeelint.org/)

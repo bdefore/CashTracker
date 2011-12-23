@@ -1,6 +1,5 @@
 module.exports = class MVC
 
-  connect = require 'connect'
   express = require 'express'
 
   # Bootstrap controllers

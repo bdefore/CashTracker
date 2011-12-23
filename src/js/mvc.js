@@ -2,11 +2,9 @@
   var MVC;
 
   module.exports = MVC = (function() {
-    var bootController, connect, controllerAction, express;
+    var bootController, controllerAction, express;
 
     function MVC() {}
-
-    connect = require('connect');
 
     express = require('express');
 

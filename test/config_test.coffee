@@ -27,8 +27,6 @@ describe 'Configuration', () ->
       should.exist raw
     it 'has a database path', ->
       should.exist config.database
-    it 'has a template engine', ->
-      should.exist config.template_engine
 
   describe 'test environment', ->
     env = 'test'

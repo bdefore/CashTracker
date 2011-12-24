@@ -12,13 +12,14 @@
 
     model = require('./model');
 
-    DB.connect = function(path) {
+    DB.connect = function(path, callback) {
       return mongoose.connect(path, function(err, success) {
         if (err) {
-          return w.error(err);
+          w.error(err);
         } else {
-          return w.info("MongoDB connection success");
+          w.info("MongoDB connection success");
         }
+        if (callback) return callback(err, success);
       });
     };
 

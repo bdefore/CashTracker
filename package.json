@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "src/js/app.js",
-    "test": "vows test/* --spec"
+    "test": "mocha --reporter spec"
   },
   "dependencies": {
     "connect": "1.8.x",
@@ -41,6 +41,7 @@
     "hamljs": "0.5.1",
     "jade": "0.16.2",
     "stylus": "0.13.0",
+    "mocha": "*",
     "should": "0.3.2",
     "express-messages": "0.0.2",
     "node-markdown": ">= 0.0.1",
@@ -49,7 +50,7 @@
   },
   "name": "cashtracker",
   "subdomain": "cashtracker",
-  "version": "0.0.1",
+  "version": "0.0.1-1",
   "repository": {},
   "env": {
     "SUBDOMAIN": "cashtracker",

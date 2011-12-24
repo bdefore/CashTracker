@@ -1,23 +1,12 @@
-# http://ariejan.net/2011/06/10/vows-and-coffeescript
-
-vows = require 'vows'
-assert = require 'assert'
-
 model = require '../src/coffee/model'
 
-vows
-  .describe('Geography related')
-  .addBatch
-    'Provides a basic sighting model':
-      topic: -> new model.sighting
+should = require 'should'
 
-      'exists': (sighting) ->
-        assert.isNotNull sighting
-      'provides a date by default': (sighting) ->
-        assert.isNotNull sighting.date
-      'does not presume latitude or longitude': (sighting) ->
-        assert.isUndefined sighting.latitude && assert.isUndefined sighting.longitude
-      'has the ability to save': (sighting) ->
-        assert.isNotNull sighting.save
-
-  .export(module)
+describe 'Geography', () ->
+  describe 'a new sighting model', () ->
+    it 'should exist', ->
+      new model.sighting().should.exist
+    it 'should provide a date by default', ->
+      new model.sighting().date.should.exist
+    it 'should provide a save method', ->
+      new model.sighting().save.should.exist

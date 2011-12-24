@@ -65,7 +65,13 @@
               name: fbUserMetadata.name,
               fbId: fbUserMetadata.id
             });
-            return u.save();
+            return u.save(function(err) {
+              if (err) {
+                return w.error("Failed to save user record");
+              } else {
+                return w.info("Successful save of user record");
+              }
+            });
           } else {
             return w.info("Stored user record found");
           }

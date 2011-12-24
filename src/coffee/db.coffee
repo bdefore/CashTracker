@@ -6,8 +6,7 @@ module.exports = class DB
   model = require './model'
 
   @connect: (path, callback) =>
-    conn = mongoose.createConnection()
-    conn.open path, (err, success) ->
+    mongoose.connect path, (err, success) ->
       if(err)
         w.error err
       else

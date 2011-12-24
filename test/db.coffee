@@ -18,9 +18,13 @@ describe 'Database', () ->
       db.connect config.database, (err) ->
         should.not.exist err
         done()
-    it 'should fail to connect without fake path', (done) ->
+    it 'should fail to connect with fake path', (done) ->
       db.connect 'mongodb://bunnies/onfire', (err, result) ->
         if !err
           throw err
         should.not.exist result
         done()
+
+  after (done) ->
+    db.disconnect (err) ->
+      done()        

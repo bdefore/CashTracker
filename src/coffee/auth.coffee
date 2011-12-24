@@ -53,7 +53,11 @@ module.exports = class Auth
           u = new User
             name:   fbUserMetadata.name
             fbId:   fbUserMetadata.id
-          u.save()
+          u.save (err) ->
+            if err
+              w.error "Failed to save user record"
+            else
+              w.info "Successful save of user record"
         else
           w.info "Stored user record found"
 

@@ -13,7 +13,7 @@
     model = require('./model');
 
     DB.connect = function(path, callback) {
-      return mongoose.connect(path, function(err, success) {
+      mongoose.connect(path, function(err, success) {
         if (err) {
           w.error(err);
         } else {
@@ -21,6 +21,11 @@
         }
         if (callback) return callback(err, success);
       });
+      return null;
+    };
+
+    DB.disconnect = function(callback) {
+      return mongoose.disconnect(callback);
     };
 
     DB.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

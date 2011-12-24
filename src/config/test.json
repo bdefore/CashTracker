@@ -1,0 +1,3 @@
+{
+  "database": "mongodb://localhost/cashtracker_automated_testing"
+}

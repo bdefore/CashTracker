@@ -10,46 +10,89 @@ getConfigAsync = (name, callback) ->
 describe 'Configuration', () ->
   describe 'NODE_ENV', ->
     it 'exists', ->
-      process.env['NODE_ENV'].should.exist
+      should.exist process.env['NODE_ENV']
   describe 'current environment', ->
-    # config = getConfigSync process.env['NODE_ENV']
-    getConfigAsync process.env['NODE_ENV'], (err, result) ->
-      config = JSON.parse(result)
-      it 'exists', ->
-        should.not.exist err
-        should.exist result
-      it 'parses', ->
-        should.exist config
-      it 'has a database path', ->
-        should.exist config.database
-      it 'has a template engine', ->
-        should.exist config.template_engine
+    env = process.env['NODE_ENV']
+    raw = {}
+    config = {}
+
+    beforeEach (done) ->
+      getConfigAsync env, (err, result) ->
+        raw = result
+        if raw
+          config = JSON.parse raw
+        done()
+
+    it 'exists', ->
+      should.exist raw
+    it 'has a database path', ->
+      should.exist config.database
+    it 'has a template engine', ->
+      should.exist config.template_engine
+
+  describe 'test environment', ->
+    env = 'test'
+    raw = {}
+    config = {}
+
+    beforeEach (done) ->
+      getConfigAsync env, (err, result) ->
+        raw = result
+        if raw
+          config = JSON.parse raw
+        done()
+
+    it 'exists', ->
+      should.exist raw
+    it 'has a database path', ->
+      should.exist config.database
+
   describe 'development environment', ->
-    getConfigAsync 'development', (err, result) ->
-      config = JSON.parse(result)
-      it 'exists', ->
-        should.not.exist err
-        should.exist result
-      it 'parses', ->
-        should.exist config
-      it 'has a database path', ->
-        should.exist config.database
-      it 'has a template engine', ->
-        should.exist config.template_engine
+    env = 'development'
+    raw = {}
+    config = {}
+
+    beforeEach (done) ->
+      getConfigAsync env, (err, result) ->
+        raw = result
+        if raw
+          config = JSON.parse raw
+        done()
+
+    it 'exists', ->
+      should.exist raw
+    it 'has a database path', ->
+      should.exist config.database
+    it 'has a template engine', ->
+      should.exist config.template_engine
+
   describe 'production environment', ->
-    getConfigAsync 'production', (err, result) ->
-      config = JSON.parse(result)
-      it 'exists', ->
-        should.not.exist err
-        should.exist result
-      it 'parses', ->
-        should.exist config
-      it 'has a database path', ->
-        should.exist config.database
-      it 'has a template engine', ->
-        should.exist config.template_engine
+    env = 'production'
+    raw = {}
+    config = {}
+
+    beforeEach (done) ->
+      getConfigAsync env, (err, result) ->
+        raw = result
+        if raw
+          config = JSON.parse raw
+        done()
+
+    it 'exists', ->
+      should.exist raw
+    it 'has a database path', ->
+      should.exist config.database
+    it 'has a template engine', ->
+      should.exist config.template_engine
+
   describe 'fake environment', ->
-    getConfigAsync 'bunniesonfire', (err, result) ->
-      it 'does not exist', ->
-        should.exist err
-        should.not.exist result
+    env = 'production'
+    raw = {}
+
+    beforeEach (done) ->
+      getConfigAsync env, (err, result) ->
+        raw = result
+        done()
+
+    it 'does not exist', ->
+      should.exist raw

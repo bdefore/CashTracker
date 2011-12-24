@@ -1,6 +1,6 @@
 should = require 'should'
 
 describe 'CoffeeScript', () ->
-  describe 'test files', () ->
-    it 'should be able to be parsed', ->
+  describe 'sanity', () ->
+    it 'is parsed by mocha', ->
       should.exist 1

@@ -14,7 +14,7 @@ describe 'Database', () ->
       should.exist db.connect
     it 'has disconnect method', ->
       should.exist db.disconnect
-    it 'should connect without error from config', (done) ->
+    it 'should connect without error from configured database path', (done) ->
       db.connect config.database, (err) ->
         should.not.exist err
         done()

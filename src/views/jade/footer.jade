@@ -1,4 +1,12 @@
 footer
+    ul.smallNav
+        li
+            a(href="/") Home
+        li
+            a(href="/sightings") Sightings
+        li
+            a(href="/bills") Bills
+
     - if (everyauth.loggedIn)
         p You are logged in with Facebook user: #{everyauth.facebook.user.name}. 
             a(href="/account") View your account

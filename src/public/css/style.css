@@ -1,3 +1,5 @@
+/* BEGIN CSS FROM BOOTSTRAP EXAMPLE */
+
 /* Override some defaults */
 html, body {
   background-color: #eee;
@@ -7,22 +9,10 @@ body {
   /* Keeping for reference in case we want a highlight section above the nav a la http://lesscss.org/ */
   /* padding-top: 40px; */
 }
-.container > footer p {
-  text-align: center; /* center align it with the container */
-}
-.centered
-{
-  padding-left: 10px;
-  padding-bottom: 3px;
-  vertical-align:middle;
-}
 .container {
 }
 
 .footer {
-  margin-left:auto;
-  margin-right:auto;
-  width:70%;
 }
 
 /* The white background content wrapper */
@@ -47,4 +37,23 @@ body {
 
 .topbar .btn {
   border: 0;
+}
+
+/* END CSS FROM BOOTSTRAP EXAMPLE */
+
+.container > footer p {
+  text-align: center; /* center align it with the container */
+}
+.centered
+{
+  padding-left: 10px;
+  padding-bottom: 3px;
+  vertical-align:middle;
+}
+
+@media (min-width: 488px) {
+  .smallNav
+  {
+    display: none; 
+  }
 }

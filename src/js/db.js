@@ -56,6 +56,7 @@
         serial: fakeSerial,
         latitude: DB.getRandomCoordinate(),
         longitude: DB.getRandomCoordinate(),
+        location: "Dummy Location",
         comment: fakeComment
       });
     };
@@ -65,6 +66,7 @@
       return model.sighting.findOne(null, function(error, result) {
         var b, n, s;
         if (result) {
+          w.info("result: " + result);
           return w.info("Found a sighting... skipping dummy data creation...");
         } else {
           w.info("No sightings found, filling with dummy data...");

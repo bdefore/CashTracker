@@ -10,9 +10,8 @@
           - sightings.forEach(function(sighting){
             li
                 a(href="/sightings/#{sighting._id}") 
-                    = sighting.latitude + " "
-                    = sighting.longitude + " - "
-                    = sighting.comment
+                    = sighting.location + " : "
+                    = sighting.date
           - })
     .span3
         h3 Secondary content

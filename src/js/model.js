@@ -12,7 +12,10 @@
 
     Model.bill = mongoose.model('Bill', new mongoose.Schema({
       serial: String,
-      denomination: Number,
+      denomination: {
+        type: Number,
+        "default": 10
+      },
       currency: {
         type: String,
         "default": "Euro"
@@ -70,6 +73,7 @@
       serial: String,
       latitude: Number,
       longitude: Number,
+      location: String,
       comment: String,
       submitterId: String
     }));

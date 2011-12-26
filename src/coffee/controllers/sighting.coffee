@@ -17,7 +17,7 @@ module.exports = class Account
     # TO FIX: Default to 10?
     bill = new model.bill { serial: "", currency: "Euro", denomination: 10 }
     sighting = new model.sighting \
-      { serial: bill.serial, latitude: "", longitude: "", comment: "" }
+      { serial: bill.serial, location: "", latitude: "", longitude: "", comment: "" }
 
     res.render sighting, { bill: bill }
 
@@ -79,8 +79,11 @@ module.exports = class Account
 
           model.sighting.update \
             { _id: sighting._id }, \
-            { serial: sighting.serial, latitude: sighting.latitude, longitude: \
-              sighting.longitude, comment: sighting.comment }, \
+            { serial: sighting.serial, \
+              location: sighting.location, \
+              latitude: sighting.latitude, \
+              longitude: sighting.longitude, \
+              comment: sighting.comment }, \
             null, \
             updateCallback
         else

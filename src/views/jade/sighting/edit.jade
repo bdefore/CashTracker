@@ -17,10 +17,8 @@
         input(type="text", name="sighting[currency]", value="#{bill.currency}", disabled="true")
       p Denomination:
         input(type="text", name="sighting[denomination]", value="#{bill.denomination}")
-      p Latitude: 
-        input(type="text", id="latitudeInput", name="sighting[latitude]", value="#{sighting.latitude}")
-      p Longitude:
-        input(type="text", id="longitudeInput", name="sighting[longitude]", value="#{sighting.longitude}")
+      p Location: 
+        input(type="text", id="locationInput", name="sighting[location]", value="#{sighting.location}", disabled="true")
       p Comment (Optional):
         input(type="text", name="sighting[comment]", value="#{sighting.comment}")
       p

@@ -9,7 +9,7 @@ module.exports = class Model
   @bill = mongoose.model 'Bill' , new mongoose.Schema {
     # _id           : String, # assigned by mongodb
     serial        : String,
-    denomination  : Number,
+    denomination  : { type: Number, default: 10 }
     currency      : { type: String, default: "Euro" }
   }
 
@@ -53,6 +53,7 @@ module.exports = class Model
     serial        : String,
     latitude      : Number,
     longitude     : Number,
+    location      : String,
     comment       : String,
     submitterId   : String
   }

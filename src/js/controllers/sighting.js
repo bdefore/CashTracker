@@ -23,6 +23,7 @@
       });
       sighting = new model.sighting({
         serial: bill.serial,
+        location: "",
         latitude: "",
         longitude: "",
         comment: ""
@@ -96,6 +97,7 @@
               _id: sighting._id
             }, {
               serial: sighting.serial,
+              location: sighting.location,
               latitude: sighting.latitude,
               longitude: sighting.longitude,
               comment: sighting.comment

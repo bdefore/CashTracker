@@ -34,6 +34,7 @@ function geoCodeSuccess(position) {
   console.log('success geocoding')
 
   showOnMap(position.coords.latitude, position.coords.longitude)
+  reverseGeocode(position.coords.latitude, position.coords.longitude);
  }
 
  function geoCodeError(msg) {
@@ -42,8 +43,23 @@ function geoCodeSuccess(position) {
    // console.log(arguments);
  }
 
+function reverseGeocode(lat, lon) {
+
+    $('#gMap3Container').gmap3({
+        action:'getAddress',
+        latLng:[lat, lon],
+        callback:function(results){
+            console.dir(results)
+              content = results && results[2] ? results && results[2].formatted_address : 'no address';
+              
+              // TO FIX: Get the DOM out of here
+              document.getElementById("locationInput").value = content;
+        }
+      });    
+}
+
  if (navigator.geolocation) {
    navigator.geolocation.getCurrentPosition(geoCodeSuccess, geoCodeError);
  } else {
-   error('not supported');
+   error('Geolocation not supported or not granted by your browser.');
  }

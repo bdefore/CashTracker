@@ -38,8 +38,7 @@
             thead
                 tr
                     th Serial
-                    th Latitude
-                    th Longitude
+                    th Location
                     th Comment
             tbody
                 - sightings.forEach(function(sighting){
@@ -48,9 +47,7 @@
                             a(href="/sightings/#{sighting._id}")
                                 = sighting.serial
                         td
-                            = sighting.latitude
-                        td
-                            = sighting.longitude
+                            = sighting.location
                         td
                             = sighting.comment
 

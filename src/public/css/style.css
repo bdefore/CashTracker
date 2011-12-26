@@ -63,8 +63,7 @@ body {
   {
     display: none; 
   }
-}
-
-html, body {
-  background-image: url("../images/guilloche3.jpg");
+  html, body {
+    background-image: url("../images/guilloche3.jpg");
+  }  
 }

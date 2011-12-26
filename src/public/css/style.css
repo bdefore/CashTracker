@@ -51,6 +51,14 @@ body {
   vertical-align:middle;
 }
 
+.clearfix
+{
+  /* Unfortunate workaround */
+  padding-top: 10px;
+  padding-bottom: 5px; 
+}
+
+
 @media (min-width: 768px) {
   .smallNav
   {

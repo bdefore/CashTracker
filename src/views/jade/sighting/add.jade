@@ -16,21 +16,33 @@
     p
 
     form(method="post", action="/sightings/!=sighting.id")
-      input(type="hidden", name="_method", value="put")
-      input(type="hidden", id="latitudeInput", name="sighting[latitude]", value="#{sighting.latitude}")
-      input(type="hidden", id="longitudeInput", name="sighting[longitude]", value="#{sighting.longitude}")
-      input(type="hidden", id="locationInput", name="sighting[location]", value="#{sighting.location}")
+      fieldset
+        legend Enter bill details:
 
-      p Serial: 
-        input(type="text", name="sighting[serial]", value="#{sighting.serial}")
-      p Currency: 
-        input(type="text", name="sighting[currency]", value="#{bill.currency}", disabled="true")
-      p Denomination: 
-        input(type="text", name="sighting[denomination]", value="#{bill.denomination}")
-      p Comment (Optional): 
-        input(type="text", name="sighting[comment]", value="#{sighting.comment}")
-      p
-        button(class="btn primary", type="submit", value="Update") Fire away
+        input(type="hidden", name="_method", value="put")
+        input(type="hidden", id="latitudeInput", name="sighting[latitude]", value="#{sighting.latitude}")
+        input(type="hidden", id="longitudeInput", name="sighting[longitude]", value="#{sighting.longitude}")
+        input(type="hidden", id="locationInput", name="sighting[location]", value="#{sighting.location}")
+
+        .clearfix
+          label(for="serialInput") Serial:
+          .input
+            input.xlarge(type="text", id="serialInput", name="sighting[serial]", value="#{sighting.serial}", size="30")
+        .clearfix
+          label(for="currencyInput") Currency:
+          .input
+            input(type="text", id="currencyInput", name="sighting[currency]", value="#{bill.currency}", disabled="true", size="30")
+        .clearfix
+          label(for="denominationInput") Denomination:
+          .input
+            input(type="text", id="denominationInput", name="sighting[denomination]", value="#{bill.denomination}", size="30")
+        .clearfix
+          label(for="commentInput") Comment: (Optional)
+          .input
+            input(type="text", id="commentInput", name="sighting[comment]", value="#{sighting.comment}", size="30")
+        p
+        p
+          button(class="btn primary", type="submit", value="Update") Add
 
   .span3
       h3 Secondary content

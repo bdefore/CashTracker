@@ -97,9 +97,6 @@
               _id: sighting._id
             }, {
               serial: sighting.serial,
-              location: sighting.location,
-              latitude: sighting.latitude,
-              longitude: sighting.longitude,
               comment: sighting.comment
             }, null, updateCallback);
           } else {

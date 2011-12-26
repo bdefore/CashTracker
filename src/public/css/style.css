@@ -58,10 +58,13 @@ body {
   padding-bottom: 5px; 
 }
 
-
 @media (min-width: 768px) {
   .smallNav
   {
     display: none; 
   }
+}
+
+html, body {
+  background-image: url("../images/guilloche3.jpg");
 }

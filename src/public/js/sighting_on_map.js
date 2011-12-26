@@ -3,7 +3,7 @@ function createMap(container, lat, lon, zoom)
   var mapcanvas = document.createElement('div');
   mapcanvas.id = 'mapcanvas';
   mapcanvas.style.height = '400px';
-  mapcanvas.style.width = '560px';
+  mapcanvas.style.width = '100%';
 
   // TO FIX: Get the DOM out of here
   container.appendChild(mapcanvas);

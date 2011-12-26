@@ -5,11 +5,23 @@
     .span7
         !=partial('messages')
 
-        ul
-            - bills.forEach(function(bill){
-                li
-                    a(href="/bills/#{bill.serial}")
-                        = bill.serial
-            - })
+        table
+            thead
+                tr
+                    th Serial
+                    th Currency
+                    th Denomination
+            tbody
+                - bills.forEach(function(bill){
+                    tr
+                        td
+                            a(href="/bills/#{bill.serial}")
+                                = bill.serial
+                        td
+                            = bill.currency
+                        td
+                            = bill.denomination
+                            
+                - })
     .span3
         h3 Secondary content

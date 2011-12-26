@@ -51,7 +51,7 @@ body {
   vertical-align:middle;
 }
 
-@media (min-width: 488px) {
+@media (min-width: 768px) {
   .smallNav
   {
     display: none; 

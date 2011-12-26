@@ -1,19 +1,34 @@
-.page-header
-    h1 User Account 
-        small yon vittles be waiting
-.row
-    .span7
-        !=partial('messages')
+- if (everyauth.loggedIn)
+    .page-header
+        h1 User Account 
+            small #{everyauth.facebook.user.name} FB ID: #{everyauth.facebook.user.id} CT ID: #{everyauth.user.id}
+    .row
+        .span12
+            !=partial('messages')
 
-        - if (everyauth.loggedIn)
+            h2 Your sightings
 
-            h1 Your sightings
+            table
+                thead
+                    tr
+                        th Serial
+                        th Latitude
+                        th Longitude
+                        th Comment
+                tbody
+                    - sightings.forEach(function(sighting){
+                        tr
+                            td
+                                a(href="/sightings/#{sighting._id}")
+                                    = sighting.serial
+                            td
+                                = sighting.latitude
+                            td
+                                = sighting.longitude
+                            td
+                                = sighting.comment
 
-            ul
-              - sightings.forEach(function(sighting){
-                li
-                    a(href="/sightings/#{sighting._id}") #{sighting.latitude} #{sighting.longitude} - #{sighting.comment}
-              - })
+                    - })
 
             a(href="/sightings/add")
                 button(class="btn primary", type="submit", value="Update") Add New Sighting
@@ -30,10 +45,6 @@
             //-                 = bill.serial
             //-     - })
 
-        - else
-            p You are not linked with your Facebook account yet. 
-                a(href="/auth/facebook") Log in via Facebook
-    .span3
-        p Name: #{everyauth.facebook.user.name}
-        p FB ID: #{everyauth.facebook.user.id}
-        p CashTracker ID: #{everyauth.user.id}
+- else
+    p You are not linked with your Facebook account yet. 
+        a(href="/auth/facebook") Log in via Facebook

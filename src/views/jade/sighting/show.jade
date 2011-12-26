@@ -22,23 +22,30 @@
 
     div#mapContainer
     p
-    ul
-      li Serial: 
+  .span5
+      h3 Serial:
+      p
         = sighting.serial
-      li Currency: 
+      h3 Date:
+      p
+        = sighting.date
+      h3 Currency:
+      p
         = bill.currency
-      li Denomination: 
+      h3 Denomination:
+      p
         = bill.denomination
-      li Latitude: 
+      h3 Latitude:
+      p
         = sighting.latitude
-      li Longitude: 
+      h3 Longitude:
+      p
         = sighting.longitude
-      li Comment: 
+      h3 Comment:
+      p
         = sighting.comment
       p
       - if (everyauth.loggedIn)
         - if (sighting.submitterId == everyauth.user.id)
           a(href="#{sighting._id}/edit")
             button(class="btn primary", type="submit", value="Update") Edit
-  .span3
-      h3 Secondary content

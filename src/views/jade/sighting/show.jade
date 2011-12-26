@@ -14,7 +14,7 @@
         // var map = createMap($("#mapContainer"), $("#latitude").val(), $("#longitude").val(), 4) 
 
         var map = createMap(document.getElementById('mapContainer'), $("#latitude").val(), $("#longitude").val(), 4) 
-        showOnMap( sighting.latitude, sighting.longitude, map )
+        showOnMap( $("#latitude").val(), $("#longitude").val(), map )
       })
 
     input(type='hidden', id='latitude', value='#{sighting.latitude}')

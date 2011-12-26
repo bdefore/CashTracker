@@ -17,18 +17,16 @@
 
     form(method="post", action="/sightings/!=sighting.id")
       input(type="hidden", name="_method", value="put")
+      input(type="hidden", id="latitudeInput", name="sighting[latitude]", value="#{sighting.latitude}")
+      input(type="hidden", id="longitudeInput", name="sighting[longitude]", value="#{sighting.longitude}")
+      input(type="hidden", id="locationInput", name="sighting[location]", value="#{sighting.location}")
+
       p Serial: 
         input(type="text", name="sighting[serial]", value="#{sighting.serial}")
       p Currency: 
         input(type="text", name="sighting[currency]", value="#{bill.currency}", disabled="true")
       p Denomination: 
         input(type="text", name="sighting[denomination]", value="#{bill.denomination}")
-      p Latitude: 
-        input(type="text", id="latitudeInput", name="sighting[latitude]", value="#{sighting.latitude}")
-      p Longitude: 
-        input(type="text", id="longitudeInput", name="sighting[longitude]", value="#{sighting.longitude}")
-      p Location: 
-        input(type="text", id="locationInput", name="sighting[location]", value="#{sighting.location}")
       p Comment (Optional): 
         input(type="text", name="sighting[comment]", value="#{sighting.comment}")
       p

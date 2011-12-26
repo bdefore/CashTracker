@@ -54,7 +54,6 @@ module.exports = class DB
 
     model.sighting.findOne null, (error, result) =>
       if result
-        w.info "result: " + result
         w.info "Found a sighting... skipping dummy data creation..."
       else
         w.info "No sightings found, filling with dummy data..."

@@ -105,15 +105,21 @@
             return model.bill.getBillBySerial(sighting.serial, function(error, result) {
               var b;
               if (!result) {
+                w.info('new bill denom: ' + sighting.serial + " : " + sighting.denomination);
                 b = new model.bill({
                   serial: sighting.serial,
-                  denomination: sighting.denomination,
+                  denomination: Number(req.body.sighting.denomination),
                   currency: sighting.currency
                 });
-                b.save();
-                w.info("saved new sighting to new record");
-                req.flash('success', 'Successfully saved sighting. First record of this bill!');
-                return res.redirect('/sightings');
+                return b.save(function(err) {
+                  if (err) {
+                    return w.info("Creation of new Bill entry failed.");
+                  } else {
+                    w.info("New bill creation success");
+                    req.flash('success', 'Successfully saved sighting. First record of this bill!');
+                    return res.redirect('/sightings');
+                  }
+                });
               } else {
                 w.info("saved new sighting to preexisting record: " + result);
                 req.flash('success', 'Successfully saved sighting. Bill has been seen before!');

@@ -85,7 +85,7 @@
             updateCallback = function(error) {
               if (error) {
                 w.info("Error updating entry: " + error);
-                req.flash('error', 'Failed to update entry.');
+                req.flash('error', 'Failed to update entry: ' + error);
                 return res.redirect('/sightings');
               } else {
                 w.info("=== Successful update === ");

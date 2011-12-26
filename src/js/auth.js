@@ -61,7 +61,7 @@
           var u;
           if (!result) {
             w.info("Is new user record");
-            u = new User({
+            u = new model.user({
               name: fbUserMetadata.name,
               fbId: fbUserMetadata.id
             });

@@ -5,11 +5,14 @@
     .span9
         !=partial('messages')
 
-        h2 What's this all about?
+        h3 What's this all about?
 
         p The site was built in the spirit of 
             a(href="http://wheresgeorge.com") Where's George
             . You add sightings of particular Euro bills and it makes a geocode lookup of your location to store an entry for that bill's serial number. You can authenticate with Facebook and track your entered bills to see where else in the world they have been spotted.
+        
+        h3 All right. Why'd you make it?
+
         p This site is a rudimentary example that explores the capabilities of:
             ul
                 li
@@ -22,11 +25,21 @@
                     a(href="http://coffeescript.org/") CoffeeScript
                 li Twitter's  
                     a(href="http://twitter.github.com/bootstrap/") Bootstrap library
-        
+
+        h3 Huh. Give me some technical details.
+                
         p The site was built entirely in CoffeeScript BDD-style. Upon saving any file, a Jitter task compiles the CoffeeScript files into JavaScript, then runs a series of Mocha tests which, if they pass, trigger a restart of the local node.js server. URL routing happens via a rough Model-View-Controller model based on Express. HTML views are built using Jade, a templating framework. With a lot of help from Bootstrap's newest additions in version 2.0, the site is responsive; page elements flow naturally no matter what device you use.
+
+        h3 OK, where should I start?
+
+        ul
+            li
+                a(href="/auth/facebook") Log into your Facebook and authenticate. 
+            li 
+                a(href="/sightings/add") Start adding sightings
 
         p Thanks to 
             a(href="http://nodejitsu.com") Nodejitsu
             ,   for making deployment one-liner easy!
 
-        p More technical details are in README file in the source.
+        p More technical details are in the README file in the source.

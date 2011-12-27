@@ -2,6 +2,7 @@ module.exports = class Model
 
   @DEBUG = false
 
+  w = require 'winston'
   mongoose = require 'mongoose'
 
   # TO FIX: How to split these into their own classes via CoffeeScript?
@@ -17,14 +18,12 @@ module.exports = class Model
     if @DEBUG
       w.info "getBillBySerial serial: " + filterBySerial
     @findOne { serial: filterBySerial }, (error, result) =>
-      if error
-        if @DEBUG
-          w.info "getBillBySerial error: " + error
+      if error and @DEBUG
+        w.info "getBillBySerial error: " + error
       if @DEBUG
         w.info "getBillBySerial results: " + result
-      if !callback
-        if @DEBUG
-          w.info "Warning: getBillBySerial requested without callback"
+      if !callback and @DEBUG
+        w.info "Warning: getBillBySerial requested without callback"
       else
         callback error, result
 
@@ -36,14 +35,12 @@ module.exports = class Model
     if filterBySerial
       filter = { serial: filterBySerial }
     @find filter, (error, result) =>
-      if error
-        if @DEBUG
-          w.info "getBills error: " + error
+      if error and @DEBUG
+        w.info "getBills error: " + error
       if @DEBUG
         w.info "getBills results: " + result
-      if !callback
-        if @DEBUG
-          w.info "Warning: getBills requested without callback"
+      if !callback and @DEBUG
+        w.info "Warning: getBills requested without callback"
       else
         callback error, result
 
@@ -65,14 +62,12 @@ module.exports = class Model
     if filterById
       filter = { _id: filterById }
     @find filter, (error, result) =>
-      if error
-        if @DEBUG
-          w.info "getSightings error: " + error
+      if error and @DEBUG
+        w.info "getSightings error: " + error
       if @DEBUG
         w.info "getSightings results: " + result
-      if !callback
-        if @DEBUG
-          w.info "Warning: getSightings requested without callback"
+      if !callback and @DEBUG
+        w.info "Warning: getSightings requested without callback"
       else
         callback error, result
 
@@ -84,14 +79,12 @@ module.exports = class Model
     if filterBySerial
       filter = { serial: filterBySerial }
     @find filter, (error, result) =>
-      if error
-        if @DEBUG
-          w.info "getSightingsBySerial error: " + error
+      if error and @DEBUG
+        w.info "getSightingsBySerial error: " + error
       if @DEBUG
         w.info "getSightingsBySerial results: " + result
-      if !callback
-        if @DEBUG
-          w.info "Warning: getSightingsBySerial requested without callback"
+      if !callback and @DEBUG
+        w.info "Warning: getSightingsBySerial requested without callback"
       else
         callback error, result
 
@@ -103,30 +96,69 @@ module.exports = class Model
     if filterBySubmitterId
       filter = { submitterId: filterBySubmitterId }
     @find filter, (error, result) =>
-      if error
-        if @DEBUG
-          w.info "getSightingsBySubmitter error: " + error
+      if error and @DEBUG
+        w.info "getSightingsBySubmitter error: " + error
       if @DEBUG
         w.info "getSightingsBySubmitter results: " + result
-      if !callback
-        if @DEBUG
-          w.info "Warning: getSightingsBySubmitter requested sin callback"
+      if !callback and @DEBUG
+        w.info "Warning: getSightingsBySubmitter requested sin callback"
       else
         callback error, result
 
-  # No longer used?
-  #
-  # function getUser(id, callback) {
-  #   w.info("getting user of id: " + id)
-  #   User.findOne( { id: id }, function(error, result) {
-  #     if(error) w.info("Error getting user: " + error)
-  #     w.info("results: " + result)
-  #     if(!callback) w.info("Warning: sightings requested sin callback")
-  #     else callback(result)
-  #   })
-  # }
+  @sighting.saveAndCreateBillIfNecessary = (sighting, callback) =>
 
+    sighting.save (err) =>
+      if err and @DEBUG
+        w.error "Error saving sighting"
+      else
+        # If there's no existing bill of this sighting, create an entry for it
+        @bill.getBillBySerial sighting.serial, (err, result) =>
+          if !result
+            w.info 'new bill denom: ' + sighting.serial + " : " \
+              + sighting.denomination
+
+            b = new @bill { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency }
+            w.info "b b b b b b b b b " + b
+            w.info "b save: " + b.save
+            b.save (err) ->
+              if callback
+                callback err
+          else
+            # Already record of this bill, do nothing
+            if callback
+              callback err, result
+                              
   @user = mongoose.model 'User', new mongoose.Schema {
     name        : String,
     fbId        : Number
   }
+
+  # TO FIX: These shouldn't be publicly exposed (@ prefix) but the scope
+  # of prepopulate's sighting.findOne callback is doing something surprising
+
+  @alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+  @getRandomLetter: () =>
+    @alphabet[Math.floor(Math.random() * @alphabet.length)]
+
+  @getRandomDigit: () =>
+    Math.floor Math.random() * 10
+
+  @getRandomCoordinate: () =>
+    (Math.random() * 180) - 90
+
+  @sighting.getRandom = () =>
+
+    # Euro serial is letter followed by 11 digits
+    fakeSerial = @getRandomLetter().toUpperCase()
+    fakeSerial += @getRandomDigit() for n in [0..10]
+
+    fakeComment = ""
+    fakeComment += @getRandomLetter() for n in [0..20]
+
+    new @sighting
+      serial: fakeSerial
+      latitude: @getRandomCoordinate()
+      longitude: @getRandomCoordinate()
+      location: "Dummy Location"
+      comment: fakeComment

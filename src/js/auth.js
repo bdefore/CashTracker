@@ -83,6 +83,7 @@
       everyauth.everymodule.findUserById(function(userId, callback) {
         return model.user.findOne(userId, callback);
       });
+      w.info('oi! ' + this.processFacebookResponse);
       daisyChain = everyauth.facebook.appId(creds.fb.appId).appSecret(creds.fb.appSecret).findOrCreateUser(this.processFacebookResponse);
       daisyChain.redirectPath(creds.domain + "/account");
       app.use(everyauth.middleware());

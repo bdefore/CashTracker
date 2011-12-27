@@ -18,36 +18,6 @@ module.exports = class DB
   @disconnect: (callback) =>
     mongoose.disconnect callback
 
-  # TO FIX: These shouldn't be publicly exposed (@ prefix) but the scope
-  # of prepopulate's sighting.findOne callback is doing something surprising
-
-  @alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-  @getRandomLetter: () =>
-    @alphabet[Math.floor(Math.random() * @alphabet.length)]
-
-  @getRandomDigit: () =>
-    Math.floor Math.random() * 10
-
-  @getRandomCoordinate: () =>
-    (Math.random() * 180) - 90
-
-  @getRandomSighting: () =>
-
-    # Euro serial is letter followed by 11 digits
-    fakeSerial = @getRandomLetter().toUpperCase()
-    fakeSerial += @getRandomDigit() for n in [0..10]
-
-    fakeComment = ""
-    fakeComment += @getRandomLetter() for n in [0..20]
-
-    sighting = new model.sighting
-      serial: fakeSerial
-      latitude: @getRandomCoordinate()
-      longitude: @getRandomCoordinate()
-      location: "Dummy Location"
-      comment: fakeComment
-
   @prepopulate: () =>
 
     w.info "Checking for existing data..."
@@ -59,7 +29,7 @@ module.exports = class DB
         w.info "No sightings found, filling with dummy data..."
 
         for n in [0..10]
-          s = @getRandomSighting()
+          s = model.sighting.getRandom()
           b = new model.bill
             serial: s.serial
             denomination: 20

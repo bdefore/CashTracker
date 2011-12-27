@@ -71,6 +71,9 @@ module.exports = class Auth
 
     # TO FIX: Find more elegant way of complying with line length
     # than making daisychain variables and \ char. #toolazytoreaddocs
+
+    w.info 'oi! ' + @processFacebookResponse
+
     daisyChain = everyauth \
       .facebook \
       .appId(creds.fb.appId) \

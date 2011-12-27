@@ -2,11 +2,14 @@
   var Model;
 
   module.exports = Model = (function() {
-    var mongoose;
+    var mongoose, w,
+      _this = this;
 
     function Model() {}
 
     Model.DEBUG = false;
+
+    w = require('winston');
 
     mongoose = require('mongoose');
 
@@ -28,12 +31,10 @@
       return this.findOne({
         serial: filterBySerial
       }, function(error, result) {
-        if (error) if (_this.DEBUG) w.info("getBillBySerial error: " + error);
+        if (error && _this.DEBUG) w.info("getBillBySerial error: " + error);
         if (_this.DEBUG) w.info("getBillBySerial results: " + result);
-        if (!callback) {
-          if (_this.DEBUG) {
-            return w.info("Warning: getBillBySerial requested without callback");
-          }
+        if (!callback && _this.DEBUG) {
+          return w.info("Warning: getBillBySerial requested without callback");
         } else {
           return callback(error, result);
         }
@@ -53,12 +54,10 @@
         };
       }
       return this.find(filter, function(error, result) {
-        if (error) if (_this.DEBUG) w.info("getBills error: " + error);
+        if (error && _this.DEBUG) w.info("getBills error: " + error);
         if (_this.DEBUG) w.info("getBills results: " + result);
-        if (!callback) {
-          if (_this.DEBUG) {
-            return w.info("Warning: getBills requested without callback");
-          }
+        if (!callback && _this.DEBUG) {
+          return w.info("Warning: getBills requested without callback");
         } else {
           return callback(error, result);
         }
@@ -91,12 +90,10 @@
         };
       }
       return this.find(filter, function(error, result) {
-        if (error) if (_this.DEBUG) w.info("getSightings error: " + error);
+        if (error && _this.DEBUG) w.info("getSightings error: " + error);
         if (_this.DEBUG) w.info("getSightings results: " + result);
-        if (!callback) {
-          if (_this.DEBUG) {
-            return w.info("Warning: getSightings requested without callback");
-          }
+        if (!callback && _this.DEBUG) {
+          return w.info("Warning: getSightings requested without callback");
         } else {
           return callback(error, result);
         }
@@ -116,12 +113,10 @@
         };
       }
       return this.find(filter, function(error, result) {
-        if (error) if (_this.DEBUG) w.info("getSightingsBySerial error: " + error);
+        if (error && _this.DEBUG) w.info("getSightingsBySerial error: " + error);
         if (_this.DEBUG) w.info("getSightingsBySerial results: " + result);
-        if (!callback) {
-          if (_this.DEBUG) {
-            return w.info("Warning: getSightingsBySerial requested without callback");
-          }
+        if (!callback && _this.DEBUG) {
+          return w.info("Warning: getSightingsBySerial requested without callback");
         } else {
           return callback(error, result);
         }
@@ -141,16 +136,41 @@
         };
       }
       return this.find(filter, function(error, result) {
-        if (error) {
-          if (_this.DEBUG) w.info("getSightingsBySubmitter error: " + error);
+        if (error && _this.DEBUG) {
+          w.info("getSightingsBySubmitter error: " + error);
         }
         if (_this.DEBUG) w.info("getSightingsBySubmitter results: " + result);
-        if (!callback) {
-          if (_this.DEBUG) {
-            return w.info("Warning: getSightingsBySubmitter requested sin callback");
-          }
+        if (!callback && _this.DEBUG) {
+          return w.info("Warning: getSightingsBySubmitter requested sin callback");
         } else {
           return callback(error, result);
+        }
+      });
+    };
+
+    Model.sighting.saveAndCreateBillIfNecessary = function(sighting, callback) {
+      return sighting.save(function(err) {
+        if (err && Model.DEBUG) {
+          return w.error("Error saving sighting");
+        } else {
+          return Model.bill.getBillBySerial(sighting.serial, function(err, result) {
+            var b;
+            if (!result) {
+              w.info('new bill denom: ' + sighting.serial + " : " + sighting.denomination);
+              b = new Model.bill({
+                serial: sighting.serial,
+                denomination: sighting.denomination,
+                currency: sighting.currency
+              });
+              w.info("b b b b b b b b b " + b);
+              w.info("b save: " + b.save);
+              return b.save(function(err) {
+                if (callback) return callback(err);
+              });
+            } else {
+              if (callback) return callback(err, result);
+            }
+          });
         }
       });
     };
@@ -160,8 +180,41 @@
       fbId: Number
     }));
 
+    Model.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    Model.getRandomLetter = function() {
+      return Model.alphabet[Math.floor(Math.random() * Model.alphabet.length)];
+    };
+
+    Model.getRandomDigit = function() {
+      return Math.floor(Math.random() * 10);
+    };
+
+    Model.getRandomCoordinate = function() {
+      return (Math.random() * 180) - 90;
+    };
+
+    Model.sighting.getRandom = function() {
+      var fakeComment, fakeSerial, n;
+      fakeSerial = Model.getRandomLetter().toUpperCase();
+      for (n = 0; n <= 10; n++) {
+        fakeSerial += Model.getRandomDigit();
+      }
+      fakeComment = "";
+      for (n = 0; n <= 20; n++) {
+        fakeComment += Model.getRandomLetter();
+      }
+      return new Model.sighting({
+        serial: fakeSerial,
+        latitude: Model.getRandomCoordinate(),
+        longitude: Model.getRandomCoordinate(),
+        location: "Dummy Location",
+        comment: fakeComment
+      });
+    };
+
     return Model;
 
-  })();
+  }).call(this);
 
 }).call(this);

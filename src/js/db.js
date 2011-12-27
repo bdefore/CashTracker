@@ -28,39 +28,6 @@
       return mongoose.disconnect(callback);
     };
 
-    DB.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    DB.getRandomLetter = function() {
-      return DB.alphabet[Math.floor(Math.random() * DB.alphabet.length)];
-    };
-
-    DB.getRandomDigit = function() {
-      return Math.floor(Math.random() * 10);
-    };
-
-    DB.getRandomCoordinate = function() {
-      return (Math.random() * 180) - 90;
-    };
-
-    DB.getRandomSighting = function() {
-      var fakeComment, fakeSerial, n, sighting;
-      fakeSerial = DB.getRandomLetter().toUpperCase();
-      for (n = 0; n <= 10; n++) {
-        fakeSerial += DB.getRandomDigit();
-      }
-      fakeComment = "";
-      for (n = 0; n <= 20; n++) {
-        fakeComment += DB.getRandomLetter();
-      }
-      return sighting = new model.sighting({
-        serial: fakeSerial,
-        latitude: DB.getRandomCoordinate(),
-        longitude: DB.getRandomCoordinate(),
-        location: "Dummy Location",
-        comment: fakeComment
-      });
-    };
-
     DB.prepopulate = function() {
       w.info("Checking for existing data...");
       return model.sighting.findOne(null, function(error, result) {
@@ -70,7 +37,7 @@
         } else {
           w.info("No sightings found, filling with dummy data...");
           for (n = 0; n <= 10; n++) {
-            s = DB.getRandomSighting();
+            s = model.sighting.getRandom();
             b = new model.bill({
               serial: s.serial,
               denomination: 20,

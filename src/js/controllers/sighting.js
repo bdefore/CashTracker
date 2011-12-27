@@ -81,6 +81,7 @@
       var sighting,
         _this = this;
       sighting = new model.sighting(req.body.sighting);
+      sighting.denomination = Number(req.body.sighting.denomination);
       if (sighting.serial.length !== 12) {
         req.flash('info', 'Serial must contain 12 characters, the first beginning with a letter');
         return res.redirect('/sightings/add');
@@ -109,28 +110,14 @@
             }, null, updateCallback);
           } else {
             w.info("Saving new entry: '" + sighting + "'");
-            sighting.save();
-            return model.bill.getBillBySerial(sighting.serial, function(error, result) {
-              var b;
-              if (!result) {
-                w.info('new bill denom: ' + sighting.serial + " : " + sighting.denomination);
-                b = new model.bill({
-                  serial: sighting.serial,
-                  denomination: Number(req.body.sighting.denomination),
-                  currency: sighting.currency
-                });
-                return b.save(function(err) {
-                  if (err) {
-                    return w.info("Creation of new Bill entry failed.");
-                  } else {
-                    w.info("New bill creation success");
-                    req.flash('success', 'Successfully saved sighting. First record of this bill!');
-                    return res.redirect('/sightings');
-                  }
-                });
+            return model.sighting.saveAndCreateBillIfNecessary(sighting, function(err, result) {
+              if (err) {
+                w.info("Creation of new sighting or related bill failed.");
+                req.flash('error', 'Failed to save sighting.');
+                return res.redirect('/sightings');
               } else {
-                w.info("saved new sighting to preexisting record: " + result);
-                req.flash('success', 'Successfully saved sighting. Bill has been seen before!');
+                w.info("New bill creation success");
+                req.flash('success', 'Successfully saved sighting.');
                 return res.redirect('/sightings');
               }
             });

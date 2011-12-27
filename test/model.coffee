@@ -9,10 +9,10 @@ pathToConfig = __dirname + '/../src/config/test.json'
 
 config = JSON.parse fs.readFileSync pathToConfig, 'utf8'
 
+sighting = new model.sighting()
+
 describe 'Model', () ->
   describe 'Sighting', () ->
-
-    sighting = new model.sighting()
 
     before (done) ->
       db.connect config.database, (err) ->
@@ -24,12 +24,23 @@ describe 'Model', () ->
     it 'new sighting has id assigned automatically', ->
       should.exist sighting.id
 
+    it 'new sighting does not have serial assigned automatically', ->
+      should.not.exist sighting.serial
+
     it 'new sighting does not have latitude/longitude assigned automatically', ->
       should.not.exist sighting.longitude
       should.not.exist sighting.latitude
 
+    it 'can be generated randomly', ->
+      sighting = model.sighting.getRandom()
+      should.exist sighting.latitude
+      should.exist sighting.longitude
+      should.exist sighting.serial
+      should.exist sighting.comment
+
     it 'can save new entry', (done) ->
-      sighting.save (err) ->
+      console.dir sighting
+      model.sighting.saveAndCreateBillIfNecessary sighting, (err) ->
         should.not.exist err
         done()
 
@@ -44,6 +55,31 @@ describe 'Model', () ->
         should.not.exist err
         should.exist result
         done()
+
+    it 'has a single bill associated with it after saving', (done) ->
+      model.bill.find { serial: sighting.serial }, (err, result) ->
+        should.not.exist err
+        should.exist result
+        console.dir result
+        result.length.should.equal 1
+        done()
+
+    it 'has a single bill associated with it after saving a second sighting with same serial', (done) ->
+      # Create fresh random serial but reassign its serial to the one we already had
+      firstSerial = sighting.serial
+      sighting = model.sighting.getRandom()
+      sighting.serial = firstSerial
+
+      # Save this new one
+      model.sighting.saveAndCreateBillIfNecessary sighting, (err, result) ->
+        should.not.exist err
+        model.bill.find { serial: sighting.serial }, (err, result) ->
+          should.not.exist err
+          should.exist result
+          console.dir result
+          # Ensure only one bill record exists, no duplication after a serial with the same number exists
+          result.length.should.equal 1
+          done()
 
     after (done) ->
       db.disconnect (err) ->

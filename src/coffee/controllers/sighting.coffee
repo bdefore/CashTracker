@@ -63,6 +63,9 @@ module.exports = class Sighting
 
   @update: (req, res, next) ->
     sighting = new model.sighting req.body.sighting
+    
+    # TO FIX: Why does above not properly serialize this?
+    sighting.denomination = Number(req.body.sighting.denomination)
 
     # Validate
     # Euro example: X18084287225
@@ -99,27 +102,12 @@ module.exports = class Sighting
         else
           # New sighting, save new entry
           w.info "Saving new entry: '" + sighting + "'"
-          sighting.save()
-
-          # If there's no existing bill of this sighting, create an entry for it
-          model.bill.getBillBySerial sighting.serial, (error, result) ->
-            if !result
-              w.info 'new bill denom: ' + sighting.serial + " : " \
-                + sighting.denomination
-
-              b = new model.bill { serial: sighting.serial, \
-                denomination: Number(req.body.sighting.denomination), \
-                currency: sighting.currency }
-              b.save (err) ->
-                if err
-                  w.info "Creation of new Bill entry failed."
-                else
-                  w.info "New bill creation success"
-                  req.flash 'success', \
-                    'Successfully saved sighting. First record of this bill!'
-                  res.redirect '/sightings'
+          model.sighting.saveAndCreateBillIfNecessary sighting, (err, result) ->
+            if err
+              w.info "Creation of new sighting or related bill failed."
+              req.flash 'error', 'Failed to save sighting.'
+              res.redirect '/sightings'
             else
-              w.info "saved new sighting to preexisting record: " + result
-              req.flash 'success', \
-                'Successfully saved sighting. Bill has been seen before!'
+              w.info "New bill creation success"
+              req.flash 'success', 'Successfully saved sighting.'
               res.redirect '/sightings'

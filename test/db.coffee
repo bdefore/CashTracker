@@ -4,7 +4,7 @@ mongoose = require 'mongoose'
 
 db = require '../src/coffee/db'
 
-pathToConfig = __dirname + '/../src/config/' + process.env['NODE_ENV'] + '.json'
+pathToConfig = __dirname + '/../src/config/test.json'
 
 config = JSON.parse fs.readFileSync pathToConfig, 'utf8'
 

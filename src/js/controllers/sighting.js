@@ -35,36 +35,42 @@
 
     Sighting.show = function(req, res, next) {
       var _this = this;
-      return model.sighting.getSightings(req.params.id, function(result) {
-        if (result && result[0]) {
-          return model.bill.getBillBySerial(result[0].serial, function(error, bill) {
-            return res.render(result[0], {
-              bill: bill
+      if (req.params.id) {
+        return model.sighting.findById(req.params.id, function(err, result) {
+          if (result) {
+            return model.bill.getBillBySerial(result.serial, function(error, bill) {
+              return res.render(result, {
+                bill: bill
+              });
             });
-          });
-        } else {
-          return res.render([], {
-            bill: {}
-          });
-        }
-      });
+          } else {
+            req.flash('error', 'Could not find sighting details for id: ' + req.params.id);
+            return res.redirect('/sightings');
+          }
+        });
+      } else {
+        req.flash('error', 'Could not find sighting details for id: ' + req.params.id);
+        return res.redirect('/sightings');
+      }
     };
 
     Sighting.edit = function(req, res, next) {
       var _this = this;
       if (req.params.id) {
-        return model.sighting.getSightings(req.params.id, function(result) {
-          if (result && result[0]) {
-            return model.bill.getBillBySerial(result[0].serial, function(error, bill) {
-              return res.render(result[0], {
+        return model.sighting.findById(req.params.id, function(err, result) {
+          if (result) {
+            return model.bill.getBillBySerial(result.serial, function(error, bill) {
+              return res.render(result, {
                 bill: bill
               });
             });
           } else {
+            req.flash('error', 'Could not find sighting details for id: ' + req.params.id);
             return res.redirect('/sightings/add');
           }
         });
       } else {
+        req.flash('error', 'Could not find sighting details for id: ' + req.params.id);
         return res.redirect('/sightings/add');
       }
     };

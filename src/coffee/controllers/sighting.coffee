@@ -24,26 +24,31 @@ module.exports = class Sighting
   # /sightings/:id
 
   @show: (req, res, next) ->
-    model.sighting.getSightings req.params.id, (result) =>
-      # TO FIX: Periodic server crashes when result appears to be null
-      if result && result[0]
-        model.bill.getBillBySerial result[0].serial, (error, bill) =>
-          res.render result[0], { bill: bill }
-      else
-        # TO FIX: Better than pass empty object? Inform user of error?
-        res.render [], { bill: {} }
+    if req.params.id
+      model.sighting.findById req.params.id, (err, result) =>
+        if result
+          model.bill.getBillBySerial result.serial, (error, bill) =>
+            res.render result, { bill: bill }
+        else
+          req.flash 'error', 'Could not find sighting details for id: ' + req.params.id
+          res.redirect '/sightings'
+    else
+      req.flash 'error', 'Could not find sighting details for id: ' + req.params.id
+      res.redirect '/sightings'
 
   # /sightings/:id/edit
 
   @edit: (req, res, next) ->
     if req.params.id
-      model.sighting.getSightings req.params.id, (result) =>
-        if result && result[0]
-          model.bill.getBillBySerial result[0].serial, (error, bill) =>
-            res.render result[0], { bill: bill }
+      model.sighting.findById req.params.id, (err, result) =>
+        if result
+          model.bill.getBillBySerial result.serial, (error, bill) =>
+            res.render result, { bill: bill }
         else
+          req.flash 'error', 'Could not find sighting details for id: ' + req.params.id
           res.redirect '/sightings/add'
     else
+      req.flash 'error', 'Could not find sighting details for id: ' + req.params.id
       res.redirect '/sightings/add'
 
   # PUT /sightings/:id

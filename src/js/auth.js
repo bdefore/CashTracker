@@ -47,42 +47,43 @@
       });
     };
 
+    Auth.processFacebookResponse = function(session, token, extra, fbUserMetadata) {
+      var userByFbId;
+      w.info("Checking to see if we have FB user: " + fbUserMetadata.id);
+      w.info(fbUserMetadata);
+      getStoredUser(fbUserMetadata.id, function(result) {
+        var u;
+        if (!result) {
+          w.info("Is new user record");
+          u = new model.user({
+            name: fbUserMetadata.name,
+            fbId: fbUserMetadata.id
+          });
+          return u.save(function(err) {
+            if (err) {
+              return w.error("Failed to save user record");
+            } else {
+              return w.info("Successful save of user record");
+            }
+          });
+        } else {
+          return w.info("Stored user record found");
+        }
+      });
+      userByFbId = usersByFbId[fbUserMetadata.id];
+      if (!userByFbId) {
+        userByFbId = usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata);
+      }
+      return userByFbId;
+    };
+
     Auth.bootEveryAuth = function(app, creds) {
-      var daisyChain, everyauth, facebookResponseCallback;
+      var daisyChain, everyauth;
       everyauth = require('everyauth');
       everyauth.everymodule.findUserById(function(userId, callback) {
         return model.user.findOne(userId, callback);
       });
-      facebookResponseCallback = function(session, token, extra, fbUserMetadata) {
-        var userByFbId;
-        w.info("Checking to see if we have FB user: " + fbUserMetadata.id);
-        w.info(fbUserMetadata);
-        getStoredUser(fbUserMetadata.id, function(result) {
-          var u;
-          if (!result) {
-            w.info("Is new user record");
-            u = new model.user({
-              name: fbUserMetadata.name,
-              fbId: fbUserMetadata.id
-            });
-            return u.save(function(err) {
-              if (err) {
-                return w.error("Failed to save user record");
-              } else {
-                return w.info("Successful save of user record");
-              }
-            });
-          } else {
-            return w.info("Stored user record found");
-          }
-        });
-        userByFbId = usersByFbId[fbUserMetadata.id];
-        if (!userByFbId) {
-          userByFbId = usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata);
-        }
-        return userByFbId;
-      };
-      daisyChain = everyauth.facebook.appId(creds.fb.appId).appSecret(creds.fb.appSecret).findOrCreateUser(facebookResponseCallback);
+      daisyChain = everyauth.facebook.appId(creds.fb.appId).appSecret(creds.fb.appSecret).findOrCreateUser(this.processFacebookResponse);
       daisyChain.redirectPath(creds.domain + "/account");
       app.use(everyauth.middleware());
       return everyauth.helpExpress(app);

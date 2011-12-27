@@ -31,6 +31,34 @@ module.exports = class Auth
 
       else callback result
 
+  @processFacebookResponse: (session, token, extra, fbUserMetadata) ->
+
+    w.info "Checking to see if we have FB user: " + fbUserMetadata.id
+    w.info fbUserMetadata
+
+    getStoredUser fbUserMetadata.id, (result) ->
+      if !result
+        w.info "Is new user record"
+        u = new model.user
+          name:   fbUserMetadata.name
+          fbId:   fbUserMetadata.id
+        u.save (err) ->
+          if err
+            w.error "Failed to save user record"
+          else
+            w.info "Successful save of user record"
+      else
+        w.info "Stored user record found"
+
+    # Check if this user has already been added to our list of users
+    # If not, add. Then return this user
+    userByFbId = usersByFbId[fbUserMetadata.id]
+    if !userByFbId
+      userByFbId = usersByFbId[fbUserMetadata.id] = \
+        addUser 'facebook', fbUserMetadata
+
+    return userByFbId
+
   @bootEveryAuth: (app, creds) ->
 
     everyauth = require 'everyauth'
@@ -41,42 +69,13 @@ module.exports = class Auth
       model.user.findOne userId, callback
       # callback null, { userId: userId }
 
-    # Create callback that will store user to db
-    facebookResponseCallback = (session, token, extra, fbUserMetadata) ->
-
-      w.info "Checking to see if we have FB user: " + fbUserMetadata.id
-      w.info fbUserMetadata
-
-      getStoredUser fbUserMetadata.id, (result) ->
-        if !result
-          w.info "Is new user record"
-          u = new model.user
-            name:   fbUserMetadata.name
-            fbId:   fbUserMetadata.id
-          u.save (err) ->
-            if err
-              w.error "Failed to save user record"
-            else
-              w.info "Successful save of user record"
-        else
-          w.info "Stored user record found"
-
-      # Check if this user has already been added to our list of users
-      # If not, add. Then return this user
-      userByFbId = usersByFbId[fbUserMetadata.id]
-      if !userByFbId
-        userByFbId = usersByFbId[fbUserMetadata.id] = \
-          addUser 'facebook', fbUserMetadata
-
-      return userByFbId
-
     # TO FIX: Find more elegant way of complying with line length
     # than making daisychain variables and \ char. #toolazytoreaddocs
     daisyChain = everyauth \
       .facebook \
       .appId(creds.fb.appId) \
       .appSecret(creds.fb.appSecret) \
-      .findOrCreateUser facebookResponseCallback
+      .findOrCreateUser @processFacebookResponse
 
     # TO FIX: If this could be appeneded to previous call, daisyChain
     # variable is unnecessary

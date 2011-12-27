@@ -23,6 +23,8 @@ module.exports = class Sighting
         longitude: "", \
         comment: "" }
 
+    res.render sighting, { bill: bill }
+
   # /sightings/:id
 
   @show: (req, res, next) ->

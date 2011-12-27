@@ -114,10 +114,9 @@ module.exports = class Model
         # If there's no existing bill of this sighting, create an entry for it
         @bill.getBillBySerial sighting.serial, (err, result) =>
           if !result
-            w.info 'new bill denom: ' + sighting.serial + " : " \
-              + sighting.denomination
-
-            b = new @bill { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency }
+            b = new @bill { serial: sighting.serial, \
+              denomination: sighting.denomination, \
+              currency: sighting.currency }
             b.save (err) ->
               if callback
                 callback err
@@ -125,7 +124,7 @@ module.exports = class Model
             # Already record of this bill, do nothing
             if callback
               callback err, result
-                              
+
   @user = mongoose.model 'User', new mongoose.Schema {
     name        : String,
     fbId        : Number

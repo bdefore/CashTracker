@@ -14,3 +14,6 @@ src/js, tests are run, and the node server restarted. This workflow is enabled b
 
 Note you'll need to map your /etc/hosts and test on local.host:3000, due to FB security
 nonsense
+
+Known Issues:
+- When adding a new sighting for a bill that's already been entered, your entry for denomination is ignored in lieu of the first sighting's entry for it

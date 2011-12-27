@@ -39,7 +39,6 @@ describe 'Model', () ->
       should.exist sighting.comment
 
     it 'can save new entry', (done) ->
-      console.dir sighting
       model.sighting.saveAndCreateBillIfNecessary sighting, (err) ->
         should.not.exist err
         done()
@@ -60,7 +59,6 @@ describe 'Model', () ->
       model.bill.find { serial: sighting.serial }, (err, result) ->
         should.not.exist err
         should.exist result
-        console.dir result
         result.length.should.equal 1
         done()
 
@@ -76,7 +74,6 @@ describe 'Model', () ->
         model.bill.find { serial: sighting.serial }, (err, result) ->
           should.not.exist err
           should.exist result
-          console.dir result
           # Ensure only one bill record exists, no duplication after a serial with the same number exists
           result.length.should.equal 1
           done()

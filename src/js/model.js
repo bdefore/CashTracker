@@ -156,7 +156,6 @@
           return Model.bill.getBillBySerial(sighting.serial, function(err, result) {
             var b;
             if (!result) {
-              w.info('new bill denom: ' + sighting.serial + " : " + sighting.denomination);
               b = new Model.bill({
                 serial: sighting.serial,
                 denomination: sighting.denomination,

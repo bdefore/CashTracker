@@ -60,7 +60,7 @@
             return w.info("Warning: getBills requested without callback");
           }
         } else {
-          return callback(result);
+          return callback(error, result);
         }
       });
     };
@@ -98,7 +98,7 @@
             return w.info("Warning: getSightings requested without callback");
           }
         } else {
-          return callback(result);
+          return callback(error, result);
         }
       });
     };
@@ -123,7 +123,7 @@
             return w.info("Warning: getSightingsBySerial requested without callback");
           }
         } else {
-          return callback(result);
+          return callback(error, result);
         }
       });
     };
@@ -150,7 +150,7 @@
             return w.info("Warning: getSightingsBySubmitter requested sin callback");
           }
         } else {
-          return callback(result);
+          return callback(error, result);
         }
       });
     };

@@ -11,13 +11,15 @@
     model = require('../model');
 
     Bill.index = function(req, res) {
-      return model.bill.getBills(null, res.render);
+      return model.bill.getBills(null, function(err, bills) {
+        return res.render(bills);
+      });
     };
 
     Bill.show = function(req, res, next) {
       var _this = this;
       w.info("Bill ID: " + req.params.id);
-      return model.sighting.getSightingsBySerial(req.params.id, function(result) {
+      return model.sighting.getSightingsBySerial(req.params.id, function(error, result) {
         return res.render(null, {
           sightings: result
         });

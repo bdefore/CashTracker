@@ -16,7 +16,7 @@
         req.flash('error', "Oi! You're not logged in.");
         return res.redirect('/');
       } else {
-        return model.sighting.getSightingsBySubmitter(req.user.id, function(result) {
+        return model.sighting.getSightingsBySubmitter(req.user.id, function(error, result) {
           var sightings;
           sightings = result;
           return res.render(null, {

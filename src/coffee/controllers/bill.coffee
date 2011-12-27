@@ -6,7 +6,7 @@ module.exports = class Bill
   # /bills
 
   @index: (req, res) ->
-    model.bill.getBills null, res.render
+    model.bill.getBills null, (err, bills) -> res.render bills
 
   # /bills/:id
 
@@ -14,7 +14,7 @@ module.exports = class Bill
 
     w.info "Bill ID: " + req.params.id
 
-    model.sighting.getSightingsBySerial req.params.id, (result) =>
+    model.sighting.getSightingsBySerial req.params.id, (error, result) =>
 
       # TO FIX: Poor form. Hijacking the framework here.
       res.render null, { sightings: result }

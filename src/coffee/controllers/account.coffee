@@ -9,7 +9,7 @@ module.exports = class Account
       req.flash 'error', "Oi! You're not logged in."
       res.redirect '/'
     else
-      model.sighting.getSightingsBySubmitter req.user.id, (result) =>
+      model.sighting.getSightingsBySubmitter req.user.id, (error, result) =>
         sightings = result
 
         res.render null, { sightings: sightings }

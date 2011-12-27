@@ -11,7 +11,9 @@
     model = require('../model');
 
     Sighting.index = function(req, res) {
-      return model.sighting.getSightings(null, res.render);
+      return model.sighting.getSightings(null, function(err, sightings) {
+        return res.render(sightings);
+      });
     };
 
     Sighting.add = function(req, res, next) {

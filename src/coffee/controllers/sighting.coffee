@@ -6,7 +6,7 @@ module.exports = class Sighting
   # /sightings
 
   @index: (req, res) ->
-    model.sighting.getSightings null, res.render
+    model.sighting.getSightings null, (err, sightings) -> res.render sightings
 
   # /sightings/add
 

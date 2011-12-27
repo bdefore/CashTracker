@@ -45,7 +45,7 @@ module.exports = class Model
         if @DEBUG
           w.info "Warning: getBills requested without callback"
       else
-        callback result
+        callback error, result
 
   @sighting = mongoose.model 'Sighting', new mongoose.Schema {
     # _id           : String, # assigned by mongodb
@@ -74,7 +74,7 @@ module.exports = class Model
         if @DEBUG
           w.info "Warning: getSightings requested without callback"
       else
-        callback result
+        callback error, result
 
   @sighting.getSightingsBySerial = (filterBySerial, callback) ->
     if @DEBUG
@@ -93,7 +93,7 @@ module.exports = class Model
         if @DEBUG
           w.info "Warning: getSightingsBySerial requested without callback"
       else
-        callback result
+        callback error, result
 
   @sighting.getSightingsBySubmitter = (filterBySubmitterId, callback) ->
     if @DEBUG
@@ -112,7 +112,7 @@ module.exports = class Model
         if @DEBUG
           w.info "Warning: getSightingsBySubmitter requested sin callback"
       else
-        callback result
+        callback error, result
 
   # No longer used?
   #

@@ -38,16 +38,6 @@ fs.readFile pathToConfig, (error, data) ->
 
     baseDir = __dirname + "/.."
 
-    # @use 'bodyParser', 'cookieParser', 'methodOverride', app.router, \
-      # static: baseDir + '/public'
-
-    # @use 'bodyParser', 'cookieParser', 'methodOverride', session: \
-      # { secret: 'bunniesonfire' }, app router, static: baseDir + '/public'
-
-    # @configure
-    #   development: => @use errorHandler: {dumpExceptions: on}
-    #   production: => @use 'errorHandler'
-
     # BEWARE: Sequence matters.
     # Note: express.session call MUST precede auth init
     # Note: Auth.bootEveryAuth MUST precede app.router call, or else
@@ -65,19 +55,8 @@ fs.readFile pathToConfig, (error, data) ->
     app.use app.router
     app.use express.static baseDir + '/public'
 
-    # @set 'views': baseDir + '/views/' + conf.template_engine
-    # @set 'view engine': conf.template_engine
-    # # get '/': -> render 'index.jade'
-    # @get '/': "hi!"
-
-    # blacklist = 'scope self locals filename debug compiler compileDebug \
-      # inline'.split ' '
-    # @register jade: @zappa.adapter 'jade', blacklist
-
     app.set 'views', baseDir + '/views/' + config.template_engine
     app.set 'view engine', config.template_engine
-
-    # @register coffee: require('coffeekup').adapters.express
 
     # Example 500 page
     app.error = (err, req, res) -> render '500'

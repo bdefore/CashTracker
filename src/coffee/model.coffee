@@ -118,8 +118,6 @@ module.exports = class Model
               + sighting.denomination
 
             b = new @bill { serial: sighting.serial, denomination: sighting.denomination, currency: sighting.currency }
-            w.info "b b b b b b b b b " + b
-            w.info "b save: " + b.save
             b.save (err) ->
               if callback
                 callback err

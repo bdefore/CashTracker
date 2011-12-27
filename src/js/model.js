@@ -162,8 +162,6 @@
                 denomination: sighting.denomination,
                 currency: sighting.currency
               });
-              w.info("b b b b b b b b b " + b);
-              w.info("b save: " + b.save);
               return b.save(function(err) {
                 if (callback) return callback(err);
               });

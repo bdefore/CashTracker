@@ -1,4 +1,4 @@
-module.exports = class Account
+module.exports = class Sighting
 
   w = require 'winston'
   model = require '../model'

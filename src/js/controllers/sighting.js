@@ -1,20 +1,20 @@
 (function() {
-  var Account;
+  var Sighting;
 
-  module.exports = Account = (function() {
+  module.exports = Sighting = (function() {
     var model, w;
 
-    function Account() {}
+    function Sighting() {}
 
     w = require('winston');
 
     model = require('../model');
 
-    Account.index = function(req, res) {
+    Sighting.index = function(req, res) {
       return model.sighting.getSightings(null, res.render);
     };
 
-    Account.add = function(req, res, next) {
+    Sighting.add = function(req, res, next) {
       var bill, sighting;
       bill = new model.bill({
         serial: "",
@@ -33,7 +33,7 @@
       });
     };
 
-    Account.show = function(req, res, next) {
+    Sighting.show = function(req, res, next) {
       var _this = this;
       return model.sighting.getSightings(req.params.id, function(result) {
         if (result && result[0]) {
@@ -50,7 +50,7 @@
       });
     };
 
-    Account.edit = function(req, res, next) {
+    Sighting.edit = function(req, res, next) {
       var _this = this;
       if (req.params.id) {
         return model.sighting.getSightings(req.params.id, function(result) {
@@ -69,7 +69,7 @@
       }
     };
 
-    Account.update = function(req, res, next) {
+    Sighting.update = function(req, res, next) {
       var sighting,
         _this = this;
       sighting = new model.sighting(req.body.sighting);
@@ -131,7 +131,7 @@
       }
     };
 
-    return Account;
+    return Sighting;
 
   })();
 

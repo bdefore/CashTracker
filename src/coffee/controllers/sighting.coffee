@@ -17,9 +17,11 @@ module.exports = class Sighting
     # TO FIX: Default to 10?
     bill = new model.bill { serial: "", currency: "Euro", denomination: 10 }
     sighting = new model.sighting \
-      { serial: bill.serial, location: "", latitude: "", longitude: "", comment: "" }
-
-    res.render sighting, { bill: bill }
+      { serial: bill.serial, \
+        location: "", \
+        latitude: "", \
+        longitude: "", \
+        comment: "" }
 
   # /sightings/:id
 
@@ -30,10 +32,12 @@ module.exports = class Sighting
           model.bill.getBillBySerial result.serial, (error, bill) =>
             res.render result, { bill: bill }
         else
-          req.flash 'error', 'Could not find sighting details for id: ' + req.params.id
+          req.flash 'error', 'Could not find sighting details for id: ' \
+            + req.params.id
           res.redirect '/sightings'
     else
-      req.flash 'error', 'Could not find sighting details for id: ' + req.params.id
+      req.flash 'error', 'Could not find sighting details for id: ' \
+        + req.params.id
       res.redirect '/sightings'
 
   # /sightings/:id/edit
@@ -45,10 +49,12 @@ module.exports = class Sighting
           model.bill.getBillBySerial result.serial, (error, bill) =>
             res.render result, { bill: bill }
         else
-          req.flash 'error', 'Could not find sighting details for id: ' + req.params.id
+          req.flash 'error', 'Could not find sighting details for id: ' \
+            + req.params.id
           res.redirect '/sightings/add'
     else
-      req.flash 'error', 'Could not find sighting details for id: ' + req.params.id
+      req.flash 'error', 'Could not find sighting details for id: ' \
+        + req.params.id
       res.redirect '/sightings/add'
 
   # PUT /sightings/:id
@@ -96,7 +102,8 @@ module.exports = class Sighting
           # If there's no existing bill of this sighting, create an entry for it
           model.bill.getBillBySerial sighting.serial, (error, result) ->
             if !result
-              w.info 'new bill denom: ' + sighting.serial + " : " + sighting.denomination
+              w.info 'new bill denom: ' + sighting.serial + " : " \
+                + sighting.denomination
 
               b = new model.bill { serial: sighting.serial, \
                 denomination: Number(req.body.sighting.denomination), \

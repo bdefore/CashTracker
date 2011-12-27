@@ -23,15 +23,12 @@
         currency: "Euro",
         denomination: 10
       });
-      sighting = new model.sighting({
+      return sighting = new model.sighting({
         serial: bill.serial,
         location: "",
         latitude: "",
         longitude: "",
         comment: ""
-      });
-      return res.render(sighting, {
-        bill: bill
       });
     };
 

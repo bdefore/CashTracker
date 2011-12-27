@@ -7,16 +7,10 @@ Ensure your configuration files are pointing to the correct path.
 
 Run the following from the main root dir:
 
-NODE_ENV=development node_modules/jitter/bin/jitter src/coffee src/js src/js/app.js
+NODE_ENV=development node_modules/jitter/bin/jitter -lt src/coffee src/js src/js/app.js
 
-As changes are made to the src/coffee directory, they are recompiled into src/js,
-tests are run, and the node server restarted. This workflow is enabled by Jitter.
+As changes are made to the src/coffee directory, they are linted and recompiled into
+src/js, tests are run, and the node server restarted. This workflow is enabled by Jitter.
 
 Note you'll need to map your /etc/hosts and test on local.host:3000, due to FB security
 nonsense
-
-== Lint
-
-Passes Coffeelint (http://www.coffeelint.org/)
-
-find src/coffee -name '*.coffee' -exec node_modules/coffeelint/bin/coffeelint {} \;

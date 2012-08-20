@@ -90,4 +90,4 @@ fs.readFile pathToConfig, (error, data) ->
 
     mvc.bootControllers app, config.template_engine
 
-    app.listen 3000
+    app.listen config.port

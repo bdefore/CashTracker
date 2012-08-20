@@ -77,7 +77,7 @@
         };
       };
       mvc.bootControllers(app, config.template_engine);
-      return app.listen(3000);
+      return app.listen(config.port);
     }
   });
 

@@ -29,18 +29,6 @@
     } else {
       config = JSON.parse(data);
       w.info("Configuration file loaded: " + config);
-      if (config.logging) {
-        if (config.logging.console) {
-          w.remove(w.transports.Console);
-          w.add(w.transports.Console, config.logging.console);
-        }
-        if (config.logging.logfile) {
-          w.add(w.transports.File, config.logging.logfile);
-        }
-        if (config.logging.loggly) {
-          w.add(w.transports.Loggly, config.logging.loggly);
-        }
-      }
       w.warn("=============================================");
       w.warn("Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']);
       w.warn("=============================================");

@@ -77,7 +77,7 @@
         };
       };
       mvc.bootControllers(app, config.template_engine);
-      return app.listen(config.port);
+      return app.listen(process.env.PORT);
     }
   });
 

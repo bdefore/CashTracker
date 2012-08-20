@@ -6,7 +6,6 @@
     },
     "domain": "http://cashtracker.nodejitsu.com"
   },
-  "database": "mongodb://nodejitsu:9848881c7e7584010c47564a811342db@staff.mongohq.com:10008/nodejitsudb789128401139",
   "template_engine": "jade",
   "logging": {
 		"loggly": {

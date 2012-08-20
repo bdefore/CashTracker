@@ -33,7 +33,7 @@ fs.readFile pathToConfig, (error, data) ->
     w.warn "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
     w.warn "============================================="
 
-    db.connect config.database
+    db.connect process.env['MONGOHQ_URL']
     db.prepopulate()
 
     baseDir = __dirname + "/.."

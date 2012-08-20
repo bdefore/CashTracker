@@ -30,9 +30,9 @@
       config = JSON.parse(data);
       w.info("Configuration file loaded: " + config);
       w.warn("=============================================");
-      w.warn("Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']);
+      w.warn("Loading configuration: " + process.env['NODE_ENV']);
       w.warn("=============================================");
-      db.connect("mongodb://heroku:JwsYG7xRqzJmJ8ZVkqdA@alex.mongohq.com:10001/app6881560");
+      db.connect(config.database);
       db.prepopulate();
       baseDir = __dirname + "/..";
       express = require('express');
@@ -82,7 +82,7 @@
         messages: messages
       });
       mvc.bootControllers(app, config.template_engine);
-      return app.listen(process.env.PORT);
+      return app.listen(process.env.PORT || 3000);
     }
   });
 

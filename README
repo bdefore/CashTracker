@@ -12,8 +12,15 @@ NODE_ENV=development PORT=3000 node_modules/jitter/bin/jitter -lt src/coffee src
 As changes are made to the src/coffee directory, they are linted and recompiled into
 src/js, tests are run, and the node server restarted. This workflow is enabled by Jitter.
 
-Note you'll need to map your /etc/hosts and test on local.host:3000, due to FB security
-nonsense
+Heroku:
+
+Heroku branch can be redeployed with:
+
+git push heroku heroku:master
+
+Heroku's MongoDB URL derives from a password that needs to be set here https://providers.mongohq.com/home for 'heroku' user. Specify one there and update the config/heroku.json file or you will not be able to add/edit entries
+
+More info about using Heroku toolkit here: https://devcenter.heroku.com/articles/nodejs
 
 Known Issues:
 - When adding a new sighting for a bill that's already been entered, your entry for denomination is ignored in lieu of the first sighting's entry for it

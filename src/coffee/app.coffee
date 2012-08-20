@@ -30,10 +30,10 @@ fs.readFile pathToConfig, (error, data) ->
     #     w.add w.transports.Loggly, config.logging.loggly
 
     w.warn "============================================="
-    w.warn "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
+    w.warn "Loading configuration: " + process.env['NODE_ENV']
     w.warn "============================================="
 
-    db.connect "mongodb://heroku:JwsYG7xRqzJmJ8ZVkqdA@alex.mongohq.com:10001/app6881560"
+    db.connect config.database
     db.prepopulate()
 
     baseDir = __dirname + "/.."
@@ -90,4 +90,4 @@ fs.readFile pathToConfig, (error, data) ->
 
     mvc.bootControllers app, config.template_engine
 
-    app.listen process.env.PORT
+    app.listen process.env.PORT || 3000

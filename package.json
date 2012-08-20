@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "src/js/app.js",
-    "test": "mocha --reporter spec"
+    "test": "mocha --compilers coffee:coffee-script --reporter spec"
   },
   "dependencies": {
     "connect": "1.8.x",
@@ -30,7 +30,9 @@
     "pkginfo": "*",
     "colors": "*",
     "stack-trace": "*",
-    "async": "*"
+    "async": "*",
+    "cycle": "*",
+    "bson": "*"
   },
   "devDependencies": {
     "coffee-script": "1.2.0",
@@ -50,7 +52,7 @@
   },
   "name": "cashtracker",
   "subdomain": "cashtracker",
-  "version": "0.0.2-13",
+  "version": "0.0.2-20",
   "repository": {},
   "env": {
     "SUBDOMAIN": "cashtracker",
@@ -59,5 +61,8 @@
   "domains": [],
   "databases": {},
   "ctime": 1324141329476,
-  "mtime": 1324158550197
+  "mtime": 1324158550197,
+  "engines": {
+    "node": "0.6.x"
+  }
 }

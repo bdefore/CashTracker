@@ -33,7 +33,7 @@ fs.readFile pathToConfig, (error, data) ->
     w.warn "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
     w.warn "============================================="
 
-    db.connect "mongodb://bdefore:ieq3o42h@alex.mongohq.com:10001/app6881560"
+    db.connect "mongodb://heroku:JwsYG7xRqzJmJ8ZVkqdA@alex.mongohq.com:10001/app6881560"
     db.prepopulate()
 
     baseDir = __dirname + "/.."

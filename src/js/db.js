@@ -43,8 +43,12 @@
               denomination: 20,
               currency: 'Euro'
             });
-            b.save();
-            s.save();
+            b.save(function(err) {
+              if (err) return w.error("Failed to create dummy bill: " + err);
+            });
+            s.save(function(err) {
+              if (err) return w.error("Failed to create dummy sighting: " + err);
+            });
             w.info('Adding dummy sighting: ' + s);
           }
           return w.info("Dummy data created...");

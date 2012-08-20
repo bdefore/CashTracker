@@ -34,8 +34,10 @@ module.exports = class DB
             serial: s.serial
             denomination: 20
             currency: 'Euro'
-          b.save()
-          s.save()
+          b.save (err) ->
+            w.error "Failed to create dummy bill: " + err if err
+          s.save (err) ->
+            w.error "Failed to create dummy sighting: " + err if err
 
           w.info 'Adding dummy sighting: ' + s
 

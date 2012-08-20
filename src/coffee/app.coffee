@@ -33,7 +33,7 @@ fs.readFile pathToConfig, (error, data) ->
     w.warn "Starting CashTracker in NODE_ENV: " + process.env['NODE_ENV']
     w.warn "============================================="
 
-    db.connect process.env['MONGOHQ_URL']
+    db.connect "mongodb://bdefore:ieq3o42h@alex.mongohq.com:10001/app6881560"
     db.prepopulate()
 
     baseDir = __dirname + "/.."
@@ -86,7 +86,7 @@ fs.readFile pathToConfig, (error, data) ->
           return arr.concat msgs[type]
         ), []
 
-    app.dynamicHelpers { hasMessages, request, messages }
+    # app.dynamicHelpers { hasMessages, request, messages }
 
     mvc.bootControllers app, config.template_engine
 

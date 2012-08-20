@@ -76,6 +76,11 @@
           }), []);
         };
       };
+      app.dynamicHelpers({
+        hasMessages: hasMessages,
+        request: request,
+        messages: messages
+      });
       mvc.bootControllers(app, config.template_engine);
       return app.listen(process.env.PORT);
     }

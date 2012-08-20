@@ -86,7 +86,7 @@ fs.readFile pathToConfig, (error, data) ->
           return arr.concat msgs[type]
         ), []
 
-    # app.dynamicHelpers { hasMessages, request, messages }
+    app.dynamicHelpers { hasMessages, request, messages }
 
     mvc.bootControllers app, config.template_engine
 

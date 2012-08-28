@@ -1,26 +1,38 @@
-Dev workflow tips:
-
 == Running development server
 
-Be sure you have a valid MongoDB running. You initiate a local database with 'mongodb'.
-Ensure your configuration files are pointing to the correct path.
+This is a codebase primarily from December 2011, as a result it is designed and tested to run on Express 2.5.11 and Node 0.6.20. It currently does not work on Express 3.0 due to the removal of dynamicHelpers.
 
-Run the following from the main root dir:
+Before running your own you will need to assign your own Facebook and MongoDB settings to development.json and production.json in src/config. You can create your own unique application on developers.facebook.com.
 
-NODE_ENV=development PORT=3000 node_modules/jitter/bin/jitter -lt src/coffee src/js src/js/app.js
+Local Development Steps:
 
-As changes are made to the src/coffee directory, they are linted and recompiled into
-src/js, tests are run, and the node server restarted. This workflow is enabled by Jitter.
+MongoDB:
 
-Heroku:
+Install MongoDB. Create a database named 'cashtracker'. Then run 'mongod' to start the service.
 
-Heroku branch can be redeployed with:
+Ensure your development.json file pointing to the correct path. For my development, my local path was 'mongodb://localhost/cashtracker'
 
-git push heroku heroku:master
+I recommend using nave to manage different Node.JS installations. After installing nave, you can run the project in the following steps:
 
-Heroku's MongoDB URL derives from a password that needs to be set here https://providers.mongohq.com/home for 'heroku' user. Specify one there and update the config/heroku.json file or you will not be able to add/edit entries
+nave install 0.6.20
+nave use 0.6.20
+npm install -d
+
+At which point you may run run the following from the main root dir to start Jitter which will watch for code changes, run Mocha tests, and restart the local node server accordingly:
+
+NODE_ENV=development PORT=3000 vendor/jitter/bin/jitter -lt src/coffee src/js src/js/app.js
+
+That's it, you may begin coding. As changes are made to the src/coffee directory, they are linted and recompiled into src/js, tests are run, and the node server restarted. This workflow is enabled by Jitter.
+
+Heroku Development Steps:
+
+You'll want to set up a free Heroku account along with the MongoDB add-on. The free option should suffice for testing.
 
 More info about using Heroku toolkit here: https://devcenter.heroku.com/articles/nodejs
+
+Heroku's MongoDB URL derives from a password that needs to be set here https://providers.mongohq.com/home for your 'heroku' user. Specify one there and update the src/config/production.json file or you will not be able to add/edit entries.
+
+NOTE: Remember to set 'heroku config:add NODE_ENV=production' so that the app loads the correct configuration file.
 
 Known Issues:
 - When adding a new sighting for a bill that's already been entered, your entry for denomination is ignored in lieu of the first sighting's entry for it

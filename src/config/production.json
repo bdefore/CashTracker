@@ -1,23 +1,23 @@
 {
   "creds": {
     "fb": {
-        "appId": "210234019058633"
-      , "appSecret": "8030f2759dd95d9afab2a201b68840c5"
+        "appId": "355679181173216"
+      , "appSecret": "016cfebbe786a0326aa06dabd2903f6c"
     },
-    "domain": "http://cashtracker.nodejitsu.com"
+    "domain": "http://cashtracker.herokuapp.com"
   },
-  "database": "mongodb://nodejitsu:9848881c7e7584010c47564a811342db@staff.mongohq.com:10008/nodejitsudb789128401139",
+  "database": "mongodb://heroku:GbUw4IjrlVIRvaWcK4Ez@alex.mongohq.com:10001/app6881560",
   "template_engine": "jade",
   "logging": {
-		"loggly": {
-			"auth": {
-				"username": "bdefore",
-				"password": "Nobjow11"
-			},
-			"subdomain": "bcdef",
-			"inputName": "cashtracker",
-			"inputToken": "8150a4a2-a604-439f-aff1-9ad5956e9fa4",
-			"json": true
-		}
+    "loggly": {
+      "auth": {
+        "username": "bdefore",
+        "password": "Nobjow11"
+      },
+      "subdomain": "bcdef",
+      "inputName": "cashtracker",
+      "inputToken": "8150a4a2-a604-439f-aff1-9ad5956e9fa4",
+      "json": true
+    }
   }
 }

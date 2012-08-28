@@ -4,7 +4,7 @@
         "appId": "355679181173216"
       , "appSecret": "016cfebbe786a0326aa06dabd2903f6c"
     },
-    "domain": "http://shrouded-beyond-6259.herokuapp.com"
+    "domain": "http://cashtracker.herokuapp.com"
   },
   "database": "mongodb://heroku:GbUw4IjrlVIRvaWcK4Ez@alex.mongohq.com:10001/app6881560",
   "template_engine": "jade",
